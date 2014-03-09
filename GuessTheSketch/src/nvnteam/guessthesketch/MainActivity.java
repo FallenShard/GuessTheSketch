@@ -1,238 +1,84 @@
 package nvnteam.guessthesketch;
 
-import java.util.UUID;
-
-import com.example.drawingfun.R;
-
-import android.os.Bundle;
-import android.provider.MediaStore;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
-import android.view.Menu;
+import android.content.Intent;
+import android.graphics.Typeface;
+import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.Toast;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.Button;
 
-/**
- * This is demo code to accompany the Mobiletuts+ tutorial series:
- * - Android SDK: Create a Drawing App
- * 
- * Sue Smith
- * August 2013
- *
- */
-public class MainActivity extends Activity implements OnClickListener 
+public class MainActivity extends Activity 
 {
-	//custom drawing view
-	private DrawingView m_drawView;
-	//buttons
-	private ImageButton m_currPaint;
-	private ImageButton m_drawBtn; 
-	private ImageButton m_eraseBtn; 
-	private ImageButton m_newBtn; 
-	private ImageButton m_saveBtn;
-	//sizes
-	private float m_smallBrush;
-	private float m_mediumBrush;
-	private float m_largeBrush;
-	@Override
-	protected void onCreate(Bundle savedInstanceState) 
-	{
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+    Button m_playBtn;
+    Button m_freeDrawingBtn;
+    Button m_highScoresBtn;
+    Button m_quitBtn;
 
-		//get drawing view
-		m_drawView = (DrawingView)findViewById(R.id.drawing);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) 
+    {
+        super.onCreate(savedInstanceState);
 
-		//get the palette and first color button
-		LinearLayout paintLayout = (LinearLayout)findViewById(R.id.paint_colors);
-		m_currPaint = (ImageButton)paintLayout.getChildAt(0);
-		m_currPaint.setImageDrawable(getResources().getDrawable(R.drawable.paint_pressed));
+        setContentView(R.layout.activity_main);
 
-		//sizes from dimensions
-		m_smallBrush = getResources().getInteger(R.integer.small_size);
-		m_mediumBrush = getResources().getInteger(R.integer.medium_size);
-		m_largeBrush = getResources().getInteger(R.integer.large_size);
+        Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/goodfoot.ttf");
 
-		//draw button
-		m_drawBtn = (ImageButton)findViewById(R.id.draw_btn);
-		m_drawBtn.setOnClickListener(this);
+        m_playBtn = (Button) findViewById(R.id.button_play);
+        m_playBtn.setTypeface(tf);
 
-		//set initial size
-		m_drawView.setBrushSize(m_mediumBrush);
+        m_highScoresBtn = (Button) findViewById(R.id.button_high_scores);
+        m_highScoresBtn.setTypeface(tf);
 
-		//erase button
-		m_eraseBtn = (ImageButton)findViewById(R.id.erase_btn);
-		m_eraseBtn.setOnClickListener(this);
+        m_freeDrawingBtn = (Button) findViewById(R.id.button_free_drawing);
+        m_freeDrawingBtn.setTypeface(tf);
 
-		//new button
-		m_newBtn = (ImageButton)findViewById(R.id.new_btn);
-		m_newBtn.setOnClickListener(this);
+        m_quitBtn = (Button) findViewById(R.id.button_quit);
+        m_quitBtn.setTypeface(tf);
 
-		//save button
-		m_saveBtn = (ImageButton)findViewById(R.id.save_btn);
-		m_saveBtn.setOnClickListener(this);
-	}
+        m_freeDrawingBtn.setOnClickListener(new OnClickListener() 
+        {
+            @Override
+            public void onClick(View v) 
+            {
+                Intent intent = new Intent(MainActivity.this, 
+                                           DrawingActivity.class);
+                startActivity(intent);
+            }
+        });
+ 
+        m_quitBtn.setOnClickListener(new OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                finish();
+            }
+        });
+    }
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
-	}
+    @Override
+    protected void onStart()
+    {
+        super.onStart();
+        final View l1 = findViewById(R.id.main_menu_linear_layout);
+        final View l2 = findViewById(R.id.logo_view);
+        final Animation fadeOut = AnimationUtils.loadAnimation(this, R.anim.layout_fade_in);
+        final Animation logoAnim = AnimationUtils.loadAnimation(this, R.anim.logo_anim);
+        l1.startAnimation(fadeOut);
+        l2.startAnimation(logoAnim);
+    }
 
-	//user clicked paint
-	public void paintClicked(View view){
-		//use chosen color
-
-		//set erase false
-	    m_drawView.setErase(false);
-	    m_drawView.setBrushSize(m_drawView.getLastBrushSize());
-
-		if(view != m_currPaint){
-			ImageButton imgView = (ImageButton)view;
-			String color = view.getTag().toString();
-			m_drawView.setColor(color);
-			//update ui
-			imgView.setImageDrawable(getResources().getDrawable(R.drawable.paint_pressed));
-			m_currPaint.setImageDrawable(getResources().getDrawable(R.drawable.paint));
-			m_currPaint = (ImageButton)view;
-		}
-	}
-
-	@Override
-	public void onClick(View view){
-
-		if(view.getId()==R.id.draw_btn){
-			//draw button clicked
-			final Dialog brushDialog = new Dialog(this);
-			brushDialog.setTitle("Brush size:");
-			brushDialog.setContentView(R.layout.brush_chooser);
-			//listen for clicks on size buttons
-			ImageButton smallBtn = (ImageButton)brushDialog.findViewById(R.id.small_brush);
-			smallBtn.setOnClickListener(new OnClickListener(){
-				@Override
-				public void onClick(View v) {
-				    m_drawView.setErase(false);
-				    m_drawView.setBrushSize(m_smallBrush);
-				    m_drawView.setLastBrushSize(m_smallBrush);
-					brushDialog.dismiss();
-				}
-			});
-			ImageButton mediumBtn = (ImageButton)brushDialog.findViewById(R.id.medium_brush);
-			mediumBtn.setOnClickListener(new OnClickListener(){
-				@Override
-				public void onClick(View v) {
-				    m_drawView.setErase(false);
-				    m_drawView.setBrushSize(m_mediumBrush);
-				    m_drawView.setLastBrushSize(m_mediumBrush);
-					brushDialog.dismiss();
-				}
-			});
-			ImageButton largeBtn = (ImageButton)brushDialog.findViewById(R.id.large_brush);
-			largeBtn.setOnClickListener(new OnClickListener(){
-				@Override
-				public void onClick(View v) {
-				    m_drawView.setErase(false);
-				    m_drawView.setBrushSize(m_largeBrush);
-				    m_drawView.setLastBrushSize(m_largeBrush);
-					brushDialog.dismiss();
-				}
-			});
-			//show and wait for user interaction
-			brushDialog.show();
-		}
-		else if(view.getId()==R.id.erase_btn){
-			//switch to erase - choose size
-			final Dialog brushDialog = new Dialog(this);
-			brushDialog.setTitle("Eraser size:");
-			brushDialog.setContentView(R.layout.brush_chooser);
-			//size buttons
-			ImageButton smallBtn = (ImageButton)brushDialog.findViewById(R.id.small_brush);
-			smallBtn.setOnClickListener(new OnClickListener(){
-				@Override
-				public void onClick(View v) {
-				    m_drawView.setErase(true);
-				    m_drawView.setBrushSize(m_smallBrush);
-					brushDialog.dismiss();
-				}
-			});
-			ImageButton mediumBtn = (ImageButton)brushDialog.findViewById(R.id.medium_brush);
-			mediumBtn.setOnClickListener(new OnClickListener(){
-				@Override
-				public void onClick(View v) {
-				    m_drawView.setErase(true);
-				    m_drawView.setBrushSize(m_mediumBrush);
-					brushDialog.dismiss();
-				}
-			});
-			ImageButton largeBtn = (ImageButton)brushDialog.findViewById(R.id.large_brush);
-			largeBtn.setOnClickListener(new OnClickListener(){
-				@Override
-				public void onClick(View v) {
-				    m_drawView.setErase(true);
-				    m_drawView.setBrushSize(m_largeBrush);
-					brushDialog.dismiss();
-				}
-			});
-			brushDialog.show();
-		}
-		else if(view.getId()==R.id.new_btn){
-			//new button
-			AlertDialog.Builder newDialog = new AlertDialog.Builder(this);
-			newDialog.setTitle("New drawing");
-			newDialog.setMessage("Start new drawing (you will lose the current drawing)?");
-			newDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener(){
-				public void onClick(DialogInterface dialog, int which){
-				    m_drawView.startNew();
-					dialog.dismiss();
-				}
-			});
-			newDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
-				public void onClick(DialogInterface dialog, int which){
-					dialog.cancel();
-				}
-			});
-			newDialog.show();
-		}
-		else if(view.getId()==R.id.save_btn){
-			//save drawing
-			AlertDialog.Builder saveDialog = new AlertDialog.Builder(this);
-			saveDialog.setTitle("Save drawing");
-			saveDialog.setMessage("Save drawing to device Gallery?");
-			saveDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener(){
-				public void onClick(DialogInterface dialog, int which){
-					//save drawing
-				    m_drawView.setDrawingCacheEnabled(true);
-					//attempt to save
-					String imgSaved = MediaStore.Images.Media.insertImage(
-							getContentResolver(), m_drawView.getDrawingCache(),
-							UUID.randomUUID().toString()+".png", "drawing");
-					//feedback
-					if(imgSaved!=null){
-						Toast savedToast = Toast.makeText(getApplicationContext(), 
-								"Drawing saved to Gallery!", Toast.LENGTH_SHORT);
-						savedToast.show();
-					}
-					else{
-						Toast unsavedToast = Toast.makeText(getApplicationContext(), 
-								"Oops! Image could not be saved.", Toast.LENGTH_SHORT);
-						unsavedToast.show();
-					}
-					m_drawView.destroyDrawingCache();
-				}
-			});
-			saveDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
-				public void onClick(DialogInterface dialog, int which){
-					dialog.cancel();
-				}
-			});
-			saveDialog.show();
-		}
-	}
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+        int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                      | View.SYSTEM_UI_FLAG_FULLSCREEN
+                      | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+        getWindow().getDecorView().setSystemUiVisibility(uiOptions);
+    }
 
 }

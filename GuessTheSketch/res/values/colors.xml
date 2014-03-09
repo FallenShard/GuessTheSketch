@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Menu Button Colors -->
+    <color name="gray_light">#FFDDDDDD</color>
+    <color name="gray_dark">#FF111111</color>
+    <color name="gray_medium">#FF888888</color>
+    <color name="gray_lighter">#FFEEEEEE</color>
+    <color name="gray_medium_dark">#FF666666</color>
+    <color name="gray_medium_dark_transparent">#00666666</color>
+    <color name="gray_medium_light">#FFBBBBBB</color>
+    <color name="gray_medium_light_transparent">#00BBBBBB</color>
+
+</resources>

@@ -17,4 +17,24 @@
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
 
+    <!-- Button Styles -->
+    <style name="main_menu_button_style">
+        <item name="android:layout_width">@dimen/menu_button_width</item>
+        <item name="android:layout_height">@dimen/menu_button_height</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:background">@drawable/menu_button</item>
+	    <item name="android:textSize">@dimen/menu_font_size</item>
+	    <item name="android:textColor">#FFFFFFFF</item>
+    </style>
+    
+    <!-- Main Menu Logo Style -->
+    <style name="main_menu_logo_style">
+        <item name="android:id">@+id/menu_logo</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:src">@drawable/guess_the_sketch_logo</item>
+    </style>
+
 </resources>
