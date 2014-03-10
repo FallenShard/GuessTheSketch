@@ -2,13 +2,13 @@
 <resources>
 
     <!-- Menu Button Colors -->
-    <color name="gray_light">#FFDDDDDD</color>
-    <color name="gray_dark">#FF111111</color>
-    <color name="gray_medium">#FF888888</color>
-    <color name="gray_lighter">#FFEEEEEE</color>
-    <color name="gray_medium_dark">#FF666666</color>
-    <color name="gray_medium_dark_transparent">#00666666</color>
-    <color name="gray_medium_light">#FFBBBBBB</color>
-    <color name="gray_medium_light_transparent">#00BBBBBB</color>
+    <color name="blue_light">#FF7777DD</color>
+    <color name="blue_dark">#FF000011</color>
+    <color name="blue_medium">#FF444488</color>
+    <color name="blue_lighter">#FF7777EE</color>
+    <color name="blue_medium_dark">#FF333366</color>
+    <color name="blue_medium_dark_transparent">#00333366</color>
+    <color name="blue_medium_light">#FF5555BB</color>
+    <color name="blue_medium_light_transparent">#005555BB</color>
 
 </resources>

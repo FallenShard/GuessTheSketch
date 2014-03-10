@@ -14,7 +14,7 @@
 	<integer name="large_size">30</integer>
 	
 	<!-- Main Menu Items -->
-	<dimen name="menu_font_size">50sp</dimen>
+	<dimen name="menu_font_size">30sp</dimen>
 	<dimen name="menu_button_width">240dp</dimen>
 	<dimen name="menu_button_height">80dp</dimen>
 

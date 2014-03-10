@@ -12,12 +12,22 @@
 	<string name="med">Medium</string>
 	<string name="lrg">Large</string>
 
-    <!-- Main Menu Buttons Texts -->
-	<string name="free_drawing_button_text">Free Drawing</string>
-	<string name="quit_button_text">Quit</string>
+    <!-- Main Menu Texts -->
 	<string name="play_button_text">Play</string>
+	<string name="free_drawing_button_text">Free Drawing</string>
+	<string name="tutorial_button_text">Tutorial</string>
 	<string name="high_scores_button_text">High Scores</string>
+	<string name="quit_button_text">Quit</string>
 	
+	<string name="single_device_button_text">Single-Device Mode</string>
+	<string name="play_via_bluetooth_button_text">Play via Bluetooth</string>
+	<string name="back_button_text">Back</string>
+	
+	<!-- Pre-Game Texts -->
+	<string name="start_button_text">Start</string>
+	<string name="team_one_text_view_hint">Team One</string>
+	<string name="team_two_text_view_hint">Team Two</string>
+
 	<!-- Descriptions for Image Views -->
 	<string name="desc_logo">Main Logo</string>
 
