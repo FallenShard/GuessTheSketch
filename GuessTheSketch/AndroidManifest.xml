@@ -28,6 +28,7 @@
 
 		<activity
 			android:name="nvnteam.guessthesketch.DrawingActivity"
+			android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
 			android:label="@string/app_name"
 			android:screenOrientation="portrait" >
 
@@ -35,8 +36,15 @@
 
 		<activity
 		    android:name="nvnteam.guessthesketch.SDPreGameActivity"
+		    android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
 		    android:windowSoftInputMode="stateHidden" >
 		</activity>
+		
+		<activity
+            android:name="nvnteam.guessthesketch.SDGameActivity"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+            android:windowSoftInputMode="stateHidden" >
+        </activity>
 
 	</application>
 

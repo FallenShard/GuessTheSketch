@@ -30,5 +30,9 @@
 
 	<!-- Descriptions for Image Views -->
 	<string name="desc_logo">Main Logo</string>
+	
+	<!-- In-Game Texts -->
+	<string name="finish_drawing_button_text">Finish!</string>
+	<string name="pick_a_word_dialog_text">Pick a Word!</string>
 
 </resources>
