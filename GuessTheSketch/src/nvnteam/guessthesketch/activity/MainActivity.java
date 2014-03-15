@@ -1,5 +1,9 @@
-package nvnteam.guessthesketch;
+package nvnteam.guessthesketch.activity;
 
+import nvnteam.guessthesketch.R;
+import nvnteam.guessthesketch.R.anim;
+import nvnteam.guessthesketch.R.id;
+import nvnteam.guessthesketch.R.layout;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
