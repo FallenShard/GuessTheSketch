@@ -226,7 +226,7 @@ public class SDGameActivity extends Activity implements OnClickListener
         handleEvaluation();
         
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("T1: " + m_currentPoints[0] + " T2: " + m_currentPoints[1])
+        builder.setMessage("T1: " + m_currentPoints[0] + "       T2: " + m_currentPoints[1])
                .setCancelable(false)
                .setPositiveButton(m_teamNames[m_currentTurn] + "'s turn", new DialogInterface.OnClickListener() 
                {
