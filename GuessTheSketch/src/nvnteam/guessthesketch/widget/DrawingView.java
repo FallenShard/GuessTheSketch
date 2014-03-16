@@ -5,7 +5,6 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 import nvnteam.guessthesketch.R;
-import nvnteam.guessthesketch.R.integer;
 import nvnteam.guessthesketch.dto.DrawingNode;
 
 import android.content.Context;
@@ -18,7 +17,6 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.os.SystemClock;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;

@@ -181,7 +181,7 @@
         android:inputType="text"
         android:imeOptions="actionDone"
         android:maxLines="1"
-        android:hint="Type your guess here!"
+        android:hint="@string/guesser_edit_text"
         android:gravity="center_vertical"
         android:visibility="gone" />
 

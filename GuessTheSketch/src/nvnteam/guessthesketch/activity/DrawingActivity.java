@@ -3,11 +3,6 @@ package nvnteam.guessthesketch.activity;
 import java.util.UUID;
 
 import nvnteam.guessthesketch.R;
-import nvnteam.guessthesketch.R.drawable;
-import nvnteam.guessthesketch.R.id;
-import nvnteam.guessthesketch.R.integer;
-import nvnteam.guessthesketch.R.layout;
-import nvnteam.guessthesketch.R.menu;
 import nvnteam.guessthesketch.widget.DrawingView;
 
 

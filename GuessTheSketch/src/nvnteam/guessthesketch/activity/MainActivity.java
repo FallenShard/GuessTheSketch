@@ -1,9 +1,6 @@
 package nvnteam.guessthesketch.activity;
 
 import nvnteam.guessthesketch.R;
-import nvnteam.guessthesketch.R.anim;
-import nvnteam.guessthesketch.R.id;
-import nvnteam.guessthesketch.R.layout;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -13,14 +10,15 @@ import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 public class MainActivity extends Activity 
 {
-    Button m_playBtn;
-    Button m_freeDrawingBtn;
-    Button m_tutorialBtn;
-    Button m_highScoresBtn;
-    Button m_quitBtn;
+    ImageButton m_playBtn;
+    ImageButton m_freeDrawingBtn;
+    ImageButton m_tutorialBtn;
+    ImageButton m_highScoresBtn;
+    ImageButton m_quitBtn;
     
     Button m_singleDeviceBtn;
     Button m_viaBluetoothBtn;
@@ -30,8 +28,13 @@ public class MainActivity extends Activity
     View m_playLayout;
     View m_logo;
     
+    View m_upperLeft;
+    View m_lowerLeft;
+    View m_devLogo;
+    
     Animation m_scaleIn;
     Animation m_scaleOut;
+    Animation m_fadeIn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) 
@@ -42,11 +45,11 @@ public class MainActivity extends Activity
 
         Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/goodfoot.ttf");
 
-        m_playBtn = (Button) findViewById(R.id.button_play);
-        m_freeDrawingBtn = (Button) findViewById(R.id.button_free_drawing);
-        m_tutorialBtn = (Button) findViewById(R.id.button_tutorial);
-        m_highScoresBtn = (Button) findViewById(R.id.button_high_scores);
-        m_quitBtn = (Button) findViewById(R.id.button_quit);
+        m_playBtn = (ImageButton) findViewById(R.id.button_play);
+        m_freeDrawingBtn = (ImageButton) findViewById(R.id.button_free_drawing);
+        m_tutorialBtn = (ImageButton) findViewById(R.id.button_tutorial);
+        m_highScoresBtn = (ImageButton) findViewById(R.id.button_high_scores);
+        m_quitBtn = (ImageButton) findViewById(R.id.button_quit);
         m_singleDeviceBtn = (Button) findViewById(R.id.button_single_device);
         m_viaBluetoothBtn = (Button) findViewById(R.id.button_via_bluetooth);
         m_backBtn = (Button) findViewById(R.id.button_back_play_menu);
@@ -55,14 +58,14 @@ public class MainActivity extends Activity
         m_playLayout = findViewById(R.id.play_menu_linear_layout);
         m_logo = findViewById(R.id.logo_view);
         
+        m_devLogo = findViewById(R.id.dev_logo_view);
+        m_upperLeft = findViewById(R.id.upper_left_view);
+        m_lowerLeft = findViewById(R.id.lower_left_view);
+        
         m_scaleOut = AnimationUtils.loadAnimation(this, R.anim.scale_out_anim);
         m_scaleIn = AnimationUtils.loadAnimation(this, R.anim.scale_in_anim);
+        m_fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in_anim);
 
-        m_playBtn.setTypeface(tf);
-        m_highScoresBtn.setTypeface(tf);
-        m_tutorialBtn.setTypeface(tf);
-        m_freeDrawingBtn.setTypeface(tf);
-        m_quitBtn.setTypeface(tf);
         m_singleDeviceBtn.setTypeface(tf);
         m_viaBluetoothBtn.setTypeface(tf);
         m_backBtn.setTypeface(tf);
@@ -125,7 +128,6 @@ public class MainActivity extends Activity
                startActivity(intent);
            }
         });
-        
         m_mainLayout.startAnimation(m_scaleIn);
     }
 
@@ -133,9 +135,11 @@ public class MainActivity extends Activity
     protected void onStart()
     {
         super.onStart();
-
+        
         m_logo.startAnimation(m_scaleIn);
-
+        m_devLogo.startAnimation(m_fadeIn);
+        m_upperLeft.startAnimation(m_fadeIn);
+        m_lowerLeft.startAnimation(m_fadeIn);
     }
 
     @Override

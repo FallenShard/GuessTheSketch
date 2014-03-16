@@ -2,7 +2,35 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/background_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:background="@drawable/background_tiled" >
+    
+    <ImageView
+        android:id="@+id/dev_logo_view"
+        style="@style/main_menu_logo_style"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/logo"
+        android:contentDescription="@string/desc_logo" >
+    </ImageView>
+    
+    <ImageView
+        android:id="@+id/lower_left_view"
+        style="@style/main_menu_logo_style"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
+        android:src="@drawable/lower_left_main_menu"
+        android:contentDescription="@string/desc_logo" >
+    </ImageView>
+    
+    <ImageView
+        android:id="@+id/upper_left_view"
+        style="@style/main_menu_logo_style"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/upper_left_main_menu"
+        android:contentDescription="@string/desc_logo" >
+    </ImageView>
 
     <ImageView
         android:id="@+id/logo_view"
@@ -10,6 +38,7 @@
         android:layout_marginTop="120dp"
         android:layout_marginBottom="40dp" 
         android:layout_centerHorizontal="true"
+        android:src="@drawable/guess_the_sketch_logo"
         android:contentDescription="@string/desc_logo" >
     </ImageView>
 
@@ -23,30 +52,35 @@
         android:animateLayoutChanges="true"
         android:orientation="vertical" >
 
-        <Button
+        <ImageButton
             style="@style/main_menu_button_style"
             android:id="@+id/button_play"
-            android:text="@string/play_button_text"/>
+            android:src="@drawable/new_game_button"
+            android:contentDescription="@string/play_button_text"/>
 
-        <Button
+        <ImageButton
             style="@style/main_menu_button_style"
             android:id="@+id/button_free_drawing"
-            android:text="@string/free_drawing_button_text" />
+            android:src="@drawable/free_draw_button"
+            android:contentDescription="@string/free_drawing_button_text" />
 
-        <Button
-               style="@style/main_menu_button_style"
-               android:id="@+id/button_tutorial"
-               android:text="@string/tutorial_button_text" />
+        <ImageButton
+            style="@style/main_menu_button_style"
+            android:id="@+id/button_tutorial"
+            android:src="@drawable/tutorial_button"
+            android:contentDescription="@string/tutorial_button_text" />
 
-        <Button
+        <ImageButton
             style="@style/main_menu_button_style"
             android:id="@+id/button_high_scores"
-            android:text="@string/high_scores_button_text" />
+            android:src="@drawable/high_score_button"
+            android:contentDescription="@string/high_scores_button_text" />
 
-        <Button
+        <ImageButton
             style="@style/main_menu_button_style"
             android:id="@+id/button_quit"
-            android:text="@string/quit_button_text" />
+            android:src="@drawable/quit_button"
+            android:contentDescription="@string/quit_button_text" />
 
     </LinearLayout>
 
@@ -61,17 +95,17 @@
         android:visibility="gone" >
 
         <Button
-            style="@style/main_menu_button_style"
+            style="@style/main_menu_button_style_xml"
             android:id="@+id/button_single_device"
             android:text="@string/single_device_button_text"/>
 
         <Button
-            style="@style/main_menu_button_style"
+            style="@style/main_menu_button_style_xml"
             android:id="@+id/button_via_bluetooth"
             android:text="@string/play_via_bluetooth_button_text" />
 
         <Button
-            style="@style/main_menu_button_style"
+            style="@style/main_menu_button_style_xml"
             android:layout_marginTop="80dp"
             android:id="@+id/button_back_play_menu"
             android:text="@string/back_button_text" />

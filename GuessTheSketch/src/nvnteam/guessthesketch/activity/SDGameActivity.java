@@ -194,7 +194,7 @@ public class SDGameActivity extends Activity implements OnClickListener
                                 WordBase.getReallyHardWord() };
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Pick a Word!");
+        builder.setTitle(R.string.pick_a_word_dialog_text);
         builder.setItems(words, new DialogInterface.OnClickListener() 
         {
             public void onClick(DialogInterface dialog, int item)

@@ -34,5 +34,6 @@
 	<!-- In-Game Texts -->
 	<string name="finish_drawing_button_text">Finish!</string>
 	<string name="pick_a_word_dialog_text">Pick a Word!</string>
+	<string name="guesser_edit_text">Type Your Guess Here</string>
 
 </resources>
