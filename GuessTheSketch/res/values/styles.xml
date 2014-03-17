@@ -4,7 +4,7 @@
         Base application theme, dependent on API level. This theme is replaced
         by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
     -->
-    <style name="AppBaseTheme" parent="android:Theme.Light">
+    <style name="AppBaseTheme" parent="android:Theme.Black.NoTitleBar.Fullscreen">
         <!--
             Theme customizations available in newer API levels can go in
             res/values-vXX/styles.xml, while customizations related to
@@ -13,31 +13,32 @@
     </style>
 
     <!-- Application theme. -->
-    <style name="AppTheme" parent="AppBaseTheme">
+    <style name="app_theme" parent="AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+        <item name="android:windowBackground">@drawable/background_tiled</item>
     </style>
 
     <!-- Button Styles -->
-    <style name="main_menu_button_style_xml">
-        <item name="android:layout_width">@dimen/menu_button_width</item>
-        <item name="android:layout_height">@dimen/menu_button_height</item>
+    <style name="style_button_main_menu_xml">
+        <item name="android:layout_width">@dimen/button_main_menu_width</item>
+        <item name="android:layout_height">@dimen/button_main_menu_height</item>
         <item name="android:layout_gravity">center_horizontal</item>
         <item name="android:layout_marginBottom">10dp</item>
-        <item name="android:background">@drawable/menu_button</item>
+        <item name="android:background">@drawable/button_main_menu</item>
 	    <item name="android:textSize">@dimen/menu_font_size</item>
 	    <item name="android:textColor">#FFFFFFFF</item>
     </style>
-    
-    <style name="main_menu_button_style">
+
+    <style name="style_button_main_menu">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_gravity">center_horizontal</item>
         <item name="android:layout_marginBottom">20dp</item>
         <item name="android:background">@null</item>
     </style>
-    
-    <!-- Main Menu Logo Style -->
-    <style name="main_menu_logo_style">
+
+    <!-- General Styles -->
+    <style name="wrap_content_style">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
     </style>

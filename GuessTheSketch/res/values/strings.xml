@@ -13,27 +13,30 @@
 	<string name="lrg">Large</string>
 
     <!-- Main Menu Texts -->
-	<string name="play_button_text">Play</string>
-	<string name="free_drawing_button_text">Free Drawing</string>
-	<string name="tutorial_button_text">Tutorial</string>
-	<string name="high_scores_button_text">High Scores</string>
-	<string name="quit_button_text">Quit</string>
-	
-	<string name="single_device_button_text">Single-Device Mode</string>
-	<string name="play_via_bluetooth_button_text">Play via Bluetooth</string>
-	<string name="back_button_text">Back</string>
-	
+	<string name="text_button_play">Play</string>
+	<string name="text_button_free_drawing">Free Drawing</string>
+	<string name="text_button_tutorial">Tutorial</string>
+	<string name="text_button_high_scores">High Scores</string>
+	<string name="text_button_quit">Quit</string>
+
+	<string name="text_button_single_device_mode">Single-Device Mode</string>
+	<string name="text_button_play_via_bluetooth">via Bluetooth</string>
+	<string name="text_button_back">Back</string>
+
 	<!-- Pre-Game Texts -->
-	<string name="start_button_text">Start</string>
-	<string name="team_one_text_view_hint">Team One</string>
-	<string name="team_two_text_view_hint">Team Two</string>
+	<string name="text_button_start">Start</string>
+	<string name="hint_text_view_team_one">Team One</string>
+	<string name="hint_text_view_team_two">Team Two</string>
 
 	<!-- Descriptions for Image Views -->
-	<string name="desc_logo">Main Logo</string>
-	
+	<string name="content_desc_logo_game">Main Logo</string>
+	<string name="content_desc_logo_team">Team Logo</string>
+	<string name="content_desc_upper_left">Upper Left</string>
+	<string name="content_desc_lower_left">Lower Left</string>
+
 	<!-- In-Game Texts -->
-	<string name="finish_drawing_button_text">Finish!</string>
-	<string name="pick_a_word_dialog_text">Pick a Word!</string>
-	<string name="guesser_edit_text">Type Your Guess Here</string>
+	<string name="text_button_finish_drawing">Finish!</string>
+	<string name="text_dialog_pick_a_word">Pick a Word!</string>
+	<string name="hint_edit_text_guesser">Type Your Guess Here</string>
 
 </resources>

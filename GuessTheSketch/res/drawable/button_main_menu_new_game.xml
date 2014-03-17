@@ -2,11 +2,11 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item android:state_pressed="true"
-          android:drawable="@drawable/free_draw_pressed" />
+          android:drawable="@drawable/button_new_game_pressed" />
 
     <item android:state_focused="true"
-          android:drawable="@drawable/free_draw_pressed" />
+          android:drawable="@drawable/button_new_game_pressed" />
 
-    <item android:drawable="@drawable/free_draw" />
+    <item android:drawable="@drawable/button_new_game" />
 
 </selector>

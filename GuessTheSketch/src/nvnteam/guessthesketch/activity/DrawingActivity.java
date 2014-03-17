@@ -8,7 +8,6 @@ import nvnteam.guessthesketch.widget.DrawingView;
 
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -20,14 +19,13 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 
-public class DrawingActivity extends Activity implements OnClickListener 
+public class DrawingActivity extends FullScreenActivity implements OnClickListener 
 {
 	//custom drawing view
 	private DrawingView m_drawView;
 	//buttons
 	private ImageButton m_currPaint;
 	private ImageButton m_drawBtn; 
-	private ImageButton m_eraseBtn; 
 	private ImageButton m_newBtn; 
 	private ImageButton m_saveBtn;
 	//sizes
@@ -60,10 +58,6 @@ public class DrawingActivity extends Activity implements OnClickListener
 		//set initial size
 		m_drawView.setBrushSize(m_mediumBrush);
 
-		//erase button
-		m_eraseBtn = (ImageButton)findViewById(R.id.erase_btn);
-		m_eraseBtn.setOnClickListener(this);
-
 		//new button
 		m_newBtn = (ImageButton)findViewById(R.id.new_btn);
 		m_newBtn.setOnClickListener(this);
@@ -85,7 +79,6 @@ public class DrawingActivity extends Activity implements OnClickListener
 		//use chosen color
 
 		//set erase false
-	    m_drawView.setErase(false);
 	    m_drawView.setBrushSize(m_drawView.getLastBrushSize());
 
 		if(view != m_currPaint){
@@ -112,7 +105,7 @@ public class DrawingActivity extends Activity implements OnClickListener
 			smallBtn.setOnClickListener(new OnClickListener(){
 				@Override
 				public void onClick(View v) {
-				    m_drawView.setErase(false);
+				    
 				    m_drawView.setBrushSize(m_smallBrush);
 				    m_drawView.setLastBrushSize(m_smallBrush);
 					brushDialog.dismiss();
@@ -122,7 +115,7 @@ public class DrawingActivity extends Activity implements OnClickListener
 			mediumBtn.setOnClickListener(new OnClickListener(){
 				@Override
 				public void onClick(View v) {
-				    m_drawView.setErase(false);
+				    
 				    m_drawView.setBrushSize(m_mediumBrush);
 				    m_drawView.setLastBrushSize(m_mediumBrush);
 					brushDialog.dismiss();
@@ -132,48 +125,13 @@ public class DrawingActivity extends Activity implements OnClickListener
 			largeBtn.setOnClickListener(new OnClickListener(){
 				@Override
 				public void onClick(View v) {
-				    m_drawView.setErase(false);
+				    
 				    m_drawView.setBrushSize(m_largeBrush);
 				    m_drawView.setLastBrushSize(m_largeBrush);
 					brushDialog.dismiss();
 				}
 			});
 			//show and wait for user interaction
-			brushDialog.show();
-		}
-		else if(view.getId()==R.id.erase_btn){
-			//switch to erase - choose size
-			final Dialog brushDialog = new Dialog(this);
-			brushDialog.setTitle("Eraser size:");
-			brushDialog.setContentView(R.layout.brush_chooser);
-			//size buttons
-			ImageButton smallBtn = (ImageButton)brushDialog.findViewById(R.id.small_brush);
-			smallBtn.setOnClickListener(new OnClickListener(){
-				@Override
-				public void onClick(View v) {
-				    m_drawView.setErase(true);
-				    m_drawView.setBrushSize(m_smallBrush);
-					brushDialog.dismiss();
-				}
-			});
-			ImageButton mediumBtn = (ImageButton)brushDialog.findViewById(R.id.medium_brush);
-			mediumBtn.setOnClickListener(new OnClickListener(){
-				@Override
-				public void onClick(View v) {
-				    m_drawView.setErase(true);
-				    m_drawView.setBrushSize(m_mediumBrush);
-					brushDialog.dismiss();
-				}
-			});
-			ImageButton largeBtn = (ImageButton)brushDialog.findViewById(R.id.large_brush);
-			largeBtn.setOnClickListener(new OnClickListener(){
-				@Override
-				public void onClick(View v) {
-				    m_drawView.setErase(true);
-				    m_drawView.setBrushSize(m_largeBrush);
-					brushDialog.dismiss();
-				}
-			});
 			brushDialog.show();
 		}
 		else if(view.getId()==R.id.new_btn){

@@ -1,114 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/background_layout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/background_tiled" >
+	android:id="@+id/layout_background"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent" >
 
     <ImageView
-        android:id="@+id/dev_logo_view"
-        style="@style/main_menu_logo_style"
+        android:id="@+id/image_view_logo_team"
+        style="@style/wrap_content_style"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:src="@drawable/logo"
-        android:contentDescription="@string/desc_logo" >
-    </ImageView>
-    
-    <ImageView
-        android:id="@+id/lower_left_view"
-        style="@style/main_menu_logo_style"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentBottom="true"
-        android:src="@drawable/lower_left_main_menu"
-        android:contentDescription="@string/desc_logo" >
-    </ImageView>
-    
-    <ImageView
-        android:id="@+id/upper_left_view"
-        style="@style/main_menu_logo_style"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:src="@drawable/upper_left_main_menu"
-        android:contentDescription="@string/desc_logo" >
+        android:src="@drawable/logo_team"
+        android:contentDescription="@string/content_desc_logo_team" >
     </ImageView>
 
     <ImageView
-        android:id="@+id/logo_view"
-        style="@style/main_menu_logo_style"
+        android:id="@+id/image_view_lower_left"
+        style="@style/wrap_content_style"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
+        android:src="@drawable/main_menu_lower_left"
+        android:contentDescription="@string/content_desc_lower_left" >
+    </ImageView>
+
+    <ImageView
+        android:id="@+id/image_view_upper_left"
+        style="@style/wrap_content_style"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/main_menu_upper_left"
+        android:contentDescription="@string/content_desc_upper_left" >
+    </ImageView>
+
+    <ImageView
+        android:id="@+id/image_view_logo_game"
+        style="@style/wrap_content_style"
         android:layout_marginLeft="120dp"
         android:layout_marginRight="40dp" 
         android:layout_centerVertical="true"
-        android:src="@drawable/guess_the_sketch_logo"
-        android:contentDescription="@string/desc_logo" >
+        android:src="@drawable/logo_game"
+        android:contentDescription="@string/content_desc_logo_game" >
     </ImageView>
 
     <LinearLayout
-        android:id="@+id/main_menu_linear_layout"
+        android:id="@+id/linear_layout_main_menu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/logo_view"
+        android:layout_toRightOf="@id/image_view_logo_game"
         android:layout_centerVertical="true"
         android:animateLayoutChanges="true"
         android:orientation="vertical" >
 
         <ImageButton
-            style="@style/main_menu_button_style"
-            android:id="@+id/button_play"
-            android:src="@drawable/new_game_button"
-            android:contentDescription="@string/play_button_text"/>
+            style="@style/style_button_main_menu"
+            android:id="@+id/button_main_menu_play"
+            android:src="@drawable/button_main_menu_new_game"
+            android:contentDescription="@string/text_button_play"/>
 
         <ImageButton
-            style="@style/main_menu_button_style"
-            android:id="@+id/button_free_drawing"
-            android:src="@drawable/free_draw_button"
-            android:contentDescription="@string/free_drawing_button_text" />
+            style="@style/style_button_main_menu"
+            android:id="@+id/button_main_menu_free_drawing"
+            android:src="@drawable/button_main_menu_free_drawing"
+            android:contentDescription="@string/text_button_free_drawing" />
 
         <ImageButton
-            style="@style/main_menu_button_style"
-            android:id="@+id/button_tutorial"
-            android:src="@drawable/tutorial_button"
-            android:contentDescription="@string/tutorial_button_text" />
+            style="@style/style_button_main_menu"
+            android:id="@+id/button_main_menu_tutorial"
+            android:src="@drawable/button_main_menu_tutorial"
+            android:contentDescription="@string/text_button_tutorial" />
 
         <ImageButton
-            style="@style/main_menu_button_style"
-            android:id="@+id/button_high_scores"
-            android:src="@drawable/high_score_button"
-            android:contentDescription="@string/high_scores_button_text" />
+            style="@style/style_button_main_menu"
+            android:id="@+id/button_main_menu_high_scores"
+            android:src="@drawable/button_main_menu_high_scores"
+            android:contentDescription="@string/text_button_high_scores" />
 
         <ImageButton
-            style="@style/main_menu_button_style"
-            android:id="@+id/button_quit"
-            android:src="@drawable/quit_button"
-            android:contentDescription="@string/quit_button_text" />
+            style="@style/style_button_main_menu"
+            android:id="@+id/button_main_menu_quit"
+            android:src="@drawable/button_main_menu_quit"
+            android:contentDescription="@string/text_button_quit" />
 
     </LinearLayout>
 
     <LinearLayout
-            android:id="@+id/play_menu_linear_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/logo_view"
-            android:layout_centerVertical="true"
-            android:animateLayoutChanges="true"
-            android:orientation="vertical"
-            android:visibility="gone" >
+        android:id="@+id/linear_layout_play_menu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/image_view_logo_game"
+        android:layout_centerVertical="true"
+        android:animateLayoutChanges="true"
+        android:orientation="vertical"
+        android:visibility="gone" >
 
-            <Button
-	            style="@style/main_menu_button_style_xml"
-	            android:id="@+id/button_single_device"
-	            android:text="@string/single_device_button_text"/>
+        <Button
+	        style="@style/style_button_main_menu_xml"
+	        android:id="@+id/button_single_device"
+	        android:text="@string/text_button_single_device_mode"/>
 
-	        <Button
-	            style="@style/main_menu_button_style_xml"
-	            android:id="@+id/button_via_bluetooth"
-	            android:text="@string/play_via_bluetooth_button_text" />
-	
-	        <Button
-	            style="@style/main_menu_button_style_xml"
-	            android:layout_marginTop="80dp"
-	            android:id="@+id/button_back_play_menu"
-	            android:text="@string/back_button_text" />
+	    <Button
+	        style="@style/style_button_main_menu_xml"
+	        android:id="@+id/button_via_bluetooth"
+	        android:text="@string/text_button_play_via_bluetooth" />
+
+	    <Button
+	        style="@style/style_button_main_menu_xml"
+	        android:layout_marginTop="80dp"
+	        android:id="@+id/button_back_play_menu"
+	        android:text="@string/text_button_back" />
 
     </LinearLayout>
+
 </RelativeLayout>

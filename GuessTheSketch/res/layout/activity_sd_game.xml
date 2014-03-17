@@ -19,17 +19,16 @@
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_alignParentLeft="true"
-            android:text="@string/finish_drawing_button_text" />
+            android:text="@string/text_button_finish_drawing" />
 
-        <TextView
+        <nvnteam.guessthesketch.widget.LetterSpacingTextView
 	        android:id="@+id/text_view_word_to_guess"
 	        android:layout_width="wrap_content"
 	        android:layout_height="50dp"
 	        android:layout_centerInParent="true"
-	        android:textColor="#FFFF0000"
+	        android:textColor="#FFFFFFFF"
 	        android:textSize="30sp"
-	        android:textAlignment="center"
-	        />
+	        android:textAlignment="center" />
 
         <TextView
             android:id="@+id/text_view_count_down"
@@ -38,17 +37,17 @@
             android:layout_alignParentRight="true"
             android:textColor="#FF00FF00"
             android:textSize="30sp"
-            android:textAlignment="center"
-            />
+            android:textAlignment="center" />
 
     </RelativeLayout>
-    
+
     <!-- Color Palette -->
     <LinearLayout
         android:id="@+id/paint_colors"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:animateLayoutChanges="true"
         android:orientation="horizontal" >
 
         <ImageButton
@@ -171,18 +170,19 @@
             android:src="@drawable/paint"
             android:tag="#FF000000" />
     </LinearLayout>
-    
+
     <EditText
-        android:id="@+id/text_view_guesser"
+        android:id="@+id/edit_text_guesser"
         android:layout_width="match_parent"
-        android:layout_height="45dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
         android:layout_gravity="center_vertical"
         android:inputType="text"
-        android:imeOptions="actionDone"
+        android:imeOptions="actionGo"
         android:maxLines="1"
-        android:hint="@string/guesser_edit_text"
-        android:gravity="center_vertical"
+        android:hint="@string/hint_edit_text_guesser"
+        android:gravity="center_horizontal"
+        android:textSize="25sp"
         android:visibility="gone" />
 
     <!-- Custom View -->
@@ -196,5 +196,5 @@
         android:layout_marginTop="3dp"
         android:layout_weight="1"
         android:background="#FFFFFFFF" />
-    
+
 </LinearLayout>

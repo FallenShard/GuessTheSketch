@@ -14,7 +14,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
 import android.os.SystemClock;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -40,7 +39,6 @@ public class DrawingView extends View
 	
 	private boolean m_shouldPlayback = false;
 
-	private boolean erase = false;
 	private DrawingNode m_currentNode = new DrawingNode();
 	
 	
@@ -140,14 +138,6 @@ public class DrawingView extends View
 	public float getLastBrushSize()
 	{
 		return m_lastBrushSize;
-	}
-
-	//set erase true or false
-	public void setErase(boolean isErase)
-	{
-		erase=isErase;
-		if (erase) m_drawPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
-		else m_drawPaint.setXfermode(null);
 	}
 
 	//start new drawing
