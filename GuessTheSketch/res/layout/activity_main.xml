@@ -50,34 +50,39 @@
         android:animateLayoutChanges="true"
         android:orientation="vertical" >
 
-        <ImageButton
+        <Button
             style="@style/style_button_main_menu"
-            android:id="@+id/button_main_menu_play"
-            android:src="@drawable/button_main_menu_new_game"
-            android:contentDescription="@string/text_button_play"/>
+            android:id="@+id/button_main_menu_new_game"
+            android:background="@drawable/button_main_menu_green"
+            android:text="@string/text_button_new_game"
+            android:contentDescription="@string/text_button_new_game"/>
 
-        <ImageButton
+        <Button
             style="@style/style_button_main_menu"
             android:id="@+id/button_main_menu_free_drawing"
-            android:src="@drawable/button_main_menu_free_drawing"
+            android:background="@drawable/button_main_menu_red"
+            android:text="@string/text_button_free_drawing"
             android:contentDescription="@string/text_button_free_drawing" />
 
-        <ImageButton
+        <Button
             style="@style/style_button_main_menu"
             android:id="@+id/button_main_menu_tutorial"
-            android:src="@drawable/button_main_menu_tutorial"
+            android:background="@drawable/button_main_menu_purple"
+            android:text="@string/text_button_tutorial"
             android:contentDescription="@string/text_button_tutorial" />
 
-        <ImageButton
+        <Button
             style="@style/style_button_main_menu"
             android:id="@+id/button_main_menu_high_scores"
-            android:src="@drawable/button_main_menu_high_scores"
+            android:background="@drawable/button_main_menu_yellow"
+            android:text="@string/text_button_high_scores"
             android:contentDescription="@string/text_button_high_scores" />
 
-        <ImageButton
+        <Button
             style="@style/style_button_main_menu"
             android:id="@+id/button_main_menu_quit"
-            android:src="@drawable/button_main_menu_quit"
+            android:background="@drawable/button_main_menu_blue"
+            android:text="@string/text_button_quit"
             android:contentDescription="@string/text_button_quit" />
 
     </LinearLayout>
@@ -93,20 +98,26 @@
          android:visibility="gone" >
 
          <Button
-             style="@style/style_button_main_menu_xml"
+             style="@style/style_button_main_menu"
              android:id="@+id/button_single_device"
-             android:text="@string/text_button_single_device_mode"/>
+             android:background="@drawable/button_main_menu_green"
+             android:text="@string/text_button_single_device_mode"
+             android:contentDescription="@string/text_button_single_device_mode" />
 
          <Button
-             style="@style/style_button_main_menu_xml"
+             style="@style/style_button_main_menu"
              android:id="@+id/button_via_bluetooth"
-             android:text="@string/text_button_play_via_bluetooth" />
+             android:background="@drawable/button_main_menu_red"
+             android:text="@string/text_button_play_via_bluetooth"
+             android:contentDescription="@string/text_button_play_via_bluetooth" />
 
          <Button
-             style="@style/style_button_main_menu_xml"
+             style="@style/style_button_main_menu"
              android:layout_marginTop="80dp"
              android:id="@+id/button_back_play_menu"
-             android:text="@string/text_button_back" />
+             android:background="@drawable/button_main_menu_blue"
+             android:text="@string/text_button_back"
+             android:contentDescription="@string/text_button_back" />
 
     </LinearLayout>
 

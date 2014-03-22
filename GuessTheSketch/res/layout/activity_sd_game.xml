@@ -27,7 +27,7 @@
 	        android:layout_height="50dp"
 	        android:layout_centerInParent="true"
 	        android:textColor="#FFFFFFFF"
-	        android:textSize="30sp"
+	        android:textSize="40sp"
 	        android:textAlignment="center" />
 
         <TextView
@@ -36,15 +36,16 @@
             android:layout_height="50dp"
             android:layout_alignParentRight="true"
             android:textColor="#FF00FF00"
-            android:textSize="30sp"
+            android:textSize="40sp"
             android:textAlignment="center" />
 
     </RelativeLayout>
 
     <!-- Color Palette -->
+
     <LinearLayout
         android:id="@+id/paint_colors"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:animateLayoutChanges="true"
@@ -169,6 +170,7 @@
             android:onClick="paintClicked"
             android:src="@drawable/paint"
             android:tag="#FF000000" />
+
     </LinearLayout>
 
     <EditText

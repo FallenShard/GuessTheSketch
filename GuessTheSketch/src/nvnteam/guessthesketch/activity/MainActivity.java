@@ -1,6 +1,8 @@
 package nvnteam.guessthesketch.activity;
 
 import nvnteam.guessthesketch.R;
+import nvnteam.guessthesketch.util.FontUtil;
+import nvnteam.guessthesketch.util.FontUtil.FontType;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -9,15 +11,14 @@ import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.ImageButton;
 
 public class MainActivity extends FullScreenActivity
 {
-    ImageButton m_playBtn;
-    ImageButton m_freeDrawingBtn;
-    ImageButton m_tutorialBtn;
-    ImageButton m_highScoresBtn;
-    ImageButton m_quitBtn;
+    Button m_newGameBtn;
+    Button m_freeDrawingBtn;
+    Button m_tutorialBtn;
+    Button m_highScoresBtn;
+    Button m_quitBtn;
 
     Button m_singleDeviceBtn;
     Button m_viaBluetoothBtn;
@@ -43,10 +44,15 @@ public class MainActivity extends FullScreenActivity
         initUI();
         initListeners();
 
-        Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/goodfoot.ttf");
+        Typeface tf = FontUtil.getTypeface(this, FontType.MAIN_FONT);
         m_singleDeviceBtn.setTypeface(tf);
         m_viaBluetoothBtn.setTypeface(tf);
         m_backBtn.setTypeface(tf);
+        m_newGameBtn.setTypeface(tf);
+        m_freeDrawingBtn.setTypeface(tf);
+        m_tutorialBtn.setTypeface(tf);
+        m_highScoresBtn.setTypeface(tf);
+        m_quitBtn.setTypeface(tf);
 
         m_mainLayout.startAnimation(m_scaleIn);
         m_gamelogo.startAnimation(m_scaleIn);
@@ -57,11 +63,11 @@ public class MainActivity extends FullScreenActivity
 
     private void initUI()
     {
-        m_playBtn = (ImageButton) findViewById(R.id.button_main_menu_play);
-        m_freeDrawingBtn = (ImageButton) findViewById(R.id.button_main_menu_free_drawing);
-        m_tutorialBtn = (ImageButton) findViewById(R.id.button_main_menu_tutorial);
-        m_highScoresBtn = (ImageButton) findViewById(R.id.button_main_menu_high_scores);
-        m_quitBtn = (ImageButton) findViewById(R.id.button_main_menu_quit);
+        m_newGameBtn = (Button) findViewById(R.id.button_main_menu_new_game);
+        m_freeDrawingBtn = (Button) findViewById(R.id.button_main_menu_free_drawing);
+        m_tutorialBtn = (Button) findViewById(R.id.button_main_menu_tutorial);
+        m_highScoresBtn = (Button) findViewById(R.id.button_main_menu_high_scores);
+        m_quitBtn = (Button) findViewById(R.id.button_main_menu_quit);
         m_singleDeviceBtn = (Button) findViewById(R.id.button_single_device);
         m_viaBluetoothBtn = (Button) findViewById(R.id.button_via_bluetooth);
         m_backBtn = (Button) findViewById(R.id.button_back_play_menu);
@@ -81,7 +87,7 @@ public class MainActivity extends FullScreenActivity
 
     private void initListeners()
     {
-        m_playBtn.setOnClickListener(new OnClickListener()
+        m_newGameBtn.setOnClickListener(new OnClickListener()
         {
            @Override
            public void onClick(View v)

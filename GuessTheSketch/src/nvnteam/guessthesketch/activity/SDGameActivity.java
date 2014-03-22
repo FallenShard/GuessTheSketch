@@ -7,6 +7,7 @@ import nvnteam.guessthesketch.widget.LetterSpacingTextView;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.SystemClock;
@@ -44,7 +45,7 @@ public class SDGameActivity extends FullScreenActivity
 
     /* Game logic elements */
     private String[] m_teamNames;
-    private String m_currentWord = new String("?");
+    private String m_currentWord = new String("");
 
     private int m_currentTurn = 0;
     private static int MaxTeams = 2;
@@ -65,7 +66,9 @@ public class SDGameActivity extends FullScreenActivity
         {
             m_countDownTextView.setText(Long.toString(millisUntilFinished / 1000));
             m_currentTimeLeft = millisUntilFinished;
-            m_drawView.pullTimeStamp(millisUntilFinished);
+            int redComp = (255 * (60000 - (int)millisUntilFinished) / 60000) << 16;
+            int greenComp = (255 * ((int)millisUntilFinished) / 60000) << 8;
+            m_countDownTextView.setTextColor(0xFF000000 | redComp | greenComp);
         }
 
         public void onFinish()
@@ -86,12 +89,17 @@ public class SDGameActivity extends FullScreenActivity
         initUI();
         initListeners();
 
+        Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/Villa.ttf");
+        m_mainWordTextView.setTypeface(tf);
         m_mainWordTextView.setLetterSpacing(1.3f);
+
+        m_countDownTextView.setTypeface(tf);
 
         m_teamNames = new String[2];
         m_teamNames[0] = getIntent().getStringExtra(SDPreGameActivity.TeamOneNameTag);
         m_teamNames[1] = getIntent().getStringExtra(SDPreGameActivity.TeamTwoNameTag);
 
+        m_guesserEditText.setTypeface(tf);
         m_guesserEditText.setInputType(m_guesserEditText.getInputType()
                                      | EditorInfo.TYPE_TEXT_FLAG_NO_SUGGESTIONS
                                      | EditorInfo.TYPE_TEXT_VARIATION_FILTER);
@@ -114,10 +122,14 @@ public class SDGameActivity extends FullScreenActivity
 
     public void startPickingPhase()
     {
-        final String words[] ={ WordBase.getEasyWord(),
-                                WordBase.getMediumWord(),
-                                WordBase.getHardWord(),
-                                WordBase.getReallyHardWord() };
+        m_guesserEditText.setText("");
+        m_countDownTextView.setText("");
+        m_mainWordTextView.setText("");
+        m_timer.cancel();
+        final String words[] = { WordBase.getEasyWord(),
+                                 WordBase.getMediumWord(),
+                                 WordBase.getHardWord(),
+                                 WordBase.getReallyHardWord() };
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.text_dialog_pick_a_word);
@@ -187,7 +199,10 @@ public class SDGameActivity extends FullScreenActivity
     {
         handleEvaluation();
         if (m_gameState == State.Over)
-                return;
+        {
+            gameOver();
+            return;
+        }
         
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(m_teamNames[0]+ ": " + m_currentPoints[0] + 
@@ -219,13 +234,10 @@ public class SDGameActivity extends FullScreenActivity
     {
         if (m_currentTimeLeft > 0)
             m_currentPoints[m_currentTurn] += m_wordPoints 
-                                           + (float)m_currentTimeLeft / 2000;
+                                           + (float)m_currentTimeLeft / 6000;
 
         if (m_currentPoints[m_currentTurn] > 100.f)
-        {
             m_gameState = State.Over;
-            gameOver();
-        }
 
         m_currentTurn = (m_currentTurn + 1) % MaxTeams;
     }
@@ -244,6 +256,23 @@ public class SDGameActivity extends FullScreenActivity
                });
         AlertDialog alert = builder.create();
         alert.show();
+    }
+
+    @Override
+    public void onBackPressed() 
+    {
+        new AlertDialog.Builder(this)
+               .setMessage("Are you sure you want to exit?")
+               .setCancelable(false)
+               .setPositiveButton("Yes", new DialogInterface.OnClickListener() 
+               {
+                   public void onClick(DialogInterface dialog, int id) 
+                   {
+                        SDGameActivity.super.onBackPressed();
+                   }
+               })
+               .setNegativeButton("No", null)
+               .show();
     }
 
     private void initUI()

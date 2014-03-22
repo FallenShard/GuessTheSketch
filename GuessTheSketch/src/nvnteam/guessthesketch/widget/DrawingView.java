@@ -24,24 +24,17 @@ import android.view.View;
 public class DrawingView extends View 
 {
 	private Path m_drawPath;
-
 	private Paint m_drawPaint; 
 	private Paint m_canvasPaint;
-
 	private int m_paintColor = 0xFF660000;
-
 	private Canvas m_drawCanvas;
-
 	private Bitmap m_canvasBitmap;
 
 	private float m_brushSize; 
 	private float m_lastBrushSize;
-	
-	private boolean m_shouldPlayback = false;
 
+	private volatile boolean m_shouldPlayback = false;
 	private DrawingNode m_currentNode = new DrawingNode();
-	
-	
 	private Queue<DrawingNode> m_playbackQueue = new LinkedList<DrawingNode>();
 
 	public DrawingView(Context context, AttributeSet attrs)
@@ -87,30 +80,34 @@ public class DrawingView extends View
 	@Override
 	public boolean onTouchEvent(MotionEvent event)
 	{
-		float touchX = event.getX();
-		float touchY = event.getY();
-		m_currentNode.setAttrib(touchX, touchY, event.getAction(), SystemClock.uptimeMillis(),
-		        m_drawPaint.getColor());
-		//respond to down, move and up events
-		switch (event.getAction()) 
-		{
-    		case MotionEvent.ACTION_DOWN:
-    		    m_drawPath.moveTo(touchX, touchY);
-    			break;
-    		case MotionEvent.ACTION_MOVE:
-    		    m_drawPath.lineTo(touchX, touchY);
-    			break;
-    		case MotionEvent.ACTION_UP:
-    		    m_drawPath.lineTo(touchX, touchY);
-    		    m_drawCanvas.drawPath(m_drawPath, m_drawPaint);
-    		    m_drawPath.reset();
-    			break;
-    		default:
-    			return false;
-		}
-		m_playbackQueue.add(new DrawingNode(m_currentNode));
-		invalidate();
-		return true;
+	    if (!m_shouldPlayback)
+	    {
+    		float touchX = event.getX();
+    		float touchY = event.getY();
+    		m_currentNode.setAttrib(touchX, touchY, event.getAction(), SystemClock.uptimeMillis(),
+    		        m_drawPaint.getColor());
+    		//respond to down, move and up events
+    		switch (event.getAction()) 
+    		{
+        		case MotionEvent.ACTION_DOWN:
+        		    m_drawPath.moveTo(touchX, touchY);
+        			break;
+        		case MotionEvent.ACTION_MOVE:
+        		    m_drawPath.lineTo(touchX, touchY);
+        			break;
+        		case MotionEvent.ACTION_UP:
+        		    m_drawPath.lineTo(touchX, touchY);
+        		    m_drawCanvas.drawPath(m_drawPath, m_drawPaint);
+        		    m_drawPath.reset();
+        			break;
+        		default:
+        			return false;
+    		}
+    		m_playbackQueue.add(new DrawingNode(m_currentNode));
+    		invalidate();
+    		return true;
+	    }
+	    return false;
 	}
 
 	//update color
@@ -126,7 +123,7 @@ public class DrawingView extends View
 	{
 		float pixelAmount = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 
 				newSize, getResources().getDisplayMetrics());
-		m_brushSize=pixelAmount;
+		m_brushSize = pixelAmount;
 		m_drawPaint.setStrokeWidth(m_brushSize);
 	}
 
@@ -146,12 +143,7 @@ public class DrawingView extends View
 	    m_drawCanvas.drawColor(0, PorterDuff.Mode.CLEAR);
 		invalidate();
 	}
-	
-	public void pullTimeStamp(long milliSec)
-	{
-	    m_currentNode.setTimeStamp(milliSec);
-	}
-	
+
 	public void clearQueue()
 	{
 	    m_playbackQueue.clear();
@@ -175,6 +167,7 @@ public class DrawingView extends View
 	                while ((SystemClock.uptimeMillis() < m_playbackQueue.peek().getTimeStamp() + diff));
 	                DrawingNode firstNode = m_playbackQueue.remove();
 	                m_drawPaint.setColor(firstNode.getColor());
+	                
 	                switch (firstNode.getActionType()) 
 	                {
 	                    case MotionEvent.ACTION_DOWN:
@@ -189,7 +182,8 @@ public class DrawingView extends View
 	                        m_drawPath.reset();
 	                        break;
 	                }
-	                postInvalidate();
+	                if (m_shouldPlayback)
+	                    postInvalidate();
 	            }
 	            if (!m_playbackQueue.isEmpty())
 	                m_playbackQueue.clear();

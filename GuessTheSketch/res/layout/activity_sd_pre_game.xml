@@ -29,19 +29,21 @@
         android:ems="20" />
 
     <Button
-        style="@style/style_button_main_menu_xml"
+        style="@style/style_button_main_menu"
         android:id="@+id/button_start_sd_pre_game"
         android:layout_below="@id/edit_text_team_two"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
+        android:background="@drawable/button_main_menu_green"
         android:text="@string/text_button_start" />
 
     <Button
-        style="@style/style_button_main_menu_xml"
+        style="@style/style_button_main_menu"
         android:id="@+id/button_back_sd_pre_game"
         android:layout_below="@id/button_start_sd_pre_game"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="80dp"
+        android:background="@drawable/button_main_menu_blue"
         android:text="@string/text_button_back" />
 
 </RelativeLayout>

@@ -2,6 +2,7 @@ package nvnteam.guessthesketch.activity;
 
 import nvnteam.guessthesketch.R;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -26,6 +27,10 @@ public class SDPreGameActivity extends FullScreenActivity
         setContentView(R.layout.activity_sd_pre_game);
         initUI();
         initListeners();
+
+        Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/Villa.ttf");
+        m_backBtn.setTypeface(tf);
+        m_startBtn.setTypeface(tf);
     }
 
     private void initUI()

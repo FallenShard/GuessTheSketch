@@ -16,6 +16,10 @@
 		android:label="@string/app_name"
 		android:theme="@style/app_theme" >
 
+	    <activity
+	        android:name="nvnteam.guessthesketch.activity.FullScreenActivity" >
+        </activity>
+
 		<activity
             android:name="nvnteam.guessthesketch.activity.MainActivity" >
             <intent-filter>
