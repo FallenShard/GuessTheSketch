@@ -1,6 +1,17 @@
 package nvnteam.guessthesketch.dto;
 
-public class DrawingNode
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.io.StreamCorruptedException;
+import java.nio.ByteBuffer;
+
+public class DrawingNode implements Serializable
 {
     private float m_x;
     private float m_y;
@@ -63,5 +74,36 @@ public class DrawingNode
     public int getColor()
     {
         return m_color;
+    }
+    
+    public static byte[] serialize(DrawingNode node)
+    {/*
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        ObjectOutput out = new ObjectOutputStream(bos);
+        out.writeObject(node);
+        byte[] retVal = bos.toByteArray();
+        out.close();
+        bos.close();*/
+        ByteBuffer buffer = ByteBuffer.allocate(24);
+        buffer.putFloat(node.m_x);
+        buffer.putFloat(node.m_y);
+        buffer.putInt(node.m_actionType);
+        buffer.putLong(node.m_timeStamp);
+        buffer.putInt(node.m_color);
+        return buffer.array();
+    }
+
+    public static DrawingNode deserialize(byte[] array)
+    {/*
+        ByteArrayInputStream bis = new ByteArrayInputStream(array);
+        ObjectInput in = new ObjectInputStream(bis);
+        DrawingNode node = (DrawingNode) in.readObject();*/
+        DrawingNode node = new DrawingNode();
+        node.setAttrib(ByteBuffer.wrap(array, 0, 4).getFloat(), 
+                       ByteBuffer.wrap(array, 4, 4).getFloat(),
+                       ByteBuffer.wrap(array, 8, 4).getInt(),
+                       ByteBuffer.wrap(array, 12, 8).getLong(),
+                       ByteBuffer.wrap(array, 20, 4).getInt());
+        return node;
     }
 }

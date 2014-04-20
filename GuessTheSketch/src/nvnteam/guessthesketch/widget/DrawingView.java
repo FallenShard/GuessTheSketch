@@ -154,8 +154,24 @@ public class DrawingView extends View
 	    m_shouldPlayback = playback;
 	}
 	
+	public boolean getPlayback()
+    {
+        return m_shouldPlayback;
+    }
+	
+	public Deque<DrawingNode> getPlaybackDeque()
+	{
+	    return m_playbackQueue;
+	}
+	
+	public void putNode(DrawingNode node)
+	{
+	    m_playbackQueue.add(node);
+	}
+	
 	public void playBack(final long milliSec)
 	{
+	    if (!m_playbackQueue.isEmpty())
 	    new Thread(new Runnable()
 	    {
 	        public void run()
@@ -193,6 +209,8 @@ public class DrawingView extends View
 	
 	public void undo()
 	{
+	    try
+	    {
 	    while (m_undoStack.peek().getActionType() != MotionEvent.ACTION_DOWN)
 	    {
 	        m_undoStack.pop();
@@ -223,5 +241,10 @@ public class DrawingView extends View
 	    m_drawPaint.setColor(previousColor);
 	    m_paintColor = previousColor;
 	    invalidate();
+	    }
+	    catch (Exception ex)
+	    {
+
+	    }
 	}
 }
