@@ -13,5 +13,9 @@
 
 	<!-- Color Strip Size -->
 	<dimen name="color_strip_item_size">45dp</dimen>
+	
+	<!-- Dialog Items -->
+	<dimen name="dialog_text_font_size">24sp</dimen>
+	<dimen name="dialog_title_font_size">30sp</dimen>
 
 </resources>

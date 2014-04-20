@@ -3,28 +3,31 @@
     android:id="@+id/layout_background"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
-    
+
     <ImageView
         android:id="@+id/image_view_logo_team"
-        style="@style/wrap_content_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:src="@drawable/logo_team"
         android:contentDescription="@string/content_desc_logo_team" >
     </ImageView>
-    
+
     <ImageView
         android:id="@+id/image_view_lower_left"
-        style="@style/wrap_content_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentBottom="true"
         android:src="@drawable/main_menu_lower_left"
         android:contentDescription="@string/content_desc_lower_left" >
     </ImageView>
-    
+
     <ImageView
         android:id="@+id/image_view_upper_left"
-        style="@style/wrap_content_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:src="@drawable/main_menu_upper_left"
@@ -33,7 +36,8 @@
 
     <ImageView
         android:id="@+id/image_view_logo_game"
-        style="@style/wrap_content_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="120dp"
         android:layout_marginBottom="40dp" 
         android:layout_centerHorizontal="true"
@@ -55,7 +59,7 @@
             android:id="@+id/button_main_menu_new_game"
             android:background="@drawable/button_main_menu_green"
             android:text="@string/text_button_new_game"
-            android:contentDescription="@string/text_button_new_game"/>
+            android:contentDescription="@string/text_button_new_game" />
 
         <Button
             style="@style/style_button_main_menu"
@@ -95,7 +99,7 @@
          android:layout_centerHorizontal="true"
          android:animateLayoutChanges="true"
          android:orientation="vertical"
-         android:visibility="gone" >
+         android:visibility="visible" >
 
          <Button
              style="@style/style_button_main_menu"

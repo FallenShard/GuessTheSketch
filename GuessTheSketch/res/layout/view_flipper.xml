@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ViewFlipper
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/view_flipper"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:measureAllChildren="false">
+
+    <include layout="@layout/layout_connection"></include>
+    <include layout="@layout/activity_sd_pre_game"></include>
+    <include layout="@layout/activity_sd_game"></include>
+    <include layout="@layout/layout_bt_info"></include>
+
+</ViewFlipper>

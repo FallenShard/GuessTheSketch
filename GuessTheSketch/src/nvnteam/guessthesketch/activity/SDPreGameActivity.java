@@ -1,11 +1,13 @@
 package nvnteam.guessthesketch.activity;
 
+
 import nvnteam.guessthesketch.R;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -31,6 +33,20 @@ public class SDPreGameActivity extends FullScreenActivity
         Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/Villa.ttf");
         m_backBtn.setTypeface(tf);
         m_startBtn.setTypeface(tf);
+    }
+
+    @Override
+    public void onStop()
+    {
+        super.onStop();
+        InputMethodManager inputManager = (InputMethodManager) 
+                this.getSystemService(SDPreGameActivity.INPUT_METHOD_SERVICE);
+
+        View v = this.getCurrentFocus();
+        if(v == null)
+            return;
+
+        inputManager.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
     private void initUI()

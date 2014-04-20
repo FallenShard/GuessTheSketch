@@ -1,7 +1,12 @@
 package nvnteam.guessthesketch.activity;
 
+
 import nvnteam.guessthesketch.R;
 import nvnteam.guessthesketch.WordBase;
+import nvnteam.guessthesketch.dialog.GuessingDialog;
+import nvnteam.guessthesketch.util.FontUtils;
+import nvnteam.guessthesketch.util.FontUtils.FontType;
+import nvnteam.guessthesketch.util.GTSUtils;
 import nvnteam.guessthesketch.widget.DrawingView;
 import nvnteam.guessthesketch.widget.LetterSpacingTextView;
 import android.app.AlertDialog;
@@ -36,6 +41,7 @@ public class SDGameActivity extends FullScreenActivity
     private ImageButton m_currentPaint;
     private LetterSpacingTextView m_mainWordTextView;
     private Button m_finishBtn;
+    private Button m_undoBtn;
     private TextView m_countDownTextView;
     private LinearLayout m_colorStrip;
     private EditText m_guesserEditText;
@@ -60,7 +66,7 @@ public class SDGameActivity extends FullScreenActivity
     private long m_currentTimeLeft = 60000;
     private long m_currentTime = 0;             // Used to capture system time
 
-    private CountDownTimer m_timer = new CountDownTimer(60000, 100)
+    private CountDownTimer m_timer = new CountDownTimer(60000, 300)
     {
         public void onTick(long millisUntilFinished)
         {
@@ -89,11 +95,13 @@ public class SDGameActivity extends FullScreenActivity
         initUI();
         initListeners();
 
-        Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/Villa.ttf");
+        Typeface tf = FontUtils.getTypeface(this, FontType.MAIN_FONT);
         m_mainWordTextView.setTypeface(tf);
         m_mainWordTextView.setLetterSpacing(1.3f);
 
         m_countDownTextView.setTypeface(tf);
+        m_finishBtn.setTypeface(tf);
+        m_undoBtn.setTypeface(tf);
 
         m_teamNames = new String[2];
         m_teamNames[0] = getIntent().getStringExtra(SDPreGameActivity.TeamOneNameTag);
@@ -113,11 +121,10 @@ public class SDGameActivity extends FullScreenActivity
             startPickingPhase();
     }
 
-    @Override
-    public void onStop()
+    public void onDestroy()
     {
-        super.onStop();
         m_timer.cancel();
+        super.onDestroy();
     }
 
     public void startPickingPhase()
@@ -133,11 +140,25 @@ public class SDGameActivity extends FullScreenActivity
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.text_dialog_pick_a_word);
+        builder.setCancelable(false);
         builder.setItems(words, new DialogInterface.OnClickListener() 
         {
             public void onClick(DialogInterface dialog, int item)
             {
                 m_drawView.startNew();
+                m_drawView.setPlayback(false);
+                if (m_currentTurn == 0)
+                {
+                    m_finishBtn.setBackgroundResource(R.drawable.button_in_game_blue);
+                    m_undoBtn.setBackgroundResource(R.drawable.button_in_game_blue);
+                }
+                else
+                {
+                    m_finishBtn.setBackgroundResource(R.drawable.button_in_game_red);
+                    m_undoBtn.setBackgroundResource(R.drawable.button_in_game_red);
+                }
+                m_finishBtn.animate().alpha(1).withLayer();
+                m_undoBtn.animate().alpha(1).withLayer();
                 m_currentWord = words[item];
                 StringBuffer outputBuffer = new StringBuffer(m_currentWord.length());
                 for (int i = 0; i < m_currentWord.length(); i++)
@@ -164,23 +185,30 @@ public class SDGameActivity extends FullScreenActivity
                .setCancelable(false)
                .setPositiveButton("OK", new DialogInterface.OnClickListener() 
                {
-                   public void onClick(DialogInterface dialog, int id) 
+                   public void onClick(DialogInterface dialog, int id)
                    {
-                       m_drawView.startNew();
-                       m_colorStrip.startAnimation(m_scaleOut);
-                       m_colorStrip.setVisibility(View.GONE);
-                       m_scaleIn.setStartOffset(m_scaleOut.getDuration());
-                       m_guesserEditText.startAnimation(m_scaleIn);
-                       m_guesserEditText.setVisibility(View.VISIBLE);
-                       m_scaleIn.setStartOffset(0);
-                       m_gameState = State.Guessing;
-                       m_timer.start();
-                       m_drawView.setPlayback(true);
-                       m_drawView.playBack(m_currentTime);
+                       executeGuessingPhase();
                    }
                });
         AlertDialog alert = builder.create();
         alert.show();
+    }
+
+    public void executeGuessingPhase()
+    {
+        m_drawView.startNew();
+        m_finishBtn.animate().alpha(0).withLayer();
+        m_undoBtn.animate().alpha(0).withLayer();
+        m_colorStrip.startAnimation(m_scaleOut);
+        m_colorStrip.setVisibility(View.GONE);
+        m_scaleIn.setStartOffset(m_scaleOut.getDuration());
+        m_guesserEditText.startAnimation(m_scaleIn);
+        m_guesserEditText.setVisibility(View.VISIBLE);
+        m_scaleIn.setStartOffset(0);
+        m_gameState = State.Guessing;
+        m_timer.start();
+        m_drawView.setPlayback(true);
+        m_drawView.playBack(m_currentTime);
     }
 
     public void exitGuessingPhase()
@@ -210,7 +238,7 @@ public class SDGameActivity extends FullScreenActivity
                                    + "\nPrepare to Draw!")
                .setCancelable(false)
                .setPositiveButton(m_teamNames[m_currentTurn] + "'s turn",
-                                  new DialogInterface.OnClickListener() 
+                                  new DialogInterface.OnClickListener()
                {
                    public void onClick(DialogInterface dialog, int id) 
                    {
@@ -235,6 +263,7 @@ public class SDGameActivity extends FullScreenActivity
         if (m_currentTimeLeft > 0)
             m_currentPoints[m_currentTurn] += m_wordPoints 
                                            + (float)m_currentTimeLeft / 6000;
+        m_currentPoints[m_currentTurn] = GTSUtils.round(m_currentPoints[m_currentTurn], 2);
 
         if (m_currentPoints[m_currentTurn] > 100.f)
             m_gameState = State.Over;
@@ -281,13 +310,16 @@ public class SDGameActivity extends FullScreenActivity
         m_drawView = (DrawingView) findViewById(R.id.drawing);
         m_colorStrip = (LinearLayout) findViewById(R.id.paint_colors);
         m_currentPaint = (ImageButton) (m_colorStrip).getChildAt(0);
-        m_currentPaint.setImageDrawable(getResources().getDrawable(R.drawable.paint_pressed));
+        m_currentPaint.setImageDrawable(getResources().getDrawable(R.drawable.color_button_pressed));
         m_finishBtn = (Button) findViewById(R.id.button_finish_drawing);
+        m_undoBtn = (Button) findViewById(R.id.button_undo);
         m_countDownTextView = (TextView) findViewById(R.id.text_view_count_down);
         m_guesserEditText = (EditText) findViewById(R.id.edit_text_guesser);
 
         m_scaleOut = AnimationUtils.loadAnimation(this, R.anim.scale_out);
+        m_scaleOut.setFillAfter(true);
         m_scaleIn = AnimationUtils.loadAnimation(this, R.anim.scale_in);
+        m_scaleIn.setFillAfter(true);
     }
 
     private void initListeners()
@@ -299,6 +331,15 @@ public class SDGameActivity extends FullScreenActivity
             {
                 m_timer.cancel();
                 startGuessingPhase();
+            }
+        });
+
+        m_undoBtn.setOnClickListener(new OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                m_drawView.undo();
             }
         });
 
@@ -325,8 +366,8 @@ public class SDGameActivity extends FullScreenActivity
             String color = view.getTag().toString();
             m_drawView.setColor(color);
 
-            imgView.setImageDrawable(getResources().getDrawable(R.drawable.paint_pressed));
-            m_currentPaint.setImageDrawable(getResources().getDrawable(R.drawable.paint));
+            imgView.setImageDrawable(getResources().getDrawable(R.drawable.color_button_pressed));
+            m_currentPaint.setImageDrawable(getResources().getDrawable(R.drawable.color_button_normal));
             m_currentPaint = (ImageButton)view;
         }
     }

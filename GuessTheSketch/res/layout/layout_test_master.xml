@@ -1,0 +1,36 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <EditText 
+        android:id="@+id/edittext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+ 
+    <Button
+        android:id ="@+id/colorButton"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Change slave color">
+    </Button>
+
+    <Button
+        android:id="@+id/textButton"
+        android:layout_below="@+id/colorButton"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Change slave text to edittext">
+    </Button>
+
+    <Button
+        android:id="@+id/swapButton"
+        android:layout_below="@+id/textButton"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Swap master and slave">
+    </Button>
+
+</RelativeLayout>

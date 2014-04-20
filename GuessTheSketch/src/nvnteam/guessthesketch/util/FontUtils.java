@@ -3,14 +3,14 @@ package nvnteam.guessthesketch.util;
 import android.content.Context;
 import android.graphics.Typeface;
 
-public class FontUtil 
+public class FontUtils 
 {
 
     private static Typeface mTitleFont;
 
     public static enum FontType
     {
-        MAIN_FONT 
+        MAIN_FONT
         {
             public String toString() 
             {

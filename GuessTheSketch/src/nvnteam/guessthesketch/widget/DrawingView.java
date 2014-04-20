@@ -1,8 +1,10 @@
 package nvnteam.guessthesketch.widget;
 
 
+import java.util.Deque;
 import java.util.LinkedList;
-import java.util.Queue;
+import java.util.Stack;
+
 
 import nvnteam.guessthesketch.R;
 import nvnteam.guessthesketch.dto.DrawingNode;
@@ -35,7 +37,9 @@ public class DrawingView extends View
 
 	private volatile boolean m_shouldPlayback = false;
 	private DrawingNode m_currentNode = new DrawingNode();
-	private Queue<DrawingNode> m_playbackQueue = new LinkedList<DrawingNode>();
+	private Deque<DrawingNode> m_playbackQueue = new LinkedList<DrawingNode>();
+	
+	private Stack<DrawingNode> m_undoStack = new Stack<DrawingNode>();
 
 	public DrawingView(Context context, AttributeSet attrs)
 	{
@@ -59,7 +63,6 @@ public class DrawingView extends View
 		m_canvasPaint = new Paint(Paint.DITHER_FLAG);
 	}
 
-	//size assigned to view
 	@Override
 	protected void onSizeChanged(int w, int h, int oldw, int oldh)
 	{
@@ -68,7 +71,6 @@ public class DrawingView extends View
 		m_drawCanvas = new Canvas(m_canvasBitmap);
 	}
 
-	//draw the view - will be called after touch event
 	@Override
 	protected void onDraw(Canvas canvas)
 	{
@@ -76,7 +78,6 @@ public class DrawingView extends View
 		canvas.drawPath(m_drawPath, m_drawPaint);
 	}
 
-	//register user touches as drawing action
 	@Override
 	public boolean onTouchEvent(MotionEvent event)
 	{
@@ -103,6 +104,7 @@ public class DrawingView extends View
         		default:
         			return false;
     		}
+    		m_undoStack.add(new DrawingNode(m_currentNode));
     		m_playbackQueue.add(new DrawingNode(m_currentNode));
     		invalidate();
     		return true;
@@ -110,7 +112,6 @@ public class DrawingView extends View
 	    return false;
 	}
 
-	//update color
 	public void setColor(String newColor)
 	{
 		invalidate();
@@ -118,7 +119,6 @@ public class DrawingView extends View
 		m_drawPaint.setColor(m_paintColor);
 	}
 
-	//set brush size
 	public void setBrushSize(float newSize)
 	{
 		float pixelAmount = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 
@@ -127,20 +127,20 @@ public class DrawingView extends View
 		m_drawPaint.setStrokeWidth(m_brushSize);
 	}
 
-	//get and set last brush size
 	public void setLastBrushSize(float lastSize)
 	{
-	    m_lastBrushSize=lastSize;
+	    m_lastBrushSize = lastSize;
 	}
 	public float getLastBrushSize()
 	{
 		return m_lastBrushSize;
 	}
 
-	//start new drawing
 	public void startNew()
 	{
-	    m_drawCanvas.drawColor(0, PorterDuff.Mode.CLEAR);
+	    if (m_drawCanvas != null)
+	        m_drawCanvas.drawColor(0, PorterDuff.Mode.CLEAR);
+	    m_undoStack.clear();
 		invalidate();
 	}
 
@@ -167,7 +167,7 @@ public class DrawingView extends View
 	                while ((SystemClock.uptimeMillis() < m_playbackQueue.peek().getTimeStamp() + diff));
 	                DrawingNode firstNode = m_playbackQueue.remove();
 	                m_drawPaint.setColor(firstNode.getColor());
-	                
+
 	                switch (firstNode.getActionType()) 
 	                {
 	                    case MotionEvent.ACTION_DOWN:
@@ -189,5 +189,39 @@ public class DrawingView extends View
 	                m_playbackQueue.clear();
 	        }
 	    }).start();
+	}
+	
+	public void undo()
+	{
+	    while (m_undoStack.peek().getActionType() != MotionEvent.ACTION_DOWN)
+	    {
+	        m_undoStack.pop();
+	        m_playbackQueue.pollLast();
+	    }
+	    m_undoStack.pop();
+	    m_playbackQueue.pollLast();
+	    m_drawCanvas.drawColor(0, PorterDuff.Mode.CLEAR);
+	    int previousColor = m_paintColor;
+	    for (DrawingNode node : m_undoStack)
+	    {
+	        m_drawPaint.setColor(node.getColor());
+	        switch (node.getActionType())
+            {
+                case MotionEvent.ACTION_DOWN:
+                    m_drawPath.moveTo(node.getX(), node.getY());
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    m_drawPath.lineTo(node.getX(), node.getY());
+                    break;
+                case MotionEvent.ACTION_UP:
+                    m_drawPath.lineTo(node.getX(), node.getY());
+                    m_drawCanvas.drawPath(m_drawPath, m_drawPaint);
+                    m_drawPath.reset();
+                    break;
+            }
+	    }
+	    m_drawPaint.setColor(previousColor);
+	    m_paintColor = previousColor;
+	    invalidate();
 	}
 }

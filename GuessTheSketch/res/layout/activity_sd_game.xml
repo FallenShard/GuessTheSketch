@@ -1,174 +1,185 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout 
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_game"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:paddingTop="10dp"
     android:paddingBottom="10dp"
+    android:measureAllChildren="false"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".DrawingActivity" >
 
+    <nvnteam.guessthesketch.widget.LetterSpacingTextView
+            android:id="@+id/text_view_word_to_guess"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:textColor="#FFFFFFFF"
+            android:textSize="40sp"
+            android:textAlignment="center" />
+
     <RelativeLayout
+        android:id="@+id/relative_layout_status_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#FF000000" >
+        android:layout_below="@id/text_view_word_to_guess" >
 
         <Button
+            style="@style/style_button_in_game"
             android:id="@+id/button_finish_drawing"
             android:layout_width="wrap_content"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/button_in_game_blue"
             android:text="@string/text_button_finish_drawing" />
-
-        <nvnteam.guessthesketch.widget.LetterSpacingTextView
-	        android:id="@+id/text_view_word_to_guess"
-	        android:layout_width="wrap_content"
-	        android:layout_height="50dp"
-	        android:layout_centerInParent="true"
-	        android:textColor="#FFFFFFFF"
-	        android:textSize="40sp"
-	        android:textAlignment="center" />
 
         <TextView
             android:id="@+id/text_view_count_down"
             android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:layout_alignParentRight="true"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
             android:textColor="#FF00FF00"
             android:textSize="40sp"
             android:textAlignment="center" />
 
+        <Button
+            style="@style/style_button_in_game"
+            android:id="@+id/button_undo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_in_game_blue"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text="@string/text_button_undo" />
+
     </RelativeLayout>
 
     <!-- Color Palette -->
+    
+    <RelativeLayout
+        android:id="@+id/relative_layout_colors_and_guess_text"
+        android:layout_below="@id/relative_layout_status_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:animateLayoutChanges="true" >
 
     <LinearLayout
         android:id="@+id/paint_colors"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:animateLayoutChanges="true"
+        android:layout_alignParentTop="true"
         android:orientation="horizontal" >
 
         <ImageButton
-            android:layout_width="@dimen/color_strip_item_size"
-            android:layout_height="@dimen/color_strip_item_size"
-            android:layout_margin="2dp"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:src="@drawable/color_button_normal"
             android:background="#FF660000"
             android:contentDescription="@string/paint"
             android:onClick="paintClicked"
-            android:src="@drawable/paint"
             android:tag="#FF660000" />
 
         <ImageButton
-            android:layout_width="@dimen/color_strip_item_size"
-            android:layout_height="@dimen/color_strip_item_size"
-            android:layout_margin="2dp"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:src="@drawable/color_button_normal"
             android:background="#FFFF0000"
             android:contentDescription="@string/paint"
             android:onClick="paintClicked"
-            android:src="@drawable/paint"
             android:tag="#FFFF0000" />
 
         <ImageButton
-            android:layout_width="@dimen/color_strip_item_size"
-            android:layout_height="@dimen/color_strip_item_size"
-            android:layout_margin="2dp"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:src="@drawable/color_button_normal"
             android:background="#FFFF6600"
             android:contentDescription="@string/paint"
             android:onClick="paintClicked"
-            android:src="@drawable/paint"
             android:tag="#FFFF6600" />
 
         <ImageButton
-            android:layout_width="@dimen/color_strip_item_size"
-            android:layout_height="@dimen/color_strip_item_size"
-            android:layout_margin="2dp"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:src="@drawable/color_button_normal"
             android:background="#FFFFCC00"
             android:contentDescription="@string/paint"
             android:onClick="paintClicked"
-            android:src="@drawable/paint"
             android:tag="#FFFFCC00" />
 
         <ImageButton
-            android:layout_width="@dimen/color_strip_item_size"
-            android:layout_height="@dimen/color_strip_item_size"
-            android:layout_margin="2dp"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:src="@drawable/color_button_normal"
             android:background="#FF009900"
             android:contentDescription="@string/paint"
             android:onClick="paintClicked"
-            android:src="@drawable/paint"
             android:tag="#FF009900" />
 
         <ImageButton
-            android:layout_width="@dimen/color_strip_item_size"
-            android:layout_height="@dimen/color_strip_item_size"
-            android:layout_margin="2dp"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:src="@drawable/color_button_normal"
             android:background="#FF009999"
             android:contentDescription="@string/paint"
             android:onClick="paintClicked"
-            android:src="@drawable/paint"
             android:tag="#FF009999" />
 
         <ImageButton
-            android:layout_width="@dimen/color_strip_item_size"
-            android:layout_height="@dimen/color_strip_item_size"
-            android:layout_margin="2dp"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:src="@drawable/color_button_normal"
             android:background="#FF0000FF"
             android:contentDescription="@string/paint"
             android:onClick="paintClicked"
-            android:src="@drawable/paint"
             android:tag="#FF0000FF" />
 
         <ImageButton
-            android:layout_width="@dimen/color_strip_item_size"
-            android:layout_height="@dimen/color_strip_item_size"
-            android:layout_margin="2dp"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:src="@drawable/color_button_normal"
             android:background="#FF990099"
             android:contentDescription="@string/paint"
             android:onClick="paintClicked"
-            android:src="@drawable/paint"
             android:tag="#FF990099" />
 
         <ImageButton
-            android:layout_width="@dimen/color_strip_item_size"
-            android:layout_height="@dimen/color_strip_item_size"
-            android:layout_margin="2dp"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:src="@drawable/color_button_normal"
             android:background="#FFFF6666"
             android:contentDescription="@string/paint"
             android:onClick="paintClicked"
-            android:src="@drawable/paint"
             android:tag="#FFFF6666" />
 
         <ImageButton
-            android:layout_width="@dimen/color_strip_item_size"
-            android:layout_height="@dimen/color_strip_item_size"
-            android:layout_margin="2dp"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:src="@drawable/color_button_normal"
             android:background="#FFFFFFFF"
             android:contentDescription="@string/paint"
             android:onClick="paintClicked"
-            android:src="@drawable/paint"
             android:tag="#FFFFFFFF" />
 
         <ImageButton
-            android:layout_width="@dimen/color_strip_item_size"
-            android:layout_height="@dimen/color_strip_item_size"
-            android:layout_margin="2dp"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:src="@drawable/color_button_normal"
             android:background="#FF787878"
             android:contentDescription="@string/paint"
             android:onClick="paintClicked"
-            android:src="@drawable/paint"
             android:tag="#FF787878" />
 
         <ImageButton
-            android:layout_width="@dimen/color_strip_item_size"
-            android:layout_height="@dimen/color_strip_item_size"
-            android:layout_margin="2dp"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:src="@drawable/color_button_normal"
             android:background="#FF000000"
             android:contentDescription="@string/paint"
             android:onClick="paintClicked"
-            android:src="@drawable/paint"
             android:tag="#FF000000" />
 
     </LinearLayout>
@@ -179,6 +190,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
         android:layout_gravity="center_vertical"
+        android:layout_alignTop="@id/paint_colors"
+        android:layout_alignParentTop="true"
         android:inputType="text"
         android:imeOptions="actionGo"
         android:maxLines="1"
@@ -187,16 +200,16 @@
         android:textSize="25sp"
         android:visibility="gone" />
 
+    </RelativeLayout>
+
     <!-- Custom View -->
     <nvnteam.guessthesketch.widget.DrawingView
         android:id="@+id/drawing"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="match_parent"
+        android:layout_below="@id/relative_layout_colors_and_guess_text"
         android:layout_marginBottom="3dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
         android:layout_marginTop="3dp"
-        android:layout_weight="1"
         android:background="#FFFFFFFF" />
 
-</LinearLayout>
+</RelativeLayout>

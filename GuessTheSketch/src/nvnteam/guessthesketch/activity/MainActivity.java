@@ -1,13 +1,16 @@
 package nvnteam.guessthesketch.activity;
 
+
 import nvnteam.guessthesketch.R;
-import nvnteam.guessthesketch.util.FontUtil;
-import nvnteam.guessthesketch.util.FontUtil.FontType;
+import nvnteam.guessthesketch.bluetooth.BTGameActivity;
+import nvnteam.guessthesketch.util.FontUtils;
+import nvnteam.guessthesketch.util.FontUtils.FontType;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -44,7 +47,7 @@ public class MainActivity extends FullScreenActivity
         initUI();
         initListeners();
 
-        Typeface tf = FontUtil.getTypeface(this, FontType.MAIN_FONT);
+        Typeface tf = FontUtils.getTypeface(this, FontType.MAIN_FONT);
         m_singleDeviceBtn.setTypeface(tf);
         m_viaBluetoothBtn.setTypeface(tf);
         m_backBtn.setTypeface(tf);
@@ -75,6 +78,9 @@ public class MainActivity extends FullScreenActivity
         m_mainLayout = findViewById(R.id.linear_layout_main_menu);
         m_playLayout = findViewById(R.id.linear_layout_play_menu);
         m_gamelogo = findViewById(R.id.image_view_logo_game);
+        
+        ViewGroup vg = (ViewGroup)m_playLayout.getParent();
+        vg.removeView(m_playLayout);
 
         m_devLogo = findViewById(R.id.image_view_logo_team);
         m_upperLeft = findViewById(R.id.image_view_upper_left);
@@ -92,12 +98,22 @@ public class MainActivity extends FullScreenActivity
            @Override
            public void onClick(View v)
            {
-               m_mainLayout.startAnimation(m_scaleOut);
+               /*m_mainLayout.startAnimation(m_scaleOut);
                m_mainLayout.setVisibility(View.GONE);
                m_scaleIn.setStartOffset(m_scaleOut.getDuration());
                m_playLayout.startAnimation(m_scaleIn);
                m_playLayout.setVisibility(View.VISIBLE);
-               m_scaleIn.setStartOffset(0);
+               m_scaleIn.setStartOffset(0);*/
+               m_mainLayout.animate().alpha(0).withEndAction(new Runnable()
+               {
+                   public void run()
+                   {
+                       ViewGroup vg = (ViewGroup)m_mainLayout.getParent();
+                       vg.removeView(m_mainLayout);
+                       vg.addView(m_playLayout);
+                       m_playLayout.animate().alpha(1);
+                   }
+               }); 
            }
         });
 
@@ -106,12 +122,22 @@ public class MainActivity extends FullScreenActivity
             @Override
             public void onClick(View v)
             {
-                m_playLayout.startAnimation(m_scaleOut);
+                /*m_playLayout.startAnimation(m_scaleOut);
                 m_playLayout.setVisibility(View.GONE);
                 m_scaleIn.setStartOffset(m_scaleOut.getDuration());
                 m_mainLayout.startAnimation(m_scaleIn);
                 m_mainLayout.setVisibility(View.VISIBLE);
-                m_scaleIn.setStartOffset(0);
+                m_scaleIn.setStartOffset(0);*/
+                m_playLayout.animate().alpha(0).withEndAction(new Runnable()
+                {
+                    public void run()
+                    {
+                        ViewGroup vg = (ViewGroup)m_playLayout.getParent();
+                        vg.removeView(m_playLayout);
+                        vg.addView(m_mainLayout);
+                        m_mainLayout.animate().alpha(1);
+                    }
+                }); 
             }
          });
 
@@ -136,7 +162,7 @@ public class MainActivity extends FullScreenActivity
                 startActivity(intent);
             }
         });
- 
+
         m_quitBtn.setOnClickListener(new OnClickListener()
         {
             @Override
@@ -144,6 +170,24 @@ public class MainActivity extends FullScreenActivity
             {
                 finish();
             }
+        });
+
+        m_viaBluetoothBtn.setOnClickListener(new OnClickListener()
+        {
+           @Override
+           public void onClick(View v)
+           {
+               Intent intent = new Intent(MainActivity.this,
+                                          BTGameActivity.class);
+               startActivity(intent);
+           }
+        });
+        
+        m_tutorialBtn.setOnClickListener(new OnClickListener()
+        {
+           public void onClick(View v)
+           {
+           }
         });
     }
 }
