@@ -189,6 +189,7 @@ public class BTGameActivity extends FullScreenActivity
     
     private class SenderThread extends Thread
     {
+        /* test purposes only */
         private final Queue<DrawingNode> q;
 
         public SenderThread()
@@ -225,34 +226,11 @@ public class BTGameActivity extends FullScreenActivity
             q.add(newnode8);
             q.add(newnode9);
             sendNodes(BluetoothProtocol.DATA_DRAWING_NODE, q);
-            
         }
 
         public void run()
         {
-            Log.i(TAG, "BEGIN m_connectedThread");
-            byte[] buffer = new byte[1024];
-            int bytes;
-
-            // Keep listening to the InputStream while connected
-            while (true)
-            {
-                try
-                {
-                    // Read from the InputStream
-                    bytes = mm_inStream.read(buffer);
-
-                    // Send the obtained bytes to the UI Activity
-                    m_handler.obtainMessage(BluetoothProtocol.MESSAGE_READ, bytes, -1, buffer)
-                             .sendToTarget();
-                }
-                catch (IOException e)
-                {
-                    Log.e(TAG, "disconnected", e);
-                    connectionLost();
-                    break;
-                }
-            }
+            sendNodes(BluetoothProtocol.DATA_DRAWING_NODE, q);
         }
 
         public void cancel()
