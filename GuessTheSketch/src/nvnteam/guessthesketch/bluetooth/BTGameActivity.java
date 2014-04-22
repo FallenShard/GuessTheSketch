@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Random;
 import java.util.Set;
 
 import nvnteam.guessthesketch.activity.FullScreenActivity;
@@ -25,12 +26,12 @@ import nvnteam.guessthesketch.dto.DrawingNode;
 import nvnteam.guessthesketch.util.ActivityUtils;
 import nvnteam.guessthesketch.util.FontUtils;
 import nvnteam.guessthesketch.util.GTSUtils;
+import nvnteam.guessthesketch.util.WordBase;
 import nvnteam.guessthesketch.util.FontUtils.FontType;
 import nvnteam.guessthesketch.widget.DrawingView;
 import nvnteam.guessthesketch.widget.LetterSpacingTextView;
 
 import nvnteam.guessthesketch.R;
-import nvnteam.guessthesketch.WordBase;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -170,62 +171,53 @@ public class BTGameActivity extends FullScreenActivity
             int redComp = (255 * (60000 - (int)millisUntilFinished) / 60000) << 16;
             int greenComp = (255 * ((int)millisUntilFinished) / 60000) << 8;
             m_countDownTextView.setTextColor(0xFF000000 | redComp | greenComp);
-            
-            if (millisUntilFinished / 1000 == 55 && didnt_send)
-            {
-                didnt_send = false;
-            }
         }
 
         public void onFinish()
         {
             m_currentTimeLeft = 0;
-            if (m_gameState == State.Drawing)
-                startGuessingPhase();
+            if (m_gameState == State.Drawing);
+                //startGuessingPhase();
             else if (m_gameState == State.Guessing);
                 //startEvaluationPhase();
         }
     };
     
+    public void transferNodes(Deque<DrawingNode> deque)
+    {
+        Log.e(TAG, "NEW DEQUE SIZE: " + deque.size());
+        if (m_senderThread != null)
+            m_senderThread.cancel();
+        m_senderThread = new SenderThread(deque);
+        m_senderThread.run();
+    }
+    
+    public void getDecodedNodes(Deque<DrawingNode> deque)
+    {
+        Log.e(TAG, "DECODED QUEUE SIZE: " + deque.size());
+        m_drawView.drawFromDeque(deque);
+    }
+    
     private class SenderThread extends Thread
     {
         /* test purposes only */
-        private final Queue<DrawingNode> q;
-
-        public SenderThread()
+        private final Deque<DrawingNode> q;
+/*
+        public SenderThread(int num)
         {
             q = new LinkedList<DrawingNode>();
-            DrawingNode newnode = new DrawingNode();
-            DrawingNode newnode1 = new DrawingNode();
-            DrawingNode newnode2 = new DrawingNode();
-            DrawingNode newnode3 = new DrawingNode();
-            DrawingNode newnode4 = new DrawingNode();
-            DrawingNode newnode5 = new DrawingNode();
-            DrawingNode newnode6 = new DrawingNode();
-            DrawingNode newnode7 = new DrawingNode();
-            DrawingNode newnode8 = new DrawingNode();
-            DrawingNode newnode9 = new DrawingNode();
-            newnode.setAttrib(15.3f, 14.23f, 3, 123123, 909090);
-            newnode1.setAttrib(16.3f, 14.23f, 3, 123123, 909091);
-            newnode2.setAttrib(17.3f, 14.23f, 3, 123123, 909092);
-            newnode3.setAttrib(18.3f, 14.23f, 3, 123123, 909093);
-            newnode4.setAttrib(19.3f, 14.23f, 3, 123123, 909094);
-            newnode5.setAttrib(20.3f, 14.23f, 3, 123123, 909095);
-            newnode6.setAttrib(21.3f, 14.23f, 3, 123123, 909096);
-            newnode7.setAttrib(22.3f, 14.23f, 3, 123123, 909097);
-            newnode8.setAttrib(23.3f, 14.23f, 3, 123123, 909098);
-            newnode9.setAttrib(24.3f, 14.23f, 3, 123123, 909099);
-            q.add(newnode);
-            q.add(newnode1);
-            q.add(newnode2);
-            q.add(newnode3);
-            q.add(newnode4);
-            q.add(newnode5);
-            q.add(newnode6);
-            q.add(newnode7);
-            q.add(newnode8);
-            q.add(newnode9);
-            sendNodes(BluetoothProtocol.DATA_DRAWING_NODE, q);
+            for (int i = 0; i < num; i++)
+            {
+                DrawingNode newnode = new DrawingNode();
+                newnode.setAttrib(15.3f + i, 14.23f + i, 3 + i, 123123 + i, 909090 + i);
+                q.add(newnode);
+            }
+            //sendNodes(BluetoothProtocol.DATA_DRAWING_NODE, q);
+        }*/
+        
+        public SenderThread(Deque<DrawingNode> deque)
+        {
+           q = deque;
         }
 
         public void run()
@@ -237,6 +229,52 @@ public class BTGameActivity extends FullScreenActivity
         {
         }
     }
+    
+    private SenderThread m_senderThread;
+    private DecoderThread m_decoderThread;
+    
+    private class DecoderThread extends Thread
+    {
+        /* test purposes only */
+        private final Deque<DrawingNode> q;
+        private final byte[] a;
+
+        public DecoderThread(byte[] array)
+        {
+            q = new LinkedList<DrawingNode>();
+            a = new byte[array.length];
+            for (int i = 0; i < array.length; i++)
+                a[i] = array[i];
+        }
+
+        public void run()
+        {
+            int i = 0;
+            
+            while (i < a.length)
+            {
+                byte[] tempNode = new byte[24];
+                for (int k = 0; k < 24; k++)
+                {
+                    tempNode[k] = a[i];
+                    i++;
+                }
+                DrawingNode newNode = DrawingNode.deserialize(tempNode);
+                Log.i(TAG, "RECEIVED X: " + newNode.getX() +
+                        "\nY: " + newNode.getY() +
+                        "\nType: " + newNode.getActionType() + 
+                        "\nTime: " + newNode.getTimeStamp() +
+                        "\nColor: " + newNode.getColor());
+                q.add(newNode);
+            }
+            Log.i(TAG, "Deserialized " + q.size() + " nodes!");
+            Deque<DrawingNode> newDeque = new LinkedList<DrawingNode>(q);
+            q.clear();
+            getDecodedNodes(newDeque);
+        }
+    }
+    
+    
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -447,6 +485,11 @@ public class BTGameActivity extends FullScreenActivity
                 String message = view.getText().toString();
                 sendMessage(message);
                 ActivityUtils.hideSystemUI(BTGameActivity.this);
+                /*if (m_isServer)
+                {
+                    m_senderThread = new SenderThread((new Random().nextInt()) % 15);
+                    m_senderThread.start();
+                }*/
             }
         });
 
@@ -578,6 +621,8 @@ public class BTGameActivity extends FullScreenActivity
         m_infoTextView = (TextView) findViewById(R.id.information_text_view);
         m_infoTextView.setText("Congratulations! You hacked your way to this page");
         m_infoTextView.setTypeface(tf);
+        
+        m_drawView.attachObserver(this);
     }
 
     private void setupChat()
@@ -739,11 +784,23 @@ public class BTGameActivity extends FullScreenActivity
                 byte[] readBuf = (byte[]) msg.obj;
                 // construct a string from the valid bytes in the buffer
                 Log.e(TAG,  "$$$ MESSAGE LENGTH $$$ " + msg.arg1);
-                if (!handleCommandMessage(readBuf, msg.arg1))
+                //if (!handleCommandMessage(readBuf, msg.arg1))
+                //{
+                if (msg.arg2 == BluetoothProtocol.DATA_DRAWING_NODE)
                 {
-                    String readMessage = new String(readBuf, 0, msg.arg1);
-                    m_conversationArrayAdapter.add(m_connectedDeviceName+":  " + readMessage);
+                    Log.i(TAG, "HAS ENTERED DRAWING NODE RECEIVE");
+                    m_decoderThread = new DecoderThread(readBuf);
+                    m_decoderThread.start();
                 }
+                else
+                {
+                    if (!handleCommandMessage(readBuf, msg.arg1))
+                    {
+                        String readMessage = new String(readBuf, 0, msg.arg1);
+                        m_conversationArrayAdapter.add(m_connectedDeviceName+":  " + readMessage);
+                    }
+                }
+                //}
                 break;
 
             case BluetoothProtocol.MESSAGE_DEVICE_NAME:
@@ -759,91 +816,97 @@ public class BTGameActivity extends FullScreenActivity
                 break;
             }
         }
+
+        public boolean handleCommandMessage(byte[] messageBytes, int arg1)
+        {
+            int code = messageBytes[0] << 24 | messageBytes[1] << 16
+                     | messageBytes[2] << 8  | messageBytes[3];
+            Log.e(TAG,  "RECEIVED MESSAGE CODE: ++++ " + code);
+            switch (code)
+            {
+            case BluetoothProtocol.COMMAND_CREATE_GAME:
+            {
+                enableConfigPreGame();
+                m_viewFlipper.setDisplayedChild(m_viewFlipper.indexOfChild(m_preLayout));
+                return true;
+            }
+            case BluetoothProtocol.COMMAND_START_GAME:
+            {
+                enableConfigInGame();
+                m_viewFlipper.setDisplayedChild(m_viewFlipper.indexOfChild(m_infoLayout));
+                return true;
+            }
+            case BluetoothProtocol.COMMAND_EXCHANGE_TEAM_NAMES:
+            {
+                if (m_isServer)
+                {
+                    String teamTwoName = new String(messageBytes, 4, arg1 - 4);
+                    m_teamNames[1] = teamTwoName;
+                }
+                else
+                {
+                    m_teamNames[1] = m_teamTwoEditText.getText().toString();
+                    String teamOneName = new String(messageBytes, 4, arg1 - 4);
+                    m_teamNames[0] = teamOneName;
+                }
+                return true;
+            }
+            case BluetoothProtocol.COMMAND_START_DRAWING:
+            {
+                startDrawingPhase();
+                return true;
+            }
+            case BluetoothProtocol.COMMAND_START_GUESSING:
+            {
+                m_currentWord = new String(messageBytes, 4, arg1 - 4);
+                m_viewFlipper.setDisplayedChild(m_viewFlipper.indexOfChild(m_gameLayout));
+                startGuessingPhase();
+                return true;
+            }
+            case BluetoothProtocol.COMMAND_SHOW_SCORES:
+            {
+                showScores();
+                return true;
+            }
+            case BluetoothProtocol.DATA_DRAWING_NODE:
+            {/*
+                Log.e(TAG, "DATA_DRAWING_NODE_MESSAGE_LENGTH: " + arg1);
+                byte[] nodes = new byte[arg1 - 4];
+                for (int i = 0; i < nodes.length; i++)
+                    nodes[i] = messageBytes[i + 4];
+                if (arg1 > 4)
+                {
+                    
+                    m_decoderThread = new DecoderThread(nodes);
+                    m_decoderThread.start();*/
+                    /*
+                    byte[] firstNode = new byte[24];
+                    for (int i = 0; i < 24 || i < nodes.length; i++)
+                        firstNode[i] = nodes[i];
+                    try
+                    {
+                    DrawingNode newNode = new DrawingNode(DrawingNode.deserialize(firstNode));
+                    Log.e(TAG, "RECEIVED X: " + newNode.getX() +
+                            "\nY: " + newNode.getY() +
+                            "\nType: " + newNode.getActionType() + 
+                            "\nTime: " + newNode.getTimeStamp() +
+                            "\nColor: " + newNode.getColor());
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.e(TAG, "ERROR ON DESERIALIZATION");
+                    }
+                }*/
+                return true;
+            }
+            }
+            if (D) Log.d(TAG, "CODE GIVEN: " + code);
+            return false;
+        }
     };
 
     
-    public boolean handleCommandMessage(byte[] messageBytes, int arg1)
-    {
-        int code = messageBytes[0] << 24 | messageBytes[1] << 16
-                 | messageBytes[2] << 8  | messageBytes[3];
-        Log.e(TAG,  "RECEIVED MESSAGE CODE: ++++ " + code);
-        switch (code)
-        {
-        case BluetoothProtocol.COMMAND_CREATE_GAME:
-        {
-            enableConfigPreGame();
-            m_viewFlipper.setDisplayedChild(m_viewFlipper.indexOfChild(m_preLayout));
-            return true;
-        }
-        case BluetoothProtocol.COMMAND_START_GAME:
-        {
-            enableConfigInGame();
-            m_viewFlipper.setDisplayedChild(m_viewFlipper.indexOfChild(m_infoLayout));
-            return true;
-        }
-        case BluetoothProtocol.COMMAND_EXCHANGE_TEAM_NAMES:
-        {
-            if (m_isServer)
-            {
-                String teamTwoName = new String(messageBytes, 4, arg1 - 4);
-                m_teamNames[1] = teamTwoName;
-            }
-            else
-            {
-                m_teamNames[1] = m_teamTwoEditText.getText().toString();
-                String teamOneName = new String(messageBytes, 4, arg1 - 4);
-                m_teamNames[0] = teamOneName;
-            }
-            return true;
-        }
-        case BluetoothProtocol.COMMAND_START_DRAWING:
-        {
-            startDrawingPhase();
-            return true;
-        }
-        case BluetoothProtocol.COMMAND_START_GUESSING:
-        {
-            m_currentWord = new String(messageBytes, 4, arg1 - 4);
-            m_viewFlipper.setDisplayedChild(m_viewFlipper.indexOfChild(m_gameLayout));
-            startGuessingPhase();
-            return true;
-        }
-        case BluetoothProtocol.COMMAND_SHOW_SCORES:
-        {
-            showScores();
-            return true;
-        }
-        case BluetoothProtocol.DATA_DRAWING_NODE:
-        {
-            Log.e(TAG, "DATA_DRAWING_NODE_MESSAGE_LENGTH: " + arg1);
-            byte[] nodes = new byte[arg1 - 4];
-            for (int i = 0; i < nodes.length; i++)
-                nodes[i] = messageBytes[i + 4];
-            if (arg1 > 4)
-            {
-                byte[] firstNode = new byte[24];
-                for (int i = 0; i < 24 || i < nodes.length; i++)
-                    firstNode[i] = nodes[i];
-                try
-                {
-                DrawingNode newNode = new DrawingNode(DrawingNode.deserialize(firstNode));
-                Log.e(TAG, "RECEIVED X: " + newNode.getX() +
-                        "\nY: " + newNode.getY() +
-                        "\nType: " + newNode.getActionType() + 
-                        "\nTime: " + newNode.getTimeStamp() +
-                        "\nColor: " + newNode.getColor());
-                }
-                catch (Exception ex)
-                {
-                    Log.e(TAG, "ERROR ON DESERIALIZATION");
-                }
-            }
-            return true;
-        }
-        }
-        if (D) Log.d(TAG, "CODE GIVEN: " + code);
-        return false;
-    }
+    
 
     public void enableConfigPreGame()
     {

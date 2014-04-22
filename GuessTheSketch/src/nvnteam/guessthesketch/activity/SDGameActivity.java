@@ -2,9 +2,8 @@ package nvnteam.guessthesketch.activity;
 
 
 import nvnteam.guessthesketch.R;
-import nvnteam.guessthesketch.WordBase;
-import nvnteam.guessthesketch.dialog.GuessingDialog;
 import nvnteam.guessthesketch.util.FontUtils;
+import nvnteam.guessthesketch.util.WordBase;
 import nvnteam.guessthesketch.util.FontUtils.FontType;
 import nvnteam.guessthesketch.util.GTSUtils;
 import nvnteam.guessthesketch.widget.DrawingView;

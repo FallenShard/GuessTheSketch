@@ -10,12 +10,14 @@ import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 public class SDPreGameActivity extends FullScreenActivity 
 {
     public static String TeamOneNameTag = "TEAM_ONE_NAME_TAG";
     public static String TeamTwoNameTag = "TEAM_TWO_NAME_TAG";
 
+    TextView m_titleText;
     EditText m_teamOneEditText;
     EditText m_teamTwoEditText;
 
@@ -33,6 +35,9 @@ public class SDPreGameActivity extends FullScreenActivity
         Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/Villa.ttf");
         m_backBtn.setTypeface(tf);
         m_startBtn.setTypeface(tf);
+        m_teamOneEditText.setTypeface(tf);
+        m_teamTwoEditText.setTypeface(tf);
+        m_titleText.setTypeface(tf);
     }
 
     @Override
@@ -53,7 +58,7 @@ public class SDPreGameActivity extends FullScreenActivity
     {
         m_teamOneEditText = (EditText) findViewById(R.id.edit_text_team_one);
         m_teamTwoEditText = (EditText) findViewById(R.id.edit_text_team_two);
-
+        m_titleText = (TextView) findViewById(R.id.text_view_pre_game_title);
         m_startBtn = (Button) findViewById(R.id.button_start_sd_pre_game);
         m_backBtn = (Button) findViewById(R.id.button_back_sd_pre_game);
     }

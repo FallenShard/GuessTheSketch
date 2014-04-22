@@ -1,4 +1,4 @@
-package nvnteam.guessthesketch;
+package nvnteam.guessthesketch.util;
 
 import java.util.Random;
 

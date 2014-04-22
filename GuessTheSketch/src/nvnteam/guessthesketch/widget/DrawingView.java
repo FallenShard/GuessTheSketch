@@ -7,6 +7,7 @@ import java.util.Stack;
 
 
 import nvnteam.guessthesketch.R;
+import nvnteam.guessthesketch.bluetooth.BTGameActivity;
 import nvnteam.guessthesketch.dto.DrawingNode;
 
 import android.content.Context;
@@ -40,6 +41,8 @@ public class DrawingView extends View
 	private Deque<DrawingNode> m_playbackQueue = new LinkedList<DrawingNode>();
 	
 	private Stack<DrawingNode> m_undoStack = new Stack<DrawingNode>();
+	
+	private BTGameActivity m_observer;
 
 	public DrawingView(Context context, AttributeSet attrs)
 	{
@@ -61,6 +64,11 @@ public class DrawingView extends View
 		m_drawPaint.setStrokeJoin(Paint.Join.ROUND);
 		m_drawPaint.setStrokeCap(Paint.Cap.ROUND);
 		m_canvasPaint = new Paint(Paint.DITHER_FLAG);
+	}
+	
+	public void attachObserver(BTGameActivity act)
+	{
+	    m_observer = act;
 	}
 
 	@Override
@@ -106,6 +114,14 @@ public class DrawingView extends View
     		}
     		m_undoStack.add(new DrawingNode(m_currentNode));
     		m_playbackQueue.add(new DrawingNode(m_currentNode));
+    		
+    		if (m_observer != null)
+    		    if (m_playbackQueue.size() >= 30 || event.getAction() == MotionEvent.ACTION_UP)
+    		    {
+    		        Deque<DrawingNode> newDeque = new LinkedList<DrawingNode>(m_playbackQueue);
+    		        m_observer.transferNodes(newDeque);
+    		        m_playbackQueue.clear();
+    		    }
     		invalidate();
     		return true;
 	    }
@@ -206,6 +222,46 @@ public class DrawingView extends View
 	        }
 	    }).start();
 	}
+	
+	public void drawFromDeque(final Deque<DrawingNode> deque)
+    {
+        if (!deque.isEmpty())
+        new Thread(new Runnable()
+        {
+            public void run()
+            {
+                Deque<DrawingNode> localDeque = new LinkedList<DrawingNode>(deque);
+                while (!deque.isEmpty())
+                {
+                    DrawingNode node = deque.pollFirst();
+                    m_playbackQueue.add(new DrawingNode(node));
+                    m_undoStack.add(new DrawingNode(node));
+                }
+
+                while (!localDeque.isEmpty())
+                {
+                    DrawingNode firstNode = localDeque.poll();
+                    m_drawPaint.setColor(firstNode.getColor());
+
+                    switch (firstNode.getActionType()) 
+                    {
+                        case MotionEvent.ACTION_DOWN:
+                            m_drawPath.moveTo(firstNode.getX(), firstNode.getY());
+                            break;
+                        case MotionEvent.ACTION_MOVE:
+                            m_drawPath.lineTo(firstNode.getX(), firstNode.getY());
+                            break;
+                        case MotionEvent.ACTION_UP:
+                            m_drawPath.lineTo(firstNode.getX(), firstNode.getY());
+                            m_drawCanvas.drawPath(m_drawPath, m_drawPaint);
+                            m_drawPath.reset();
+                            break;
+                    }
+                    postInvalidate();
+                }
+            }
+        }).start();
+    }
 	
 	public void undo()
 	{

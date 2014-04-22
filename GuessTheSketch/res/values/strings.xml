@@ -23,6 +23,7 @@
 	<string name="text_button_back">Back</string>
 
 	<!-- Pre-Game Texts -->
+	<string name="title_text_view_pre_game">Game Config</string>
 	<string name="text_button_start">Start</string>
 	<string name="hint_text_view_team_one">Team One</string>
 	<string name="hint_text_view_team_two">Team Two</string>
@@ -44,7 +45,7 @@
 	<string name="dialog_text_guessing">Prepare to guess the word!</string>
 	<string name="dialog_button_ok">OK</string>
     
-    <!--  BluetoothChat -->
+    <!--  Bluetooth -->
     <string name="send">Send</string>
     <string name="not_connected">You are not connected to a device</string>
     <string name="bt_not_enabled_leaving">Bluetooth was not enabled. Leaving Bluetooth Chat.</string>

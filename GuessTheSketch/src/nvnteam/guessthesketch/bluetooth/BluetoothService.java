@@ -24,7 +24,7 @@ import android.util.Log;
 public class BluetoothService 
 {
     // Debugging
-    private static final String TAG = "BluetoothService";
+    private static final String TAG = "BluetoothGame";
     private static final boolean D = true;
 
     // Name for the SDP record when creating server socket
@@ -469,7 +469,7 @@ public class BluetoothService
         public void run()
         {
             Log.i(TAG, "BEGIN m_connectedThread");
-            byte[] buffer = new byte[1024];
+            byte[] buffer = new byte[4096];
             int bytes;
 
             // Keep listening to the InputStream while connected
@@ -479,10 +479,39 @@ public class BluetoothService
                 {
                     // Read from the InputStream
                     bytes = mm_inStream.read(buffer);
-
-                    // Send the obtained bytes to the UI Activity
-                    m_handler.obtainMessage(BluetoothProtocol.MESSAGE_READ, bytes, -1, buffer)
-                             .sendToTarget();
+                    Log.i("THREADCOMM", "BYTES READ: " + bytes);
+                    if (bytes > 4)
+                    {
+                        byte[] messageCode = new byte[4];
+                        messageCode[0] = buffer[0];
+                        messageCode[1] = buffer[1];
+                        messageCode[2] = buffer[2];
+                        messageCode[3] = buffer[3];
+                        byte[] byteMessage = new byte[bytes - 4];
+                        for (int i = 0; i < bytes - 4; i++)
+                            byteMessage[i] = buffer[i + 4];
+                        
+                        int code = messageCode[0] << 24 | messageCode[1] << 16
+                                | messageCode[2] << 8  | messageCode[3];
+                        Log.i(TAG, "CODE READ: " + code);
+                        
+                        if (code == BluetoothProtocol.DATA_DRAWING_NODE)
+                            m_handler.obtainMessage(BluetoothProtocol.MESSAGE_READ, bytes - 4, code, byteMessage)
+                            .sendToTarget();
+                        else
+                            m_handler.obtainMessage(BluetoothProtocol.MESSAGE_READ, bytes, -1, buffer)
+                            .sendToTarget();
+                        
+                        
+                    }
+                    else
+                     // Send the obtained bytes to the UI Activity
+                        m_handler.obtainMessage(BluetoothProtocol.MESSAGE_READ, bytes, -1, buffer)
+                        .sendToTarget();
+                    
+                    
+                    
+                    
                 }
                 catch (IOException e)
                 {
