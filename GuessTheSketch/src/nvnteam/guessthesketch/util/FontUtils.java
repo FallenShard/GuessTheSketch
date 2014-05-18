@@ -6,15 +6,23 @@ import android.graphics.Typeface;
 public class FontUtils 
 {
 
-    private static Typeface mTitleFont;
+    private static Typeface m_titleFont;
 
     public static enum FontType
     {
-        MAIN_FONT
+        VILLA
         {
             public String toString() 
             {
                 return "Villa.ttf";
+            }
+        },
+
+        SEGOE
+        {
+            public String toString() 
+            {
+                return "Segoe.ttf";
             }
         }
     }
@@ -25,13 +33,22 @@ public class FontUtils
 
         try 
         {
-            if (typefaceName.equals(FontType.MAIN_FONT.toString())) 
+            if (typefaceName.equals(FontType.VILLA.toString())) 
             {
-                if (mTitleFont == null)
-                    mTitleFont = Typeface.createFromAsset(
+                if (m_titleFont == null)
+                    m_titleFont = Typeface.createFromAsset(
                             context.getAssets(), "fonts/" + typefaceName);
 
-                typeFace = mTitleFont;
+                typeFace = m_titleFont;
+            }
+
+            if (typefaceName.equals(FontType.SEGOE.toString())) 
+            {
+                if (m_titleFont == null)
+                    m_titleFont = Typeface.createFromAsset(
+                            context.getAssets(), "fonts/" + typefaceName);
+
+                typeFace = m_titleFont;
             }
         }
         catch (Exception ex) 

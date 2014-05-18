@@ -5,7 +5,7 @@
     android:layout_height="match_parent" >
 
     <ImageView
-        android:id="@+id/image_view_logo_team"
+        android:id="@+id/image_view_team_logo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -45,84 +45,86 @@
         android:contentDescription="@string/content_desc_logo_game" >
     </ImageView>
 
-    <LinearLayout
-        android:id="@+id/linear_layout_main_menu"
+    <ViewFlipper
+        android:id="@+id/menu_flipper"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/image_view_logo_game"
         android:layout_centerHorizontal="true"
-        android:animateLayoutChanges="true"
-        android:orientation="vertical" >
+        android:layout_below="@id/image_view_logo_game" >
 
-        <Button
-            style="@style/style_button_main_menu"
-            android:id="@+id/button_main_menu_new_game"
-            android:background="@drawable/button_main_menu_green"
-            android:text="@string/text_button_new_game"
-            android:contentDescription="@string/text_button_new_game" />
+	    <LinearLayout
+	        android:id="@+id/linear_layout_main_menu"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:orientation="vertical" >
+	
+	        <Button
+	            style="@style/style_button_main_menu"
+	            android:id="@+id/button_main_menu_new_game"
+	            android:background="@drawable/button_main_menu_green"
+	            android:text="@string/text_button_new_game"
+	            android:contentDescription="@string/text_button_new_game" />
+	
+	        <Button
+	            style="@style/style_button_main_menu"
+	            android:id="@+id/button_main_menu_free_drawing"
+	            android:background="@drawable/button_main_menu_green"
+	            android:text="@string/text_button_free_drawing"
+	            android:contentDescription="@string/text_button_free_drawing" />
+	
+	        <Button
+	            style="@style/style_button_main_menu"
+	            android:id="@+id/button_main_menu_tutorial"
+	            android:background="@drawable/button_main_menu_green"
+	            android:text="@string/text_button_tutorial"
+	            android:contentDescription="@string/text_button_tutorial" />
+	
+	        <Button
+	            style="@style/style_button_main_menu"
+	            android:id="@+id/button_main_menu_high_scores"
+	            android:background="@drawable/button_main_menu_green"
+	            android:text="@string/text_button_high_scores"
+	            android:contentDescription="@string/text_button_high_scores" />
+	
+	        <Button
+	            style="@style/style_button_main_menu"
+	            android:id="@+id/button_main_menu_quit"
+	            android:background="@drawable/button_main_menu_green"
+	            android:text="@string/text_button_quit"
+	            android:contentDescription="@string/text_button_quit" />
+	
+	    </LinearLayout>
+	
+	    <LinearLayout
+	         android:id="@+id/linear_layout_play_menu"
+	         android:layout_width="wrap_content"
+	         android:layout_height="wrap_content"
+	         android:orientation="vertical" >
+	
+	         <Button
+	             style="@style/style_button_main_menu"
+	             android:id="@+id/button_single_device"
+	             android:background="@drawable/button_main_menu_green"
+	             android:text="@string/text_button_single_device_mode"
+	             android:contentDescription="@string/text_button_single_device_mode" />
+	
+	         <Button
+	             style="@style/style_button_main_menu"
+	             android:id="@+id/button_via_bluetooth"
+	             android:background="@drawable/button_main_menu_green"
+	             android:text="@string/text_button_play_via_bluetooth"
+	             android:contentDescription="@string/text_button_play_via_bluetooth" />
+	
+	         <Button
+	             style="@style/style_button_main_menu"
+	             android:layout_marginTop="80dp"
+	             android:id="@+id/button_back_play_menu"
+	             android:background="@drawable/button_main_menu_green"
+	             android:text="@string/text_button_back"
+	             android:contentDescription="@string/text_button_back" />
+	
+        </LinearLayout>
 
-        <Button
-            style="@style/style_button_main_menu"
-            android:id="@+id/button_main_menu_free_drawing"
-            android:background="@drawable/button_main_menu_red"
-            android:text="@string/text_button_free_drawing"
-            android:contentDescription="@string/text_button_free_drawing" />
-
-        <Button
-            style="@style/style_button_main_menu"
-            android:id="@+id/button_main_menu_tutorial"
-            android:background="@drawable/button_main_menu_purple"
-            android:text="@string/text_button_tutorial"
-            android:contentDescription="@string/text_button_tutorial" />
-
-        <Button
-            style="@style/style_button_main_menu"
-            android:id="@+id/button_main_menu_high_scores"
-            android:background="@drawable/button_main_menu_yellow"
-            android:text="@string/text_button_high_scores"
-            android:contentDescription="@string/text_button_high_scores" />
-
-        <Button
-            style="@style/style_button_main_menu"
-            android:id="@+id/button_main_menu_quit"
-            android:background="@drawable/button_main_menu_blue"
-            android:text="@string/text_button_quit"
-            android:contentDescription="@string/text_button_quit" />
-
-    </LinearLayout>
-
-    <LinearLayout
-         android:id="@+id/linear_layout_play_menu"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:layout_below="@id/image_view_logo_game"
-         android:layout_centerHorizontal="true"
-         android:animateLayoutChanges="true"
-         android:orientation="vertical"
-         android:visibility="visible" >
-
-         <Button
-             style="@style/style_button_main_menu"
-             android:id="@+id/button_single_device"
-             android:background="@drawable/button_main_menu_green"
-             android:text="@string/text_button_single_device_mode"
-             android:contentDescription="@string/text_button_single_device_mode" />
-
-         <Button
-             style="@style/style_button_main_menu"
-             android:id="@+id/button_via_bluetooth"
-             android:background="@drawable/button_main_menu_red"
-             android:text="@string/text_button_play_via_bluetooth"
-             android:contentDescription="@string/text_button_play_via_bluetooth" />
-
-         <Button
-             style="@style/style_button_main_menu"
-             android:layout_marginTop="80dp"
-             android:id="@+id/button_back_play_menu"
-             android:background="@drawable/button_main_menu_blue"
-             android:text="@string/text_button_back"
-             android:contentDescription="@string/text_button_back" />
-
-    </LinearLayout>
+    </ViewFlipper>
 
 </RelativeLayout>

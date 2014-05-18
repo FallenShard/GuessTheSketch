@@ -11,10 +11,12 @@ import nvnteam.guessthesketch.widget.LetterSpacingTextView;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Point;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.SystemClock;
+import android.view.Display;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
@@ -94,7 +96,7 @@ public class SDGameActivity extends FullScreenActivity
         initUI();
         initListeners();
 
-        Typeface tf = FontUtils.getTypeface(this, FontType.MAIN_FONT);
+        Typeface tf = FontUtils.getTypeface(this, FontType.VILLA);
         m_mainWordTextView.setTypeface(tf);
         m_mainWordTextView.setLetterSpacing(1.3f);
 

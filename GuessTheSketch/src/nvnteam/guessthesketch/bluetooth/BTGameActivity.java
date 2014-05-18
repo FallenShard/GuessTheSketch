@@ -159,8 +159,6 @@ public class BTGameActivity extends FullScreenActivity
     private enum State { Picking, Drawing, Guessing, Paused, Over };
     private State m_gameState = State.Picking;
 
-    private Queue<DrawingNode> m_nodeBuffer = new LinkedList<DrawingNode>();
-    private boolean didnt_send = true;
     private long m_currentTimeLeft = 60000;
     private CountDownTimer m_timer = new CountDownTimer(60000, 300)
     {
@@ -224,9 +222,10 @@ public class BTGameActivity extends FullScreenActivity
         {
             sendNodes(BluetoothProtocol.DATA_DRAWING_NODE, q);
         }
-
+        
         public void cancel()
         {
+            
         }
     }
     
@@ -236,40 +235,40 @@ public class BTGameActivity extends FullScreenActivity
     private class DecoderThread extends Thread
     {
         /* test purposes only */
-        private final Deque<DrawingNode> q;
-        private final byte[] a;
+        private final Deque<DrawingNode> mm_queue;
+        private final byte[] mm_array;
 
         public DecoderThread(byte[] array)
         {
-            q = new LinkedList<DrawingNode>();
-            a = new byte[array.length];
+            mm_queue = new LinkedList<DrawingNode>();
+            mm_array = new byte[array.length];
             for (int i = 0; i < array.length; i++)
-                a[i] = array[i];
+                mm_array[i] = array[i];
         }
 
         public void run()
         {
             int i = 0;
             
-            while (i < a.length)
+            while (i < mm_array.length)
             {
                 byte[] tempNode = new byte[24];
-                for (int k = 0; k < 24; k++)
+                for (int k = 0; k < 28; k++)
                 {
-                    tempNode[k] = a[i];
+                    tempNode[k] = mm_array[i];
                     i++;
                 }
                 DrawingNode newNode = DrawingNode.deserialize(tempNode);
-                Log.i(TAG, "RECEIVED X: " + newNode.getX() +
+              /*  Log.i(TAG, "RECEIVED X: " + newNode.getX() +
                         "\nY: " + newNode.getY() +
                         "\nType: " + newNode.getActionType() + 
                         "\nTime: " + newNode.getTimeStamp() +
-                        "\nColor: " + newNode.getColor());
-                q.add(newNode);
+                        "\nColor: " + newNode.getColor());*/
+                mm_queue.add(newNode);
             }
-            Log.i(TAG, "Deserialized " + q.size() + " nodes!");
-            Deque<DrawingNode> newDeque = new LinkedList<DrawingNode>(q);
-            q.clear();
+            Log.i(TAG, "Deserialized " + mm_queue.size() + " nodes!");
+            Deque<DrawingNode> newDeque = new LinkedList<DrawingNode>(mm_queue);
+            mm_queue.clear();
             getDecodedNodes(newDeque);
         }
     }
@@ -402,7 +401,7 @@ public class BTGameActivity extends FullScreenActivity
         m_outAnim = AnimationUtils.loadAnimation(this, android.R.anim.slide_out_right);
         m_viewFlipper.setInAnimation(m_inAnim);
         m_viewFlipper.setOutAnimation(m_outAnim);
-        Typeface tf = FontUtils.getTypeface(this, FontType.MAIN_FONT);
+        Typeface tf = FontUtils.getTypeface(this, FontType.VILLA);
 
         // Chat and connection views setup
         m_deviceTextView = (TextView) findViewById(R.id.device_text_view);

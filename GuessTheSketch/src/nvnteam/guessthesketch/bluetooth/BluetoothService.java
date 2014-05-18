@@ -515,6 +515,7 @@ public class BluetoothService
                 }
                 catch (IOException e)
                 {
+                    
                     Log.e(TAG, "disconnected", e);
                     connectionLost();
                     break;
