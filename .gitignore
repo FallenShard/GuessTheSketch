@@ -54,3 +54,6 @@ local.properties
 
 # PDT-specific
 .buildpath
+
+# Resource files
+.png
