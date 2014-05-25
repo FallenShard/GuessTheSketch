@@ -216,16 +216,16 @@ public class DrawingView extends View
 	                DrawingNode firstNode = m_playbackQueue.remove();
 	                m_drawPaint.setColor(firstNode.getColor());
 
-	                switch (firstNode.getActionType()) 
+	                switch (firstNode.getActionType())
 	                {
 	                    case MotionEvent.ACTION_DOWN:
-	                        m_drawPath.moveTo(firstNode.getX(), firstNode.getY());
+	                        m_drawPath.moveTo(firstNode.getX() * m_screenX, firstNode.getY() * m_screenY);
 	                        break;
 	                    case MotionEvent.ACTION_MOVE:
-	                        m_drawPath.lineTo(firstNode.getX(), firstNode.getY());
+	                        m_drawPath.lineTo(firstNode.getX() * m_screenX, firstNode.getY() * m_screenY);
 	                        break;
 	                    case MotionEvent.ACTION_UP:
-	                        m_drawPath.lineTo(firstNode.getX(), firstNode.getY());
+	                        m_drawPath.lineTo(firstNode.getX() * m_screenX, firstNode.getY() * m_screenY);
 	                        m_drawCanvas.drawPath(m_drawPath, m_drawPaint);
 	                        m_drawPath.reset();
 	                        break;
@@ -298,13 +298,13 @@ public class DrawingView extends View
 	        switch (node.getActionType())
             {
                 case MotionEvent.ACTION_DOWN:
-                    m_drawPath.moveTo(node.getX(), node.getY());
+                    m_drawPath.moveTo(node.getX() * m_screenX, node.getY() * m_screenY);
                     break;
                 case MotionEvent.ACTION_MOVE:
-                    m_drawPath.lineTo(node.getX(), node.getY());
+                    m_drawPath.lineTo(node.getX() * m_screenX, node.getY() * m_screenY);
                     break;
                 case MotionEvent.ACTION_UP:
-                    m_drawPath.lineTo(node.getX(), node.getY());
+                    m_drawPath.lineTo(node.getX() * m_screenX, node.getY() * m_screenY);
                     m_drawCanvas.drawPath(m_drawPath, m_drawPaint);
                     m_drawPath.reset();
                     break;

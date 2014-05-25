@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="20dp"
+    android:orientation="vertical"
+    android:background="@drawable/background_tiled" >
+
+    <TextView
+        android:id="@+id/dialog_game_over_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="10dp"
+        android:text="@string/dialog_title_game_over"
+        android:textColor="#FFFF00"
+        android:textSize="@dimen/title_font_size" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="#FFFF00"
+        />
+
+    <TextView
+        android:id="@+id/dialog_game_over_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="10dp"
+        android:text="@string/dialog_text_game_over"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/menu_font_size" />
+
+    <TextView
+        android:id="@+id/dialog_game_over_team_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="10dp"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/menu_font_size" />
+
+    <LinearLayout 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal" >
+
+        <TextView
+	        android:id="@+id/dialog_game_over_with"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_gravity="center_horizontal"
+	        android:layout_margin="10dp"
+	        android:text="@string/dialog_with_game_over"
+	        android:textColor="@android:color/white"
+	        android:textSize="@dimen/menu_font_size" />
+	
+	    <TextView
+	        android:id="@+id/dialog_game_over_number"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_gravity="center_horizontal"
+	        android:layout_margin="10dp"
+	        android:textColor="@android:color/white"
+	        android:textSize="@dimen/menu_font_size" />
+	    
+	    <TextView
+	        android:id="@+id/dialog_game_over_points"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_gravity="center_horizontal"
+	        android:layout_margin="10dp"
+	        android:text="@string/dialog_points_game_over"
+	        android:textColor="@android:color/white"
+	        android:textSize="@dimen/menu_font_size" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/dialog_game_over_congratulations"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="10dp"
+        android:text="@string/dialog_congratulations_game_over"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/menu_font_size" />
+
+    <Button 
+        android:id="@+id/dialog_guessing_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/button_main_menu_yellow"
+        android:text="@string/dialog_button_close"
+        android:textSize="@dimen/menu_font_size" />
+
+</LinearLayout>

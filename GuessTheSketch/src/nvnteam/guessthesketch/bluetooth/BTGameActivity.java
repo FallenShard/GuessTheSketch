@@ -24,10 +24,8 @@ import nvnteam.guessthesketch.activity.SDPreGameActivity;
 import nvnteam.guessthesketch.bluetooth.BluetoothProtocol;
 import nvnteam.guessthesketch.dto.DrawingNode;
 import nvnteam.guessthesketch.util.ActivityUtils;
-import nvnteam.guessthesketch.util.FontUtils;
 import nvnteam.guessthesketch.util.GTSUtils;
 import nvnteam.guessthesketch.util.WordBase;
-import nvnteam.guessthesketch.util.FontUtils.FontType;
 import nvnteam.guessthesketch.widget.DrawingView;
 import nvnteam.guessthesketch.widget.LetterSpacingTextView;
 
@@ -401,7 +399,7 @@ public class BTGameActivity extends FullScreenActivity
         m_outAnim = AnimationUtils.loadAnimation(this, android.R.anim.slide_out_right);
         m_viewFlipper.setInAnimation(m_inAnim);
         m_viewFlipper.setOutAnimation(m_outAnim);
-        Typeface tf = FontUtils.getTypeface(this, FontType.VILLA);
+        Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/Villa.ttf");
 
         // Chat and connection views setup
         m_deviceTextView = (TextView) findViewById(R.id.device_text_view);

@@ -4,212 +4,269 @@
     android:id="@+id/layout_game"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingTop="10dp"
-    android:paddingBottom="10dp"
-    android:measureAllChildren="false"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".DrawingActivity" >
+    android:padding="5dp" >
 
     <nvnteam.guessthesketch.widget.LetterSpacingTextView
-            android:id="@+id/text_view_word_to_guess"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:textColor="#FFFFFFFF"
-            android:textSize="40sp"
-            android:textAlignment="center" />
-
-    <RelativeLayout
-        android:id="@+id/relative_layout_status_bar"
-        android:layout_width="match_parent"
+        android:id="@+id/text_view_word_to_guess"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/text_view_word_to_guess" >
-
-        <Button
-            style="@style/style_button_in_game"
-            android:id="@+id/button_finish_drawing"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:background="@drawable/button_in_game_blue"
-            android:text="@string/text_button_finish_drawing" />
-
-        <TextView
-            android:id="@+id/text_view_count_down"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:textColor="#FF00FF00"
-            android:textSize="40sp"
-            android:textAlignment="center" />
-
-        <Button
-            style="@style/style_button_in_game"
-            android:id="@+id/button_undo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/button_in_game_blue"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:text="@string/text_button_undo" />
-
-    </RelativeLayout>
-
-    <!-- Color Palette -->
-    
-    <RelativeLayout
-        android:id="@+id/relative_layout_colors_and_guess_text"
-        android:layout_below="@id/relative_layout_status_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:animateLayoutChanges="true" >
-
-    <LinearLayout
-        android:id="@+id/paint_colors"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
         android:layout_alignParentTop="true"
-        android:orientation="horizontal" >
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+        android:textColor="#FFFFFFFF"
+        android:textSize="40sp"
+        android:textAlignment="center" />
 
-        <ImageButton
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:src="@drawable/color_button_normal"
-            android:background="#FF660000"
-            android:contentDescription="@string/paint"
-            android:onClick="paintClicked"
-            android:tag="#FF660000" />
+    <TextView
+        android:id="@+id/text_view_count_down"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text_view_word_to_guess"
+        android:layout_alignParentRight="true"
+        android:textColor="#FF00FF00"
+        android:textSize="40sp"
+        android:textAlignment="center" />
 
-        <ImageButton
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:src="@drawable/color_button_normal"
-            android:background="#FFFF0000"
-            android:contentDescription="@string/paint"
-            android:onClick="paintClicked"
-            android:tag="#FFFF0000" />
+    <TextView
+        android:id="@+id/text_view_current_round"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text_view_word_to_guess"
+        android:layout_centerHorizontal="true"
+        android:textColor="#FF8080FF"
+        android:textSize="40sp"
+        android:textAlignment="center" />
 
-        <ImageButton
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:src="@drawable/color_button_normal"
-            android:background="#FFFF6600"
-            android:contentDescription="@string/paint"
-            android:onClick="paintClicked"
-            android:tag="#FFFF6600" />
+    <TextView
+        android:id="@+id/text_view_global_count_down"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text_view_word_to_guess"
+        android:layout_alignParentLeft="true"
+        android:visibility="invisible"
+        android:textColor="#FFFFFFFF"
+        android:textSize="40sp"
+        android:textAlignment="center" />
 
-        <ImageButton
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:src="@drawable/color_button_normal"
-            android:background="#FFFFCC00"
-            android:contentDescription="@string/paint"
-            android:onClick="paintClicked"
-            android:tag="#FFFFCC00" />
 
-        <ImageButton
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:src="@drawable/color_button_normal"
-            android:background="#FF009900"
-            android:contentDescription="@string/paint"
-            android:onClick="paintClicked"
-            android:tag="#FF009900" />
-
-        <ImageButton
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:src="@drawable/color_button_normal"
-            android:background="#FF009999"
-            android:contentDescription="@string/paint"
-            android:onClick="paintClicked"
-            android:tag="#FF009999" />
-
-        <ImageButton
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:src="@drawable/color_button_normal"
-            android:background="#FF0000FF"
-            android:contentDescription="@string/paint"
-            android:onClick="paintClicked"
-            android:tag="#FF0000FF" />
-
-        <ImageButton
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:src="@drawable/color_button_normal"
-            android:background="#FF990099"
-            android:contentDescription="@string/paint"
-            android:onClick="paintClicked"
-            android:tag="#FF990099" />
-
-        <ImageButton
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:src="@drawable/color_button_normal"
-            android:background="#FFFF6666"
-            android:contentDescription="@string/paint"
-            android:onClick="paintClicked"
-            android:tag="#FFFF6666" />
-
-        <ImageButton
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:src="@drawable/color_button_normal"
-            android:background="#FFFFFFFF"
-            android:contentDescription="@string/paint"
-            android:onClick="paintClicked"
-            android:tag="#FFFFFFFF" />
-
-        <ImageButton
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:src="@drawable/color_button_normal"
-            android:background="#FF787878"
-            android:contentDescription="@string/paint"
-            android:onClick="paintClicked"
-            android:tag="#FF787878" />
-
-        <ImageButton
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:src="@drawable/color_button_normal"
-            android:background="#FF000000"
-            android:contentDescription="@string/paint"
-            android:onClick="paintClicked"
-            android:tag="#FF000000" />
-
-    </LinearLayout>
-
-    <EditText
-        android:id="@+id/edit_text_guesser"
+    <ViewFlipper
+        android:id="@+id/palette_flipper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:layout_gravity="center_vertical"
-        android:layout_alignTop="@id/paint_colors"
-        android:layout_alignParentTop="true"
-        android:inputType="text"
-        android:imeOptions="actionGo"
-        android:maxLines="1"
-        android:hint="@string/hint_edit_text_guesser"
-        android:gravity="center_horizontal"
-        android:textSize="25sp"
-        android:visibility="gone" />
+        android:layout_below="@id/text_view_count_down" >
 
-    </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/drawers_palette"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="2dp" >
+
+            <Button
+                android:id="@+id/button_finish_drawing"
+	            style="@style/style_button_in_game"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_alignParentLeft="true"
+	            android:layout_alignParentTop="true"
+	            android:background="@drawable/button_in_game_blue"
+	            android:text="@string/text_button_finish_drawing" />
+
+	        <Button
+	            android:id="@+id/button_undo"
+	            style="@style/style_button_in_game"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_alignParentRight="true"
+	            android:layout_alignParentTop="true"
+	            android:background="@drawable/button_in_game_blue"
+	            android:text="@string/text_button_undo" />
+
+	        <LinearLayout
+	            android:id="@+id/brush_size_layout"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_alignParentTop="true"
+	            android:layout_centerHorizontal="true"
+	            android:layout_centerInParent="true"
+	            android:orientation="horizontal" >
+
+	            <ImageButton
+			        android:id="@+id/small_brush"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:contentDescription="@string/sml"
+			        android:background="@null"
+			        android:src="@drawable/small_brush_normal"
+			        android:onClick="brushClicked" />
+
+			    <ImageButton
+			        android:id="@+id/medium_brush"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:contentDescription="@string/med"
+                    android:background="@null"
+			        android:src="@drawable/medium_brush_normal"
+			        android:onClick="brushClicked" />
+
+			    <ImageButton
+			        android:id="@+id/large_brush"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:contentDescription="@string/lrg"
+			        android:background="@null"
+			        android:src="@drawable/large_brush_normal"
+			        android:onClick="brushClicked" />
+
+	        </LinearLayout>
+
+	        <LinearLayout
+		        android:id="@+id/paint_colors"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_below="@id/button_finish_drawing"
+		        android:layout_centerHorizontal="true"
+		        android:orientation="horizontal" >
+
+		        <ImageButton
+		            android:layout_height="wrap_content"
+		            android:layout_width="wrap_content"
+		            android:src="@drawable/color_button_normal"
+		            android:background="#FF660000"
+		            android:contentDescription="@string/paint"
+		            android:onClick="paintClicked"
+		            android:tag="#FF660000" />
+
+		        <ImageButton
+		            android:layout_height="wrap_content"
+		            android:layout_width="wrap_content"
+		            android:src="@drawable/color_button_normal"
+		            android:background="#FFFF0000"
+		            android:contentDescription="@string/paint"
+		            android:onClick="paintClicked"
+		            android:tag="#FFFF0000" />
+
+		        <ImageButton
+		            android:layout_height="wrap_content"
+		            android:layout_width="wrap_content"
+		            android:src="@drawable/color_button_normal"
+		            android:background="#FFFF6600"
+		            android:contentDescription="@string/paint"
+		            android:onClick="paintClicked"
+		            android:tag="#FFFF6600" />
+
+		        <ImageButton
+		            android:layout_height="wrap_content"
+		            android:layout_width="wrap_content"
+		            android:src="@drawable/color_button_normal"
+		            android:background="#FFFFCC00"
+		            android:contentDescription="@string/paint"
+		            android:onClick="paintClicked"
+		            android:tag="#FFFFCC00" />
+
+		        <ImageButton
+		            android:layout_height="wrap_content"
+		            android:layout_width="wrap_content"
+		            android:src="@drawable/color_button_normal"
+		            android:background="#FF009900"
+		            android:contentDescription="@string/paint"
+		            android:onClick="paintClicked"
+		            android:tag="#FF009900" />
+
+		        <ImageButton
+		            android:layout_height="wrap_content"
+		            android:layout_width="wrap_content"
+		            android:src="@drawable/color_button_normal"
+		            android:background="#FF009999"
+		            android:contentDescription="@string/paint"
+		            android:onClick="paintClicked"
+		            android:tag="#FF009999" />
+
+		        <ImageButton
+		            android:layout_height="wrap_content"
+		            android:layout_width="wrap_content"
+		            android:src="@drawable/color_button_normal"
+		            android:background="#FF0000FF"
+		            android:contentDescription="@string/paint"
+		            android:onClick="paintClicked"
+		            android:tag="#FF0000FF" />
+
+		        <ImageButton
+		            android:layout_height="wrap_content"
+		            android:layout_width="wrap_content"
+		            android:src="@drawable/color_button_normal"
+		            android:background="#FF990099"
+		            android:contentDescription="@string/paint"
+		            android:onClick="paintClicked"
+		            android:tag="#FF990099" />
+
+		        <ImageButton
+		            android:layout_height="wrap_content"
+		            android:layout_width="wrap_content"
+		            android:src="@drawable/color_button_normal"
+		            android:background="#FFFF6666"
+		            android:contentDescription="@string/paint"
+		            android:onClick="paintClicked"
+		            android:tag="#FFFF6666" />
+
+		        <ImageButton
+		            android:layout_height="wrap_content"
+		            android:layout_width="wrap_content"
+		            android:src="@drawable/color_button_normal"
+		            android:background="#FFFFFFFF"
+		            android:contentDescription="@string/paint"
+		            android:onClick="paintClicked"
+		            android:tag="#FFFFFFFF" />
+
+		        <ImageButton
+		            android:layout_height="wrap_content"
+		            android:layout_width="wrap_content"
+		            android:src="@drawable/color_button_normal"
+		            android:background="#FF787878"
+		            android:contentDescription="@string/paint"
+		            android:onClick="paintClicked"
+		            android:tag="#FF787878" />
+
+		        <ImageButton
+		            android:layout_height="wrap_content"
+		            android:layout_width="wrap_content"
+		            android:src="@drawable/color_button_normal"
+		            android:background="#FF000000"
+		            android:contentDescription="@string/paint"
+		            android:onClick="paintClicked"
+		            android:tag="#FF000000" />
+
+	        </LinearLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+	        android:id="@+id/guesser_palette"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content" >
+
+		    <EditText
+		        android:id="@+id/edit_text_guesser"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_margin="30dp"
+		        android:layout_centerInParent="true"
+		        android:inputType="text"
+		        android:imeOptions="actionGo"
+		        android:maxLines="1"
+		        android:hint="@string/hint_edit_text_guesser"
+		        android:gravity="center_horizontal"
+		        android:textSize="25sp" />
+
+        </RelativeLayout>
+
+    </ViewFlipper>
 
     <!-- Custom View -->
     <nvnteam.guessthesketch.widget.DrawingView
         android:id="@+id/drawing"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/relative_layout_colors_and_guess_text"
-        android:layout_marginBottom="3dp"
-        android:layout_marginTop="3dp"
+        android:layout_below="@id/palette_flipper"
+        android:layout_margin="3dp"
         android:background="#FFFFFFFF" />
 
 </RelativeLayout>

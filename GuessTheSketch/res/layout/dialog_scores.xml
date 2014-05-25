@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="20dp"
+    android:orientation="vertical"
+    android:background="@drawable/background_tiled" >
+
+    <TextView
+        android:id="@+id/dialog_scores_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="10dp"
+        android:text="@string/dialog_title_scores"
+        android:textColor="#FFFF00"
+        android:textSize="@dimen/title_font_size" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="#FFFF00"
+        />
+
+    <TextView
+        android:id="@+id/dialog_scores_current_round"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:textColor="#FFFFFF"
+        android:textSize="@dimen/menu_font_size" />
+
+    <TextView
+        android:id="@+id/dialog_scores_current_score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:textColor="#FFFFFF"
+        android:text="@string/dialog_current_scores"
+        android:textSize="@dimen/menu_font_size" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:orientation="horizontal" >
+
+	    <TextView
+	        android:id="@+id/dialog_scores_team_one_name"
+	        android:layout_width="0dp"
+	        android:layout_height="wrap_content"
+	        android:layout_margin="10dp"
+	        android:layout_weight="1"
+	        android:textColor="#8080FF"
+	        android:textSize="@dimen/large_font_size" />
+
+	    <TextView
+	        android:id="@+id/dialog_scores_team_one_score"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_margin="10dp"
+	        android:textColor="#8080FF"
+	        android:textSize="@dimen/large_font_size" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/dialog_scores_team_two_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:textColor="#FF8080"
+            android:textSize="@dimen/large_font_size" />
+
+        <TextView
+            android:id="@+id/dialog_scores_team_two_score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:textColor="#FF8080"
+            android:textSize="@dimen/large_font_size" />
+
+    </LinearLayout>
+
+    <TextView
+		android:id="@+id/dialog_scores_proceed"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center_horizontal"
+		android:layout_margin="10dp"
+		android:textColor="#FFFFFF"
+		android:text="@string/dialog_proceed_scores"
+		android:textSize="@dimen/menu_font_size" />
+
+    <Button 
+        android:id="@+id/dialog_scores_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/button_main_menu_yellow"
+        android:text="@string/dialog_proceed_button"
+        android:textSize="@dimen/menu_font_size" />
+
+</LinearLayout>

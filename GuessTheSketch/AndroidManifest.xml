@@ -41,6 +41,16 @@
 		    android:windowSoftInputMode="stateHidden"
 		    android:screenOrientation="portrait" >
 		</activity>
+		
+		<activity
+            android:name="nvnteam.guessthesketch.activity.HighScoreActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        
+		<activity
+            android:name="nvnteam.guessthesketch.activity.TutorialActivity"
+            android:screenOrientation="portrait" >
+        </activity>
 
 		<activity
             android:name="nvnteam.guessthesketch.activity.SDGameActivity"

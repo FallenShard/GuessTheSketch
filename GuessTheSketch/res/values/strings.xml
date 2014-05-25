@@ -21,12 +21,22 @@
 	<string name="text_button_single_device_mode">Single-Device</string>
 	<string name="text_button_play_via_bluetooth">via Bluetooth</string>
 	<string name="text_button_back">Back</string>
+	
+	<!-- High Score Texts -->
+	<string name="text_button_left">&lt;</string>
+	<string name="text_button_right">></string>
+	<string name="text_high_score_title">High Scores</string>
 
 	<!-- Pre-Game Texts -->
 	<string name="title_text_view_pre_game">Game Config</string>
 	<string name="text_button_start">Start</string>
 	<string name="hint_text_view_team_one">Team One</string>
 	<string name="hint_text_view_team_two">Team Two</string>
+	<string name="text_view_team_names">Team Names</string>
+    <string name="text_view_game_modes">Game Modes</string>
+    <string name="radio_button_five_rounds">Five Rounds Mode</string>
+    <string name="radio_button_global_timer">Ten Minutes Timed Mode</string>
+    <string name="radio_button_max_points">First Team to 200 Points Wins</string>
 
 	<!-- Descriptions for Image Views -->
 	<string name="content_desc_logo_game">Main Logo</string>
@@ -44,7 +54,25 @@
 	<string name="dialog_title_guessing">Guesser Turn</string>
 	<string name="dialog_text_guessing">Prepare to guess the word!</string>
 	<string name="dialog_button_ok">OK</string>
-    
+	<string name="dialog_button_close">Close</string>
+	<string name="dialog_button_cancel">Cancel</string>
+	<string name="dialog_button_yes">Yes</string>
+    <string name="dialog_button_no">No</string>
+	
+	<string name="dialog_title_word_picker">Pick a Word!</string>
+	
+	<string name="dialog_title_scores">Timed Game Mode</string>
+	<string name="dialog_round_scores">End of Round X</string>
+	<string name="dialog_current_scores">Current Score is</string>
+	<string name="dialog_proceed_scores">It is Team1\'s Turn</string>
+	<string name="dialog_proceed_button">Proceed</string>
+	
+	<string name="dialog_title_game_over">Game Over</string>
+    <string name="dialog_text_game_over">Winner of this game is team</string>
+    <string name="dialog_with_game_over">with</string>
+    <string name="dialog_points_game_over">points!</string>
+    <string name="dialog_congratulations_game_over">Congratulations!</string>
+
     <!--  Bluetooth -->
     <string name="send">Send</string>
     <string name="not_connected">You are not connected to a device</string>

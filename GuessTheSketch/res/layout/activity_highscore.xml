@@ -1,0 +1,385 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="50dp"
+    android:paddingBottom="50dp" >
+
+    <TextView
+        android:id="@+id/text_view_high_scores"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="@string/text_high_score_title"
+        android:textSize="@dimen/title_font_size"
+        android:textColor="#FFFFFF00"
+        android:layout_marginBottom="50dp"/>
+
+    <TextView
+        android:id="@+id/text_view_flipper_page"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/text_view_high_scores"
+        android:text="@string/text_high_score_title"
+        android:textSize="@dimen/dialog_title_font_size"
+        android:textColor="#FFFFFF00"
+        android:layout_marginBottom="20dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text_view_flipper_page"
+        android:layout_margin="10dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/start_new"
+            android:layout_gravity="center_vertical"
+            android:background="@android:color/transparent"
+            android:text="@string/text_button_left"
+            android:layout_margin="10dp"
+            android:textColor="#FFFFFF00"
+            android:textSize="@dimen/title_font_size" />
+
+        <ViewFlipper
+            android:id="@+id/high_score_flipper"
+	        android:layout_width="0dp"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1" >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:tag="Best scores in a single round"
+                >
+
+                <TextView
+                    android:id="@+id/round_score_name_one"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_margin="10dp"
+                    android:textSize="@dimen/dialog_title_font_size"
+                     />
+
+                <TextView
+                    android:id="@+id/round_score_name_two"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/round_score_name_one"
+                    android:layout_alignParentLeft="true"
+                    android:layout_margin="10dp"
+                    android:textSize="@dimen/dialog_title_font_size"
+                     />
+
+                <TextView
+                    android:id="@+id/round_score_name_three"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/round_score_name_two"
+                    android:layout_alignParentLeft="true"
+                    android:layout_margin="10dp"
+                    android:textSize="@dimen/dialog_title_font_size"
+                     />
+
+                <TextView
+                    android:id="@+id/round_score_name_four"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/round_score_name_three"
+                    android:layout_alignParentLeft="true"
+                    android:layout_margin="10dp"
+                    android:textSize="@dimen/dialog_title_font_size"
+                     />
+
+                <TextView
+                    android:id="@+id/round_score_name_five"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/round_score_name_four"
+                    android:layout_alignParentLeft="true"
+                    android:layout_margin="10dp"
+                    android:textSize="@dimen/dialog_title_font_size"
+                     />
+
+                <TextView
+                    android:id="@+id/round_score_value_one"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_margin="10dp"
+                    android:textSize="@dimen/dialog_title_font_size"
+                     />
+
+                <TextView
+                    android:id="@+id/round_score_value_two"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/round_score_value_one"
+                    android:layout_alignParentRight="true"
+                    android:layout_margin="10dp"
+                    android:textSize="@dimen/dialog_title_font_size"
+                     />
+
+                <TextView
+                    android:id="@+id/round_score_value_three"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/round_score_value_two"
+                    android:layout_alignParentRight="true"
+                    android:layout_margin="10dp"
+                    android:textSize="@dimen/dialog_title_font_size"
+                     />
+
+                <TextView
+                    android:id="@+id/round_score_value_four"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/round_score_value_three"
+                    android:layout_alignParentRight="true"
+                    android:layout_margin="10dp"
+                    android:textSize="@dimen/dialog_title_font_size"
+                     />
+
+                <TextView
+                    android:id="@+id/round_score_value_five"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/round_score_value_four"
+                    android:layout_alignParentRight="true"
+                    android:layout_margin="10dp"
+                    android:textSize="@dimen/dialog_title_font_size"
+                     />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:tag="Best average scores per round"
+                >
+
+                <TextView
+                    android:id="@+id/avg_score_name_one"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_margin="10dp"
+                    android:textSize="@dimen/dialog_title_font_size" />
+
+                <TextView
+                    android:id="@+id/avg_score_name_two"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/avg_score_name_one"
+                    android:layout_alignParentLeft="true"
+                    android:layout_margin="10dp"
+                    android:textSize="@dimen/dialog_title_font_size" />
+
+                <TextView
+                    android:id="@+id/avg_score_name_three"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/avg_score_name_two"
+                    android:layout_alignParentLeft="true"
+                    android:layout_margin="10dp"
+                    android:textSize="@dimen/dialog_title_font_size" />
+
+                <TextView
+                    android:id="@+id/avg_score_name_four"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/avg_score_name_three"
+                    android:layout_alignParentLeft="true"
+                    android:layout_margin="10dp"
+                    android:textSize="@dimen/dialog_title_font_size" />
+
+                <TextView
+                    android:id="@+id/avg_score_name_five"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/avg_score_name_four"
+                    android:layout_alignParentLeft="true"
+                    android:layout_margin="10dp"
+                    android:textSize="@dimen/dialog_title_font_size" />
+
+                <TextView
+                    android:id="@+id/avg_score_value_one"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_margin="10dp"
+                    android:textSize="@dimen/dialog_title_font_size" />
+
+                <TextView
+                    android:id="@+id/avg_score_value_two"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/avg_score_value_one"
+                    android:layout_alignParentRight="true"
+                    android:layout_margin="10dp"
+                    android:textSize="@dimen/dialog_title_font_size" />
+
+                <TextView
+                    android:id="@+id/avg_score_value_three"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/avg_score_value_two"
+                    android:layout_alignParentRight="true"
+                    android:layout_margin="10dp"
+                    android:textSize="@dimen/dialog_title_font_size" />
+
+                <TextView
+                    android:id="@+id/avg_score_value_four"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/avg_score_value_three"
+                    android:layout_alignParentRight="true"
+                    android:layout_margin="10dp"
+                    android:textSize="@dimen/dialog_title_font_size" />
+
+                <TextView
+                    android:id="@+id/avg_score_value_five"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/avg_score_value_four"
+                    android:layout_alignParentRight="true"
+                    android:layout_margin="10dp"
+                    android:textSize="@dimen/dialog_title_font_size" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:tag="Best scores in five rounds"
+                >
+
+                <TextView
+                    android:id="@+id/five_score_name_one"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_margin="10dp"
+                    android:textSize="@dimen/dialog_title_font_size" />
+
+                <TextView
+                    android:id="@+id/five_score_name_two"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/five_score_name_one"
+                    android:layout_alignParentLeft="true"
+                    android:layout_margin="10dp"
+                    android:textSize="@dimen/dialog_title_font_size" />
+
+                <TextView
+                    android:id="@+id/five_score_name_three"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/five_score_name_two"
+                    android:layout_alignParentLeft="true"
+                    android:layout_margin="10dp"
+                    android:textSize="@dimen/dialog_title_font_size"/>
+
+                <TextView
+                    android:id="@+id/five_score_name_four"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/five_score_name_three"
+                    android:layout_alignParentLeft="true"
+                    android:layout_margin="10dp"
+                    android:textSize="@dimen/dialog_title_font_size" />
+
+                <TextView
+                    android:id="@+id/five_score_name_five"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/five_score_name_four"
+                    android:layout_alignParentLeft="true"
+                    android:layout_margin="10dp"
+                    android:textSize="@dimen/dialog_title_font_size" />
+
+                <TextView
+                    android:id="@+id/five_score_value_one"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_margin="10dp"
+                    android:textSize="@dimen/dialog_title_font_size" />
+
+                <TextView
+                    android:id="@+id/five_score_value_two"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/five_score_value_one"
+                    android:layout_alignParentRight="true"
+                    android:layout_margin="10dp"
+                    android:textSize="@dimen/dialog_title_font_size"/>
+
+                <TextView
+                    android:id="@+id/five_score_value_three"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/five_score_value_two"
+                    android:layout_alignParentRight="true"
+                    android:layout_margin="10dp"
+                    android:textSize="@dimen/dialog_title_font_size"/>
+
+                <TextView
+                    android:id="@+id/five_score_value_four"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/five_score_value_three"
+                    android:layout_alignParentRight="true"
+                    android:layout_margin="10dp"
+                    android:textSize="@dimen/dialog_title_font_size" />
+
+                <TextView
+                    android:id="@+id/five_score_value_five"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/five_score_value_four"
+                    android:layout_alignParentRight="true"
+                    android:layout_margin="10dp"
+                    android:textSize="@dimen/dialog_title_font_size" />
+
+            </RelativeLayout>
+
+        </ViewFlipper>
+
+        <Button
+            android:id="@+id/btn_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/start_new"
+            android:layout_gravity="center_vertical"
+            android:background="@android:color/transparent"
+            android:text="@string/text_button_right"
+            android:layout_margin="10dp"
+            android:textColor="#FFFFFF00"
+            android:textSize="@dimen/title_font_size" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/button_back_high_scores"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/button_main_menu_blue"
+	    android:text="@string/text_button_back"
+	    android:textSize="@dimen/menu_font_size"
+	    android:contentDescription="@string/text_button_back" />
+
+</RelativeLayout>
