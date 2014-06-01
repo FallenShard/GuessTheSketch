@@ -16,9 +16,10 @@ public class BluetoothProtocol
     public static final int COMMAND_START_GUESSING = 10;
     public static final int COMMAND_SHOW_SCORES = 11;
     public static final int COMMAND_UNDO = 12;
-    
+    public static final int COMMAND_PROCEED = 13;
+
     public static final int DATA_DRAWING_NODE = 20;
-    
+
     public static final int IS_COMMAND = 100;
     //public static final int COMMAND_
 }

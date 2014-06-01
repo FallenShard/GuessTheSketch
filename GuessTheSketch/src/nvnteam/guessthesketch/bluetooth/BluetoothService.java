@@ -490,28 +490,22 @@ public class BluetoothService
                         byte[] byteMessage = new byte[bytes - 4];
                         for (int i = 0; i < bytes - 4; i++)
                             byteMessage[i] = buffer[i + 4];
-                        
+
                         int code = messageCode[0] << 24 | messageCode[1] << 16
                                 | messageCode[2] << 8  | messageCode[3];
                         Log.i(TAG, "CODE READ: " + code);
-                        
+
                         if (code == BluetoothProtocol.DATA_DRAWING_NODE)
                             m_handler.obtainMessage(BluetoothProtocol.MESSAGE_READ, bytes - 4, code, byteMessage)
                             .sendToTarget();
                         else
                             m_handler.obtainMessage(BluetoothProtocol.MESSAGE_READ, bytes, -1, buffer)
                             .sendToTarget();
-                        
-                        
                     }
                     else
                      // Send the obtained bytes to the UI Activity
                         m_handler.obtainMessage(BluetoothProtocol.MESSAGE_READ, bytes, -1, buffer)
                         .sendToTarget();
-                    
-                    
-                    
-                    
                 }
                 catch (IOException e)
                 {

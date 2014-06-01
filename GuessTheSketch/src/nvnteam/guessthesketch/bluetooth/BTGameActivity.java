@@ -1,32 +1,20 @@
 package nvnteam.guessthesketch.bluetooth;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInput;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutput;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
-import java.io.StreamCorruptedException;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
 import java.util.Deque;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Random;
-import java.util.Set;
+import java.util.Vector;
 
+import nvnteam.guessthesketch.activity.ConfirmationDialog;
 import nvnteam.guessthesketch.activity.FullScreenActivity;
-import nvnteam.guessthesketch.activity.PrepareToGuessDialog;
-import nvnteam.guessthesketch.activity.SDGameActivity;
+import nvnteam.guessthesketch.activity.GameOverDialog;
 import nvnteam.guessthesketch.activity.SDPreGameActivity;
+import nvnteam.guessthesketch.activity.ScoreDialog;
 import nvnteam.guessthesketch.activity.WordPickerDialog;
 import nvnteam.guessthesketch.bluetooth.BluetoothProtocol;
 import nvnteam.guessthesketch.dto.DrawingNode;
 import nvnteam.guessthesketch.util.ActivityUtils;
-import nvnteam.guessthesketch.util.GTSUtils;
 import nvnteam.guessthesketch.util.HighScoreManager;
 import nvnteam.guessthesketch.util.WordBase;
 import nvnteam.guessthesketch.widget.DrawingView;
@@ -38,30 +26,21 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothSocket;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
-import android.os.SystemClock;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -72,7 +51,6 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.TextView.OnEditorActionListener;
 
 /**
@@ -91,10 +69,9 @@ public class BTGameActivity extends FullScreenActivity
     // Intent request codes
     private static final int REQUEST_CONNECT_DEVICE = 1;
     private static final int REQUEST_ENABLE_BT = 2;
-    
+
     // ViewFlipper views
     private ViewFlipper m_viewFlipper;
-    private View m_connLayout;
     private View m_preLayout;
     private View m_gameLayout;
     private View m_infoLayout;
@@ -112,17 +89,16 @@ public class BTGameActivity extends FullScreenActivity
     // Pre-game views
     private TextView m_titleText;
     private TextView m_teamNamesText;
-    private TextView m_gameModesText;
-
     private EditText m_teamOneEditText;
     private EditText m_teamTwoEditText;
 
+    private TextView m_gameModesText;
     private RadioButton m_fiveRoundsRadioButton;
     private RadioButton m_timedRadioButton;
     private RadioButton m_maxPointsRadioButton;
 
-    private Button m_backBtn;
     private Button m_startBtn;
+    private Button m_backBtn;
 
     // In-game views
     private DrawingView m_drawView;
@@ -139,6 +115,8 @@ public class BTGameActivity extends FullScreenActivity
     private LinearLayout m_brushStrip;
     private EditText m_guesserEditText;
     private TextView m_infoTextView;
+    
+    private Vector<AlertDialog> m_dialogs = new Vector<AlertDialog>();
 
     // Name of the connected device
     private String m_connectedDeviceName = null;
@@ -169,7 +147,7 @@ public class BTGameActivity extends FullScreenActivity
     private int m_currentTurn = 0;
     private static int MaxTeams = 2;
     private float[] m_currentScores = {0, 0};
-    // private HighScoreManager m_highScoreManager = null;
+    private HighScoreManager m_highScoreManager = null;
 
     private int m_roundsPassed = 0;
     private int m_gameMode = 0;
@@ -189,17 +167,15 @@ public class BTGameActivity extends FullScreenActivity
 
             m_countDownTextView.setTextColor(0xFF000000 | redComp | greenComp);
 
-            //if (m_gameState == State.Guessing && !m_revealedLetter && millisUntilFinished < 30000)
-                //revealRandomLetter();
+            if (m_gameState == State.Guessing && !m_revealedLetter && millisUntilFinished < 30000)
+                revealRandomLetter();
         }
 
         public void onFinish()
-        {/*
+        {
             m_currentTimeLeft = 0;
-            if (m_gameState == State.Drawing)
-                prepareGuessingPhase();
-            else if (m_gameState == State.Guessing)
-                exitGuessingPhase();*/
+            if (m_gameState == State.Drawing || m_gameState == State.Guessing)
+                exitGuessingPhase();
         }
     };
 
@@ -208,11 +184,9 @@ public class BTGameActivity extends FullScreenActivity
     private SenderThread m_senderThread;
     private DecoderThread m_decoderThread;
 
-    public void transferNodes(Deque<DrawingNode> deque)
+    public void transferNode(DrawingNode node)
     {
-        Log.e(TAG, "NEW DEQUE SIZE: " + deque.size());
-
-        m_senderThread = new SenderThread(deque);
+        m_senderThread = new SenderThread(node);
         m_senderThread.run();
     }
 
@@ -222,42 +196,32 @@ public class BTGameActivity extends FullScreenActivity
         m_drawView.drawFromDeque(deque);
     }
 
+    public synchronized void drawDecodedNode(DrawingNode node)
+    {
+        m_drawView.drawNode(node);
+    }
+
     private class SenderThread extends Thread
     {
-        /* test purposes only */
-        private final Deque<DrawingNode> q;
-/*
-        public SenderThread(int num)
+        private DrawingNode mm_node = null;
+
+        public SenderThread(DrawingNode node)
         {
-            q = new LinkedList<DrawingNode>();
-            for (int i = 0; i < num; i++)
-            {
-                DrawingNode newnode = new DrawingNode();
-                newnode.setAttrib(15.3f + i, 14.23f + i, 3 + i, 123123 + i, 909090 + i);
-                q.add(newnode);
-            }
-            //sendNodes(BluetoothProtocol.DATA_DRAWING_NODE, q);
-        }*/
-        public SenderThread(Deque<DrawingNode> deque)
-        {
-           q = deque;
+            mm_node = node;
         }
 
         public void run()
         {
-            sendNodes(BluetoothProtocol.DATA_DRAWING_NODE, q);
+            sendNode(BluetoothProtocol.DATA_DRAWING_NODE, mm_node);
         }
     }
 
     private class DecoderThread extends Thread
     {
-        /* test purposes only */
-        private final Deque<DrawingNode> mm_queue;
-        private final byte[] mm_array;
+        private byte[] mm_array = null;
 
         public DecoderThread(byte[] array)
         {
-            mm_queue = new LinkedList<DrawingNode>();
             mm_array = new byte[array.length];
             for (int i = 0; i < array.length; i++)
                 mm_array[i] = array[i];
@@ -265,33 +229,17 @@ public class BTGameActivity extends FullScreenActivity
 
         public void run()
         {
-            int i = 0;
-            
-            while (i < mm_array.length)
+            if (mm_array.length == 28)
             {
-                byte[] tempNode = new byte[28];
-                int k;
-                for (k = 0; k < 28 && i < mm_array.length; k++)
-                {
-                    tempNode[k] = mm_array[i];
-                    i++;
-                }
-
-                if (k == 28)
-                {
-                    DrawingNode newNode = DrawingNode.deserialize(tempNode);
-                    Log.i(TAG, "RECEIVED X: " + newNode.getX() +
-                            "\nY: " + newNode.getY() +
-                            "\nType: " + newNode.getActionType() + 
-                            "\nTime: " + newNode.getTimeStamp() +
-                            "\nColor: " + newNode.getColor());
-                    mm_queue.add(newNode);
-                }
+                DrawingNode newNode = DrawingNode.deserialize(mm_array);
+                Log.i("NODESTUFF", "X: " + newNode.getX() + " Y: " + newNode.getY() 
+                        + " ACTION: " + newNode.getActionType() + " COLOR: " + newNode.getColor() 
+                        + " BRUSH: " +newNode.getBrushSize());
+                if (newNode.getX() > 0.f && newNode.getY() > 0.f)
+                    drawDecodedNode(newNode);
             }
-            Log.i(TAG, "Deserialized " + mm_queue.size() + " nodes!");
-            Deque<DrawingNode> newDeque = new LinkedList<DrawingNode>(mm_queue);
-            mm_queue.clear();
-            getDecodedNodes(newDeque);
+            else
+                Log.e("BluetoothGame", "Error decoding node");
         }
     }
 
@@ -353,6 +301,7 @@ public class BTGameActivity extends FullScreenActivity
                 m_bluetoothService.start();
             }
         }
+        m_highScoreManager = new HighScoreManager(this);
     }
 
     @Override
@@ -366,7 +315,6 @@ public class BTGameActivity extends FullScreenActivity
     public void onStop()
     {
         super.onStop();
-        m_timer.cancel();
         if(D) Log.e(TAG, "-- ON STOP --");
     }
 
@@ -376,6 +324,9 @@ public class BTGameActivity extends FullScreenActivity
         super.onDestroy();
         // Stop the Bluetooth chat services
         if (m_bluetoothService != null) m_bluetoothService.stop();
+        m_timer.cancel();
+        if (m_globalTimer != null)
+            m_globalTimer.cancel();
         if(D) Log.e(TAG, "--- ON DESTROY ---");
     }
 
@@ -461,6 +412,7 @@ public class BTGameActivity extends FullScreenActivity
 
     public void prepareInGame()
     {
+        m_infoTextView.setText("Please wait while the other player picks a word");
         if (m_isGameHost)
         {
             m_viewFlipper.setDisplayedChild(m_viewFlipper.indexOfChild(m_gameLayout));
@@ -468,9 +420,6 @@ public class BTGameActivity extends FullScreenActivity
         }
         else
         {
-            m_infoTextView.setText("Please wait while the other player picks a word"
-                    + '\n' + "Team one: " + m_teamNames[0]
-                    + '\n' + "Team two: " + m_teamNames[1]);
             m_viewFlipper.setDisplayedChild(m_viewFlipper.indexOfChild(m_infoLayout));
         }
     }
@@ -491,7 +440,7 @@ public class BTGameActivity extends FullScreenActivity
         // Check that there's actually something to send
         if (message.length() > 0)
         {
-            // Get the message bytes and tell the BluetoothChatService to write
+            // Get the message bytes and tell the BluetoothService to write
             byte[] send = message.getBytes();
             m_bluetoothService.write(send);
 
@@ -528,7 +477,7 @@ public class BTGameActivity extends FullScreenActivity
         m_bluetoothService.write(send);
     }
 
-    private void sendNodes(int code, Queue<DrawingNode> nodes)
+    private synchronized void sendNode(int code, DrawingNode node)
     {
         if (m_bluetoothService.getState() != BluetoothService.STATE_CONNECTED)
         {
@@ -541,10 +490,9 @@ public class BTGameActivity extends FullScreenActivity
             ByteBuffer b = ByteBuffer.allocate(4);
             b.putInt(code);
             outputStream.write(b.array());
-            while (nodes.peek() != null)
-                outputStream.write(DrawingNode.serialize(nodes.poll()));
-            byte[] send = outputStream.toByteArray();
-            m_bluetoothService.write(send);
+            outputStream.write(DrawingNode.serialize(node));
+
+            m_bluetoothService.write(outputStream.toByteArray());
         } 
         catch (IOException e1) 
         {
@@ -608,8 +556,7 @@ public class BTGameActivity extends FullScreenActivity
                 byte[] readBuf = (byte[]) msg.obj;
                 // construct a string from the valid bytes in the buffer
                 Log.e(TAG,  "$$$ MESSAGE LENGTH $$$ " + msg.arg1);
-                //if (!handleCommandMessage(readBuf, msg.arg1))
-                //{
+
                 if (msg.arg2 == BluetoothProtocol.DATA_DRAWING_NODE)
                 {
                     Log.i(TAG, "HAS ENTERED DRAWING NODE RECEIVE");
@@ -621,10 +568,9 @@ public class BTGameActivity extends FullScreenActivity
                     if (!handleCommandMessage(readBuf, msg.arg1))
                     {
                         String readMessage = new String(readBuf, 0, msg.arg1);
-                        m_conversationArrayAdapter.add(m_connectedDeviceName+":  " + readMessage);
+                        m_conversationArrayAdapter.add(m_connectedDeviceName + ":  " + readMessage);
                     }
                 }
-                //}
                 break;
 
             case BluetoothProtocol.MESSAGE_DEVICE_NAME:
@@ -646,6 +592,8 @@ public class BTGameActivity extends FullScreenActivity
             int code = messageBytes[0] << 24 | messageBytes[1] << 16
                      | messageBytes[2] << 8  | messageBytes[3];
             Log.e(TAG,  "RECEIVED MESSAGE CODE: ++++ " + code);
+            for (AlertDialog ad : m_dialogs)
+                if (ad.isShowing()) ad.dismiss();
             switch (code)
             {
             case BluetoothProtocol.COMMAND_CREATE_GAME:
@@ -680,49 +628,28 @@ public class BTGameActivity extends FullScreenActivity
             }
             case BluetoothProtocol.COMMAND_START_GUESSING:
             {
-                m_currentWord = new String(messageBytes, 4, arg1 - 4);
+                m_currentWord = new String(messageBytes, 5, arg1 - 8);
+                String wordIndex = new String(messageBytes, 4, 1);
+                String wordMod = new String(messageBytes, 5 + m_currentWord.length(), 3);
+                m_wordModifier = Float.parseFloat(wordMod);
+                m_wordPoints = m_baseFactor + m_difficultyFactor * Integer.parseInt(wordIndex);
                 m_viewFlipper.setDisplayedChild(m_viewFlipper.indexOfChild(m_gameLayout));
                 prepareGuessingPhase();
                 return true;
             }
             case BluetoothProtocol.COMMAND_SHOW_SCORES:
             {
-                // showScores();
+                exitGuessingPhase();
                 return true;
             }
-            case BluetoothProtocol.DATA_DRAWING_NODE:
-            {/*
-                Log.e(TAG, "DATA_DRAWING_NODE_MESSAGE_LENGTH: " + arg1);
-                byte[] nodes = new byte[arg1 - 4];
-                for (int i = 0; i < nodes.length; i++)
-                    nodes[i] = messageBytes[i + 4];
-                if (arg1 > 4)
-                {
-                    
-                    m_decoderThread = new DecoderThread(nodes);
-                    m_decoderThread.start();*/
-                    /*
-                    byte[] firstNode = new byte[24];
-                    for (int i = 0; i < 24 || i < nodes.length; i++)
-                        firstNode[i] = nodes[i];
-                    try
-                    {
-                    DrawingNode newNode = new DrawingNode(DrawingNode.deserialize(firstNode));
-                    Log.e(TAG, "RECEIVED X: " + newNode.getX() +
-                            "\nY: " + newNode.getY() +
-                            "\nType: " + newNode.getActionType() + 
-                            "\nTime: " + newNode.getTimeStamp() +
-                            "\nColor: " + newNode.getColor());
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.e(TAG, "ERROR ON DESERIALIZATION");
-                    }
-                }*/
+
+            case BluetoothProtocol.COMMAND_UNDO:
+            {
+                m_drawView.undo();
                 return true;
             }
             }
-            if (D) Log.d(TAG, "CODE GIVEN: " + code);
+            if (D) Log.d(TAG, "CODE RECEIVED: " + code);
             return false;
         }
     };
@@ -778,6 +705,7 @@ public class BTGameActivity extends FullScreenActivity
                 {
                     // Grab selected word and form the underscore string
                     m_currentWord = wpd.getSelectedWord();
+                    m_wordModifier = wpd.getSelectedModifier();
                     StringBuffer outputBuffer = new StringBuffer(m_currentWord.length());
                     for (int i = 0; i < m_currentWord.length(); i++)
                        if (m_currentWord.charAt(i) != ' ')
@@ -788,12 +716,10 @@ public class BTGameActivity extends FullScreenActivity
 
                     // Send the word across Bluetooth here
                     sendCommandWithString(BluetoothProtocol.COMMAND_START_GUESSING,
-                            m_currentWord);
+                            wpd.getSelectedIndex() + m_currentWord + m_wordModifier);
 
                     // Set base word points for selected word
-                    m_wordModifier = wpd.getSelectedModifier();
                     m_wordPoints = m_baseFactor + m_difficultyFactor * wpd.getSelectedIndex();
-                    m_drawView.startNew();
                     m_gameState = State.Drawing;
                     m_timer.start();
                     Toast.makeText(BTGameActivity.this, wpd.getSelectedWord(), Toast.LENGTH_LONG).show();
@@ -830,12 +756,11 @@ public class BTGameActivity extends FullScreenActivity
     /**
      * This function gets executed after the guessing phase begins, and evaluates
      * the current round.
-     *//*
+     */
     public void exitGuessingPhase()
     {
         // Cancel the timer and stop playback
         m_timer.cancel();
-        m_drawView.stopPlayback();
 
         // Reveal the word to the guesser
         m_mainWordTextView.setText(m_currentWord);
@@ -853,96 +778,165 @@ public class BTGameActivity extends FullScreenActivity
 
         // If time hasn't run out, add points to the current team, else set to zero
         if (m_currentTimeLeft != 0)
-            m_wordPoints += m_currentTimeLeft / 10000;
+            m_wordPoints += 2 * (m_currentTimeLeft / 10000);
         else
             m_wordPoints = 0;
 
         // Assert points and finish current round
         endRound();
-    }*/
-/*
-    public void exitGuessingPhase()
-    {
-        m_timer.cancel();
-        //m_drawView.setPlayback(false);
-        m_mainWordTextView.setText(m_currentWord);
-        m_guesserEditText.setText("");
-        InputMethodManager inputManager = (InputMethodManager)
-                           getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputManager.toggleSoftInput(0, 0);
-        
-        // Handle evaluation
-        if (m_currentTimeLeft > 0)
-            m_currentPoints[m_currentTurn] += m_wordPoints 
-                                           + (float)m_currentTimeLeft / 6000;
-        m_currentPoints[m_currentTurn] = GTSUtils.round(m_currentPoints[m_currentTurn], 2);
+    }
 
-        if (m_currentPoints[m_currentTurn] > 100.f)
-            m_gameState = State.Over;
+    private String getGameMode()
+    {
+        switch (m_gameMode)
+        {
+        case 0:
+            return "Five Rounds Mode";
+
+        case 1:
+            return "Maximum Points Mode";
+
+        case 2:
+            return "Timed Mode";
+        }
+
+        return "ERROR_MODE";
+    }
+
+    public void endRound()
+    {
+        // Add the points to the current team
+        m_currentScores[m_currentTurn] += m_wordPoints * m_wordModifier;
+        m_highScoreManager.saveScore(m_teamNames[m_currentTurn], 
+                m_wordPoints, HighScoreManager.ROUND_PREFS_NAME);
 
         m_currentTurn = (m_currentTurn + 1) % MaxTeams;
-        
-        if (m_gameState == State.Over)
+
+        // Increase the current round counter
+        ++m_roundsPassed;
+
+        String currentRound = "";
+        if (m_roundsPassed % 2 == 0)
+            currentRound = "End of Round " + (m_roundsPassed >> 1);
+        else
+            currentRound = "Round " + (m_roundsPassed + 1 >> 1) + " Half"; 
+
+        // Pop the round evaluation dialog and prepare the user for the next round
+        final ScoreDialog sd = new ScoreDialog(BTGameActivity.this);
+        m_dialogs.add(sd);
+        sd.show();
+        sd.setParam(getGameMode(), currentRound, m_teamNames[0], m_currentScores[0],
+                    m_teamNames[1], m_currentScores[1], m_currentTurn);
+        sd.setOnClickListener(new OnClickListener()
         {
-            gameOver();
-            return;
-        }
-        
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(m_teamNames[0]+ ": " + m_currentPoints[0] + 
-                           "     " + m_teamNames[1] + ": " + m_currentPoints[1]
-                                   + "\nPrepare to Draw!")
-               .setCancelable(false)
-               .setPositiveButton(m_teamNames[m_currentTurn] + "'s turn",
-                                  new DialogInterface.OnClickListener()
-               {
-                   public void onClick(DialogInterface dialog, int id) 
-                   {
-                       m_drawView.startNew();
-                       m_guesserEditText.animate().alpha(0).withLayer();
-                       m_guesserEditText.setVisibility(View.GONE);
-                       m_colorStrip.animate().alpha(1).withLayer();
-                       m_colorStrip.setVisibility(View.VISIBLE);
-                       m_gameState = State.Picking;
-                       m_timer.start();
-                       //startPickingPhase();
-                   }
-               });
-        AlertDialog alert = builder.create();
-        alert.show();
+            public void onClick(View v)
+            {
+                if (!gameOverCondition())
+                {
+
+                    if (m_isGameHost)
+                    {
+                        if (m_roundsPassed % 2 == 0)
+                        {
+                            m_paletteFlipper.showNext();
+                            prepareDrawingPhase();
+                        }
+                        else
+                            m_viewFlipper.setDisplayedChild(m_viewFlipper.indexOfChild(m_infoLayout));
+                    }
+                    else
+                    {
+                        if (m_roundsPassed % 2 == 0)
+                        {
+                            m_viewFlipper.setDisplayedChild(m_viewFlipper.indexOfChild(m_infoLayout));
+                        }
+                        else
+                        {
+                            m_paletteFlipper.showNext();
+                            prepareDrawingPhase();
+                        }
+                    }
+                }
+                else
+                    gameOver();
+
+                sd.dismiss();
+            }
+        });
     }
-    *//*
+
+    public boolean gameOverCondition()
+    {
+        switch (m_gameMode)
+        {
+        case 0:
+            if (m_roundsPassed >= 10)
+                return true;
+            break;
+
+        case 1:
+            if (m_currentScores[0] >= 200 || m_currentScores[1] >= 200)
+                return true;
+            break;
+        }
+
+        return false;
+    }
+
     public void gameOver()
     {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(m_teamNames[m_currentTurn] + " wins!")
-               .setCancelable(false)
-               .setPositiveButton("Exit", new DialogInterface.OnClickListener() 
-               {
-                   public void onClick(DialogInterface dialog, int id) 
-                   {
-                       BTGameActivity.this.finish();
-                   }
-               });
-        AlertDialog alert = builder.create();
-        alert.show();
-    }*/
+        int winner = m_currentScores[0] > m_currentScores[1] ? 0 : 1;
+        int color = winner == 0 ? 0xFF8080FF : 0xFFFF8080;
+
+        if (m_roundsPassed == 10)
+        {
+            m_highScoreManager.saveScore(m_teamNames[0], 
+                    m_currentScores[0], HighScoreManager.FIVE_PREFS_NAME);
+            m_highScoreManager.saveScore(m_teamNames[1], 
+                    m_currentScores[1], HighScoreManager.FIVE_PREFS_NAME);
+        }
+        if (m_roundsPassed >= 6)
+        {
+            m_highScoreManager.saveScore(m_teamNames[0], 
+                    m_currentScores[0] / (m_roundsPassed >> 1), HighScoreManager.AVG_PREFS_NAME);
+            m_highScoreManager.saveScore(m_teamNames[1], 
+                    m_currentScores[1] / (m_roundsPassed >> 1), HighScoreManager.AVG_PREFS_NAME);
+        }
+
+        final GameOverDialog god = new GameOverDialog(BTGameActivity.this);
+        god.show();
+        god.setParam(m_teamNames[winner], m_currentScores[winner], color);
+        god.setOnClickListener(new OnClickListener()
+        {
+            public void onClick(View v)
+            {
+                god.dismiss();
+                BTGameActivity.this.finish();
+            }
+        });
+    }
 
     @Override
     public void onBackPressed() 
     {
-        new AlertDialog.Builder(this)
-               .setMessage("Are you sure you want to exit?")
-               .setCancelable(false)
-               .setPositiveButton("Yes", new DialogInterface.OnClickListener() 
-               {
-                   public void onClick(DialogInterface dialog, int id) 
-                   {
-                        BTGameActivity.super.onBackPressed();
-                   }
-               })
-               .setNegativeButton("No", null)
-               .show();
+        final ConfirmationDialog cd = new ConfirmationDialog(BTGameActivity.this);
+        cd.show();
+        cd.setParam("Exit", "Are you sure you want to exit?");
+        cd.setYesOnClickListener(new OnClickListener()
+        {
+             public void onClick(View v) 
+             {
+                 cd.dismiss();
+                 BTGameActivity.super.onBackPressed();
+             }
+        });
+        cd.setNoOnClickListener(new OnClickListener()
+        {
+             public void onClick(View v) 
+             {
+                 cd.dismiss();
+             }
+        });
     }
 
     public void paintClicked(View view)
@@ -1046,7 +1040,6 @@ public class BTGameActivity extends FullScreenActivity
                                      | EditorInfo.TYPE_TEXT_FLAG_NO_SUGGESTIONS
                                      | EditorInfo.TYPE_TEXT_VARIATION_FILTER);
 
-        m_connLayout = findViewById(R.id.layout_connection);
         m_preLayout = findViewById(R.id.layout_pre_game);
         m_gameLayout = findViewById(R.id.layout_game);
         m_infoLayout = findViewById(R.id.layout_info);
@@ -1123,11 +1116,6 @@ public class BTGameActivity extends FullScreenActivity
                 String message = view.getText().toString();
                 sendMessage(message);
                 ActivityUtils.hideSystemUI(BTGameActivity.this);
-                /*if (m_isServer)
-                {
-                    m_senderThread = new SenderThread((new Random().nextInt()) % 15);
-                    m_senderThread.start();
-                }*/
             }
         });
 
@@ -1166,18 +1154,7 @@ public class BTGameActivity extends FullScreenActivity
            @Override
            public void onClick(View v)
            {
-               new AlertDialog.Builder(BTGameActivity.this)
-               .setMessage("Are you sure you want to exit?")
-               .setCancelable(false)
-               .setPositiveButton("Yes", new DialogInterface.OnClickListener() 
-               {
-                   public void onClick(DialogInterface dialog, int id) 
-                   {
-                        BTGameActivity.this.finish();
-                   }
-               })
-               .setNegativeButton("No", null)
-               .show();
+               onBackPressed();
            }
         });
 
@@ -1212,6 +1189,23 @@ public class BTGameActivity extends FullScreenActivity
             {
                 m_drawView.undo();
                 sendCommand(BluetoothProtocol.COMMAND_UNDO);
+            }
+        });
+
+        m_guesserEditText.setOnEditorActionListener(new OnEditorActionListener()
+        {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
+            {
+                if (actionId == EditorInfo.IME_ACTION_GO) 
+                   if (v.getText().toString().compareToIgnoreCase(m_currentWord) == 0)
+                   {
+                       sendCommand(BluetoothProtocol.COMMAND_SHOW_SCORES);
+                       exitGuessingPhase();
+                   }
+                   else
+                       v.setText("");
+                return true;
             }
         });
     }
@@ -1272,5 +1266,16 @@ public class BTGameActivity extends FullScreenActivity
 
             m_currentBrush = (ImageButton) view;
         }
+    }
+
+    public void revealRandomLetter()
+    {
+        int length = m_currentWord.length();
+        int hintIndex = WordBase.RandGen.nextInt(length);
+        String displayed = m_mainWordTextView.getText().toString();
+        StringBuilder revealed = new StringBuilder(displayed);
+        revealed.setCharAt(hintIndex, m_currentWord.charAt(hintIndex));
+        m_mainWordTextView.setText(revealed);
+        m_revealedLetter = true;
     }
 }

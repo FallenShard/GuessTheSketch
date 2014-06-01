@@ -23,7 +23,7 @@ public class GameOverDialog extends AlertDialog
     TextView m_congratulations;
     Button m_button;
 
-    protected GameOverDialog(Context context) 
+    public GameOverDialog(Context context) 
     {
         super(context);
         m_context = context;

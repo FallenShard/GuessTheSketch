@@ -18,7 +18,7 @@ public class ConfirmationDialog extends AlertDialog
     Button m_yesButton;
     Button m_nobutton;
 
-    protected ConfirmationDialog(Context context) 
+    public ConfirmationDialog(Context context) 
     {
         super(context);
         m_context = context;

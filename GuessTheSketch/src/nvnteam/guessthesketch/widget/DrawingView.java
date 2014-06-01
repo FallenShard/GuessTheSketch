@@ -66,7 +66,7 @@ public class DrawingView extends View
 	private void setupDrawing()
 	{
 		// Prepare for drawing and setup paint stroke properties
-		m_brushSize = getResources().getInteger(R.integer.medium_size);
+		m_brushSize = getResources().getInteger(R.integer.small_size);
 		m_drawPath = new Path();
 		m_drawPaint = new Paint();
 		m_drawPaint.setColor(m_paintColor);
@@ -131,12 +131,8 @@ public class DrawingView extends View
 
     		if (m_observer != null)
     		{
-    		    if (m_playbackDeque.size() >= 1 || event.getAction() == MotionEvent.ACTION_UP)
-    		    {
-    		        Deque<DrawingNode> newDeque = new LinkedList<DrawingNode>(m_playbackDeque);
-    		        m_observer.transferNodes(newDeque);
-    		        m_playbackDeque.clear();
-    		    }
+    		    m_observer.transferNode(m_currentNode);
+                m_playbackDeque.clear();
     		}
     		invalidate();
     		return true;
@@ -197,6 +193,36 @@ public class DrawingView extends View
 	public void stopPlayback()
 	{
 	    m_shouldPlayback = false;
+	}
+	
+	public void drawNode(final DrawingNode node)
+	{
+	    new Thread(new Runnable()
+        {
+            public void run()
+            {
+                m_drawPaint.setColor(node.getColor());
+                setBrushSize(node.getBrushSize());
+
+                switch (node.getActionType()) 
+                {
+                    case MotionEvent.ACTION_DOWN:
+                        m_drawPath.moveTo(node.getX() * m_screenX, node.getY() * m_screenY);
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        m_drawPath.lineTo(node.getX() * m_screenX, node.getY() * m_screenY);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        m_drawPath.lineTo(node.getX() * m_screenX, node.getY() * m_screenY);
+                        m_drawCanvas.drawPath(m_drawPath, m_drawPaint);
+                        m_drawPath.reset();
+                        break;
+                }
+                postInvalidate();
+                m_undoStack.add(new DrawingNode(m_currentNode));
+                m_playbackDeque.add(new DrawingNode(m_currentNode));
+            }
+        }).start();
 	}
 
 	public void drawFromDeque(final Deque<DrawingNode> deque)
