@@ -1,6 +1,7 @@
 package nvnteam.guessthesketch.activity;
 
 import nvnteam.guessthesketch.R;
+import nvnteam.guessthesketch.util.GTSUtils;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Typeface;
@@ -24,7 +25,7 @@ public class ScoreDialog extends AlertDialog
 
     Button m_button;
 
-    protected ScoreDialog(Context context) 
+    public ScoreDialog(Context context) 
     {
         super(context);
         m_context = context;
@@ -65,14 +66,14 @@ public class ScoreDialog extends AlertDialog
         m_button.setOnClickListener(lsnr);
     }
 
-    public void setParam(String gameMode, String round, String teamOne, int scoreOne, String teamTwo, int scoreTwo, int turn)
+    public void setParam(String gameMode, String round, String teamOne, float scoreOne, String teamTwo, float scoreTwo, int turn)
     {
         m_title.setText(gameMode);
         m_currentRound.setText(round);
         m_teamOneName.setText(teamOne);
-        m_teamOneScore.setText("" + scoreOne);
+        m_teamOneScore.setText("" + GTSUtils.round(scoreOne, 2));
         m_teamTwoName.setText(teamTwo);
-        m_teamTwoScore.setText("" + scoreTwo);
+        m_teamTwoScore.setText("" + GTSUtils.round(scoreTwo, 2));
         if (turn == 0)
             m_proceedText.setText("It's " + teamOne + "'s turn!");
         else

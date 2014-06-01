@@ -1,6 +1,7 @@
 package nvnteam.guessthesketch.activity;
 
 import nvnteam.guessthesketch.R;
+import nvnteam.guessthesketch.util.GTSUtils;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Typeface;
@@ -45,10 +46,9 @@ public class GameOverDialog extends AlertDialog
 
         Typeface tf = Typeface.createFromAsset(m_context.getAssets(), "fonts/Villa.ttf");
         m_button.setTypeface(tf);
-        
+        m_title.setTypeface(tf);
 
         tf = Typeface.createFromAsset(m_context.getAssets(), "fonts/Segoe.ttf");
-        m_title.setTypeface(tf);
         m_teamName.setTypeface(tf);
         m_number.setTypeface(tf);
         m_info.setTypeface(tf);
@@ -57,10 +57,10 @@ public class GameOverDialog extends AlertDialog
         m_congratulations.setTypeface(tf);
     }
 
-    public void setParam(String teamName, int points, int color)
+    public void setParam(String teamName, float points, int color)
     {
         m_teamName.setText(teamName);
-        m_number.setText("" + points);
+        m_number.setText("" + GTSUtils.round(points, 2));
         m_teamName.setTextColor(color);
         m_number.setTextColor(color);
     }

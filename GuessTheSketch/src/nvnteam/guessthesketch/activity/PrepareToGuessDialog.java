@@ -17,7 +17,7 @@ public class PrepareToGuessDialog extends AlertDialog
     TextView m_info;
     Button m_button;
 
-    protected PrepareToGuessDialog(Context context) 
+    public PrepareToGuessDialog(Context context) 
     {
         super(context);
         m_context = context;

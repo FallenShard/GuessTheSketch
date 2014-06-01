@@ -36,7 +36,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="30dp">
 
-        <Button 
+        <Button
 	        android:id="@+id/dialog_confirm_button_ok"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
@@ -45,7 +45,7 @@
 	        android:text="@string/dialog_button_yes"
 	        android:textSize="@dimen/menu_font_size" />
 
-	    <Button 
+	    <Button
 	        android:id="@+id/dialog_confirm_button_cancel"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"

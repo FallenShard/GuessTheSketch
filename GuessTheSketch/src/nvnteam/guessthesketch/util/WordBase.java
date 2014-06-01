@@ -4,7 +4,7 @@ import java.util.Random;
 
 public class WordBase 
 {
-    private final static Random m_randGen = new Random();
+    public final static Random RandGen = new Random();
     private static String[] m_easyWords = new String[] 
             {
                 "CAT",
@@ -262,21 +262,21 @@ public class WordBase
 	
     public static String getEasyWord()
     {
-        return m_easyWords[m_randGen.nextInt(m_easyWords.length)];
+        return m_easyWords[RandGen.nextInt(m_easyWords.length)];
     }
     
     public static String getMediumWord()
     {
-        return m_mediumWords[m_randGen.nextInt(m_mediumWords.length)];
+        return m_mediumWords[RandGen.nextInt(m_mediumWords.length)];
     }
     
     public static String getHardWord()
     {
-        return m_hardWords[m_randGen.nextInt(m_hardWords.length)];
+        return m_hardWords[RandGen.nextInt(m_hardWords.length)];
     }
 	
-	 public static String getReallyHardWord()
+	public static String getReallyHardWord()
     {
-        return m_reallyHardWords[m_randGen.nextInt(m_reallyHardWords.length)];
+        return m_reallyHardWords[RandGen.nextInt(m_reallyHardWords.length)];
     }
 }

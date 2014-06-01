@@ -68,6 +68,7 @@
 	            android:layout_height="wrap_content"
 	            android:layout_alignParentLeft="true"
 	            android:layout_alignParentTop="true"
+	            android:layout_marginBottom="5dp"
 	            android:background="@drawable/button_in_game_blue"
 	            android:text="@string/text_button_finish_drawing" />
 
@@ -78,6 +79,7 @@
 	            android:layout_height="wrap_content"
 	            android:layout_alignParentRight="true"
 	            android:layout_alignParentTop="true"
+	            android:layout_marginBottom="5dp"
 	            android:background="@drawable/button_in_game_blue"
 	            android:text="@string/text_button_undo" />
 
@@ -87,7 +89,6 @@
 	            android:layout_height="wrap_content"
 	            android:layout_alignParentTop="true"
 	            android:layout_centerHorizontal="true"
-	            android:layout_centerInParent="true"
 	            android:orientation="horizontal" >
 
 	            <ImageButton
@@ -97,7 +98,8 @@
 			        android:contentDescription="@string/sml"
 			        android:background="@null"
 			        android:src="@drawable/small_brush_normal"
-			        android:onClick="brushClicked" />
+			        android:onClick="brushClicked"
+			        android:tag="small_brush" />
 
 			    <ImageButton
 			        android:id="@+id/medium_brush"
@@ -106,7 +108,8 @@
 			        android:contentDescription="@string/med"
                     android:background="@null"
 			        android:src="@drawable/medium_brush_normal"
-			        android:onClick="brushClicked" />
+			        android:onClick="brushClicked"
+			        android:tag="medium_brush" />
 
 			    <ImageButton
 			        android:id="@+id/large_brush"
@@ -115,7 +118,8 @@
 			        android:contentDescription="@string/lrg"
 			        android:background="@null"
 			        android:src="@drawable/large_brush_normal"
-			        android:onClick="brushClicked" />
+			        android:onClick="brushClicked"
+			        android:tag="large_brush" />
 
 	        </LinearLayout>
 
@@ -123,7 +127,7 @@
 		        android:id="@+id/paint_colors"
 		        android:layout_width="match_parent"
 		        android:layout_height="wrap_content"
-		        android:layout_below="@id/button_finish_drawing"
+		        android:layout_below="@id/button_undo"
 		        android:layout_centerHorizontal="true"
 		        android:orientation="horizontal" >
 

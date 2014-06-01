@@ -51,10 +51,6 @@ public class DrawingActivity extends FullScreenActivity implements OnClickListen
 		m_mediumBrush = getResources().getInteger(R.integer.medium_size);
 		m_largeBrush = getResources().getInteger(R.integer.large_size);
 
-		//draw button
-		m_drawBtn = (ImageButton)findViewById(R.id.draw_btn);
-		m_drawBtn.setOnClickListener(this);
-
 		//set initial size
 		m_drawView.setBrushSize(m_mediumBrush);
 
@@ -78,9 +74,6 @@ public class DrawingActivity extends FullScreenActivity implements OnClickListen
 	public void paintClicked(View view){
 		//use chosen color
 
-		//set erase false
-	    m_drawView.setBrushSize(m_drawView.getLastBrushSize());
-
 		if(view != m_currPaint){
 			ImageButton imgView = (ImageButton)view;
 			String color = view.getTag().toString();
@@ -94,7 +87,7 @@ public class DrawingActivity extends FullScreenActivity implements OnClickListen
 
 	@Override
 	public void onClick(View view){
-
+/*
 		if(view.getId()==R.id.draw_btn){
 			//draw button clicked
 			final Dialog brushDialog = new Dialog(this);
@@ -134,7 +127,7 @@ public class DrawingActivity extends FullScreenActivity implements OnClickListen
 			//show and wait for user interaction
 			brushDialog.show();
 		}
-		else if(view.getId()==R.id.new_btn){
+		else*/ if(view.getId()==R.id.new_btn){
 			//new button
 			AlertDialog.Builder newDialog = new AlertDialog.Builder(this);
 			newDialog.setTitle("New drawing");

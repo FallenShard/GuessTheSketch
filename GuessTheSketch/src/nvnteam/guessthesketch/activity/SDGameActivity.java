@@ -6,9 +6,6 @@ import nvnteam.guessthesketch.util.HighScoreManager;
 import nvnteam.guessthesketch.util.WordBase;
 import nvnteam.guessthesketch.widget.DrawingView;
 import nvnteam.guessthesketch.widget.LetterSpacingTextView;
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -32,12 +29,13 @@ import android.view.KeyEvent;
 
 public class SDGameActivity extends FullScreenActivity
 {
-    /* LogCat debugging purposes */
+    // LogCat debugging purposes
     public static String LOG_TAG = "DEBUGGING";
 
-    /* GUI handlers */
+    // GUI handlers
     private DrawingView m_drawView;
     private ImageButton m_currentPaint;
+    private ImageButton m_currentBrush;
     private LetterSpacingTextView m_mainWordTextView;
     private Button m_finishBtn;
     private Button m_undoBtn;
@@ -46,19 +44,21 @@ public class SDGameActivity extends FullScreenActivity
     private TextView m_globalCountDownTextView;
     private ViewFlipper m_paletteFlipper;
     private LinearLayout m_colorStrip;
+    private LinearLayout m_brushStrip;
     private EditText m_guesserEditText;
 
-    /* Game logic elements */
+    // Game logic elements
     private String m_currentWord = new String("");
-    private int m_wordPoints = 0;
+    private float m_wordPoints = 0;
     private int m_baseFactor = 5;
     private int m_difficultyFactor = 5;
     private float m_wordModifier = 1.0f;
+    private boolean m_revealedLetter = false;
 
     private String[] m_teamNames;
     private int m_currentTurn = 0;
     private static int MaxTeams = 2;
-    private int[] m_currentScores = {0, 0};
+    private float[] m_currentScores = {0, 0};
     private HighScoreManager m_highScoreManager = null;
 
     private int m_roundsPassed = 0;
@@ -80,6 +80,9 @@ public class SDGameActivity extends FullScreenActivity
             int greenComp = (millisUntilFinished < 30000 ? (255 * ((int)millisUntilFinished) / 30000) : 255) << 8;
 
             m_countDownTextView.setTextColor(0xFF000000 | redComp | greenComp);
+
+            if (m_gameState == State.Guessing && !m_revealedLetter && millisUntilFinished < 30000)
+                revealRandomLetter();
         }
 
         public void onFinish()
@@ -172,21 +175,19 @@ public class SDGameActivity extends FullScreenActivity
      */
     public void prepareDrawingPhase()
     {
-        // Check to see if the game is over
-        if (gameOverCondition())
-            gameOver();
-
-        // Reset UI Text Views
+        // Reset UI Text Views, color and brush size
         m_guesserEditText.setText("");
         m_countDownTextView.setText("");
         m_currentRoundTextView.setText("Current Round: " + ((m_roundsPassed + 2) >> 1));
         m_mainWordTextView.setText("");
+        paintClicked((ImageButton) m_colorStrip.getChildAt(0));
+        brushClicked((ImageButton) m_brushStrip.getChildAt(0));
 
         // Reset the timer
         m_timer.cancel();
 
         // Stop the playback and wipe the canvas
-        m_drawView.setPlayback(false);
+        m_drawView.stopPlayback();
         m_drawView.startNew();
 
         // Change the backgrounds of buttons to corresponding team color
@@ -194,11 +195,13 @@ public class SDGameActivity extends FullScreenActivity
         {
             m_finishBtn.setBackgroundResource(R.drawable.button_in_game_blue);
             m_undoBtn.setBackgroundResource(R.drawable.button_in_game_blue);
+            m_currentRoundTextView.setTextColor(0xFF8080FF);
         }
         else
         {
             m_finishBtn.setBackgroundResource(R.drawable.button_in_game_red);
             m_undoBtn.setBackgroundResource(R.drawable.button_in_game_red);
+            m_currentRoundTextView.setTextColor(0xFFFF8080);
         }
 
         // Get the random words from the WordBase
@@ -228,7 +231,9 @@ public class SDGameActivity extends FullScreenActivity
                     m_mainWordTextView.setText(outputBuffer.toString());
 
                     // Set base word points for selected word
+                    m_wordModifier = wpd.getSelectedModifier();
                     m_wordPoints = m_baseFactor + m_difficultyFactor * wpd.getSelectedIndex();
+                    m_drawView.startNew();
                     m_gameState = State.Drawing;
                     m_timer.start();
                     m_currentTime = SystemClock.uptimeMillis();
@@ -248,9 +253,10 @@ public class SDGameActivity extends FullScreenActivity
      */
     public void prepareGuessingPhase()
     {
-        m_wordPoints += (int) (m_currentTimeLeft / 10000);
+        m_wordPoints += m_currentTimeLeft / 10000;
         m_drawView.startNew();
         m_paletteFlipper.showNext();
+        m_revealedLetter = false;
         m_gameState = State.Guessing;
 
         final PrepareToGuessDialog ptgd = new PrepareToGuessDialog(SDGameActivity.this);
@@ -259,8 +265,7 @@ public class SDGameActivity extends FullScreenActivity
         {
             public void onClick(View v) 
             {
-                m_drawView.setPlayback(true);
-                m_drawView.playBack(m_currentTime);
+                m_drawView.startPlayback(m_currentTime);
                 m_timer.start();
                 ptgd.dismiss();
             }
@@ -275,25 +280,25 @@ public class SDGameActivity extends FullScreenActivity
     {
         // Cancel the timer and stop playback
         m_timer.cancel();
-        m_drawView.setPlayback(false);
+        m_drawView.stopPlayback();
 
         // Reveal the word to the guesser
         m_mainWordTextView.setText(m_currentWord);
         Toast.makeText(SDGameActivity.this, "The word was " + m_currentWord, Toast.LENGTH_LONG).show();
 
-        // Clean up the guessing TextView and hide soft keyboard
+        // Clean up the guessing TextView
         m_guesserEditText.setText("");
-        InputMethodManager inputManager = (InputMethodManager)
-                           getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputManager.toggleSoftInput(0, 0);
+
+        // Hide soft keyboard
+        InputMethodManager inputManager = (InputMethodManager) 
+                this.getSystemService(SDPreGameActivity.INPUT_METHOD_SERVICE);
+        View v = this.getCurrentFocus();
+        if(v != null)
+            inputManager.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 
         // If time hasn't run out, add points to the current team, else set to zero
         if (m_currentTimeLeft != 0)
-        {
-            m_wordPoints += (int) (m_currentTimeLeft / 10000);
-            m_highScoreManager.saveScore(m_teamNames[m_currentTurn], 
-                    m_wordPoints, HighScoreManager.ROUND_PREFS_NAME);
-        }
+            m_wordPoints += m_currentTimeLeft / 10000;
         else
             m_wordPoints = 0;
 
@@ -321,7 +326,9 @@ public class SDGameActivity extends FullScreenActivity
     public void endRound()
     {
         // Add the points to the current team
-        m_currentScores[m_currentTurn] += (int) (m_wordPoints * m_wordModifier);
+        m_currentScores[m_currentTurn] += m_wordPoints * m_wordModifier;
+        m_highScoreManager.saveScore(m_teamNames[m_currentTurn], 
+                m_wordPoints, HighScoreManager.ROUND_PREFS_NAME);
 
         m_currentTurn = (m_currentTurn + 1) % MaxTeams;
 
@@ -343,8 +350,14 @@ public class SDGameActivity extends FullScreenActivity
         {
             public void onClick(View v)
             {
-                m_paletteFlipper.showNext();
-                prepareDrawingPhase();
+                if (!gameOverCondition())
+                {
+                    m_paletteFlipper.showNext();
+                    prepareDrawingPhase();
+                }
+                else
+                    gameOver();
+
                 sd.dismiss();
             }
         });
@@ -380,7 +393,7 @@ public class SDGameActivity extends FullScreenActivity
             m_highScoreManager.saveScore(m_teamNames[1], 
                     m_currentScores[1], HighScoreManager.FIVE_PREFS_NAME);
         }
-        else if (m_roundsPassed >= 6)
+        if (m_roundsPassed >= 6)
         {
             m_highScoreManager.saveScore(m_teamNames[0], 
                     m_currentScores[0] / (m_roundsPassed >> 1), HighScoreManager.AVG_PREFS_NAME);
@@ -429,9 +442,12 @@ public class SDGameActivity extends FullScreenActivity
         m_mainWordTextView = (LetterSpacingTextView) findViewById(R.id.text_view_word_to_guess);
         m_drawView = (DrawingView) findViewById(R.id.drawing);
         m_colorStrip = (LinearLayout) findViewById(R.id.paint_colors);
+        m_brushStrip = (LinearLayout) findViewById(R.id.brush_size_layout);
         m_currentRoundTextView = (TextView) findViewById(R.id.text_view_current_round);
         m_currentPaint = (ImageButton) (m_colorStrip).getChildAt(0);
         m_currentPaint.setImageDrawable(getResources().getDrawable(R.drawable.color_button_pressed));
+        m_currentBrush = (ImageButton) (m_brushStrip).getChildAt(0);
+        m_currentBrush.setImageDrawable(getResources().getDrawable(R.drawable.medium_brush_pressed));
         m_finishBtn = (Button) findViewById(R.id.button_finish_drawing);
         m_undoBtn = (Button) findViewById(R.id.button_undo);
         m_globalCountDownTextView = (TextView) findViewById(R.id.text_view_global_count_down);
@@ -499,9 +515,49 @@ public class SDGameActivity extends FullScreenActivity
         });
     }
 
+    public void revealRandomLetter()
+    {
+        int length = m_currentWord.length();
+        int hintIndex = WordBase.RandGen.nextInt(length);
+        String displayed = m_mainWordTextView.getText().toString();
+        StringBuilder revealed = new StringBuilder(displayed);
+        revealed.setCharAt(hintIndex, m_currentWord.charAt(hintIndex));
+        m_mainWordTextView.setText(revealed);
+        m_revealedLetter = true;
+    }
+
     public void brushClicked(View view)
     {
-        Toast.makeText(SDGameActivity.this, "Hello from brushes!", Toast.LENGTH_SHORT).show();
+        if (view != m_currentBrush)
+        {
+            ImageButton imgView = (ImageButton) view;
+            String size = view.getTag().toString();
+            if (size.compareTo("small_brush") == 0)
+            {
+                m_drawView.setBrushSize(10.0f);
+                imgView.setImageDrawable(getResources().getDrawable(R.drawable.small_brush_pressed));
+            }
+            else if (size.compareTo("medium_brush") == 0)
+            {
+                m_drawView.setBrushSize(20.0f);
+                imgView.setImageDrawable(getResources().getDrawable(R.drawable.medium_brush_pressed));
+            }
+            else
+            {
+                m_drawView.setBrushSize(30.0f);
+                imgView.setImageDrawable(getResources().getDrawable(R.drawable.large_brush_pressed));
+            }
+
+            String currentSize = m_currentBrush.getTag().toString();
+            if (currentSize.compareTo("small_brush") == 0)
+                m_currentBrush.setImageDrawable(getResources().getDrawable(R.drawable.small_brush_normal));
+            else if (currentSize.compareTo("medium_brush") == 0)
+                m_currentBrush.setImageDrawable(getResources().getDrawable(R.drawable.medium_brush_normal));
+            else
+                m_currentBrush.setImageDrawable(getResources().getDrawable(R.drawable.large_brush_normal));
+
+            m_currentBrush = (ImageButton) view;
+        }
     }
 
     public void paintClicked(View view)

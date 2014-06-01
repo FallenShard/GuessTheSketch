@@ -24,19 +24,19 @@ public class SDPreGameActivity extends FullScreenActivity
     // 0 is for 5 Rounds, 1 is for 200 points, 2 is for 10 minutes 
     private int m_gameMode = 0;
 
-    TextView m_titleText;
-    TextView m_teamNamesText;
-    TextView m_gameModesText;
+    private TextView m_titleText;
+    private TextView m_teamNamesText;
+    private TextView m_gameModesText;
 
-    EditText m_teamOneEditText;
-    EditText m_teamTwoEditText;
+    private EditText m_teamOneEditText;
+    private EditText m_teamTwoEditText;
 
-    RadioButton m_fiveRoundsRadioButton;
-    RadioButton m_timedRadioButton;
-    RadioButton m_maxPointsRadioButton;
+    private RadioButton m_fiveRoundsRadioButton;
+    private RadioButton m_timedRadioButton;
+    private RadioButton m_maxPointsRadioButton;
 
-    Button m_backBtn;
-    Button m_startBtn;
+    private Button m_backBtn;
+    private Button m_startBtn;
 
     @Override
     public void onCreate(Bundle savedInstanceState)

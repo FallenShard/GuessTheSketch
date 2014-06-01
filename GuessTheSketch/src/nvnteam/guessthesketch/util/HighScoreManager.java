@@ -14,11 +14,11 @@ public class HighScoreManager
     private SharedPreferences m_fivePrefs;
 
     private String[] m_roundScoresNames = new String[5];
-    private int[] m_roundScoresVals = new int[5];
+    private float[] m_roundScoresVals = new float[5];
     private String[] m_avgScoresNames = new String[5];
-    private int[] m_avgScoresVals = new int[5];
+    private float[] m_avgScoresVals = new float[5];
     private String[] m_fiveScoresNames = new String[5];
-    private int[] m_fiveScoresVals = new int[5];
+    private float[] m_fiveScoresVals = new float[5];
 
     public HighScoreManager(Context context)
     {
@@ -28,15 +28,15 @@ public class HighScoreManager
         for (int i = 0; i < 5; i++)
         {
             m_roundScoresNames[i] = m_roundPrefs.getString("roundName" + i, "-r-");
-            m_roundScoresVals[i] = m_roundPrefs.getInt("roundVal" + i, 0);
+            m_roundScoresVals[i] = m_roundPrefs.getFloat("roundVal" + i, 0);
             m_avgScoresNames[i] = m_avgPrefs.getString("avgName" + i, "-a-");
-            m_avgScoresVals[i] = m_avgPrefs.getInt("avgVal" + i, 1);
+            m_avgScoresVals[i] = m_avgPrefs.getFloat("avgVal" + i, 1.0f);
             m_fiveScoresNames[i] = m_fivePrefs.getString("fiveName" + i, "-f-");
-            m_fiveScoresVals[i] = m_fivePrefs.getInt("fiveVal" + i, 5);
+            m_fiveScoresVals[i] = m_fivePrefs.getFloat("fiveVal" + i, 5);
         }
     }
 
-    public void saveScore(String teamName, int points, String fileName)
+    public void saveScore(String teamName, float points, String fileName)
     {
         if (fileName == ROUND_PREFS_NAME)
         {
@@ -57,7 +57,7 @@ public class HighScoreManager
             SharedPreferences.Editor editor = m_roundPrefs.edit();
             for (int x = 0; x < 5; x++)
             {
-                editor.putInt("roundVal" + x, m_roundScoresVals[x]);
+                editor.putFloat("roundVal" + x, m_roundScoresVals[x]);
                 editor.putString("roundName" + x, m_roundScoresNames[x]);
             }
             editor.commit();
@@ -75,13 +75,13 @@ public class HighScoreManager
                 m_avgScoresNames[j] = m_avgScoresNames[j - 1];
             }
 
-            m_avgScoresVals[i] = points;
+            m_avgScoresVals[i] = GTSUtils.round(points, 2);
             m_avgScoresNames[i] = new String(teamName);
 
             SharedPreferences.Editor editor = m_avgPrefs.edit();
             for (int x = 0; x < 5; x++)
             {
-                editor.putInt("avgVal" + x, m_avgScoresVals[x]);
+                editor.putFloat("avgVal" + x, m_avgScoresVals[x]);
                 editor.putString("avgName" + x, m_avgScoresNames[x]);
             }
             editor.commit();
@@ -105,8 +105,8 @@ public class HighScoreManager
             SharedPreferences.Editor editor = m_fivePrefs.edit();
             for (int x = 0; x < 5; x++)
             {
+                editor.putFloat("fiveVal" + x, m_fiveScoresVals[x]);
                 editor.putString("fiveName" + x, m_fiveScoresNames[x]);
-                editor.putInt("fiveVal" + x, m_fiveScoresVals[x]);
             }
             editor.commit();
         }
@@ -124,7 +124,7 @@ public class HighScoreManager
             return m_fiveScoresNames[pos];
     }
 
-    public int getScoresVal(int pos, String fileName)
+    public float getScoresVal(int pos, String fileName)
     {
         if (pos < 0 || pos >= 5) return 0;
 

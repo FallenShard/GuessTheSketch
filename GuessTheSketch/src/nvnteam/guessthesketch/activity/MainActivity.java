@@ -3,7 +3,9 @@ package nvnteam.guessthesketch.activity;
 
 import nvnteam.guessthesketch.R;
 import nvnteam.guessthesketch.bluetooth.BTGameActivity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
@@ -11,7 +13,6 @@ import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 public class MainActivity extends FullScreenActivity
@@ -167,8 +168,13 @@ public class MainActivity extends FullScreenActivity
         m_tutorialBtn.setOnClickListener(new OnClickListener()
         {
            public void onClick(View v)
-           {
-               
+           {/*
+               SharedPreferences settings = MainActivity.this.getSharedPreferences("RoundPrefs", Context.MODE_PRIVATE);
+               settings.edit().clear().commit();
+               settings = MainActivity.this.getSharedPreferences("AvgPrefs", Context.MODE_PRIVATE);
+               settings.edit().clear().commit();
+               settings = MainActivity.this.getSharedPreferences("FivePrefs", Context.MODE_PRIVATE);
+               settings.edit().clear().commit();*/
            }
         });
 

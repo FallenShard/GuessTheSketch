@@ -22,7 +22,7 @@ public class WordPickerDialog extends AlertDialog
     private String m_selectedWord = "";
     private int m_selectedIndex = -1;
 
-    protected WordPickerDialog(Context context) 
+    public WordPickerDialog(Context context) 
     {
         super(context);
         m_context = context;

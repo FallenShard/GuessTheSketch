@@ -21,18 +21,11 @@
 			android:src="@drawable/new_document_icon" />
 
 		<ImageButton
-			android:id="@+id/draw_btn"
-			android:layout_width="wrap_content"
-			android:layout_height="fill_parent"
-			android:contentDescription="@string/brush"
-			android:src="@drawable/brush" />
-
-		<ImageButton
 			android:id="@+id/save_btn"
 			android:layout_width="wrap_content"
 			android:layout_height="fill_parent"
 			android:contentDescription="@string/save"
-			android:src="@drawable/save" />
+			android:src="@drawable/save_icon" />
 	</LinearLayout>
 
 	<!-- Custom View -->

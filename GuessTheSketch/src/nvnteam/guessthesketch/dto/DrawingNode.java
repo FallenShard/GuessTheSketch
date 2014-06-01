@@ -71,9 +71,14 @@ public class DrawingNode
         return m_color;
     }
 
+    public float getBrushSize()
+    {
+        return m_thickness;
+    }
+
     public static byte[] serialize(DrawingNode node)
     {
-        ByteBuffer buffer = ByteBuffer.allocate(24);
+        ByteBuffer buffer = ByteBuffer.allocate(28);
         buffer.putFloat(node.m_x);
         buffer.putFloat(node.m_y);
         buffer.putInt(node.m_actionType);
