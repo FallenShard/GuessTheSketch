@@ -1,97 +1,190 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- GENERAL -->
+
 	<string name="app_name">Guess the Sketch</string>
-	<string name="action_settings">Settings</string>
-	<string name="start_new">New</string>
-	<string name="brush">Brush</string>
-	<string name="save">Save</string>
-	<string name="paint">Paint</string>
-	<string name="sml">Small</string>
-	<string name="med">Medium</string>
-	<string name="lrg">Large</string>
+	<string name="debug_text">Example Text</string>
 
-    <!-- Main Menu Texts -->
-	<string name="text_button_new_game">New Game</string>
-	<string name="text_button_free_drawing">Free Drawing</string>
-	<string name="text_button_tutorial">Tutorial</string>
-	<string name="text_button_high_scores">High Scores</string>
-	<string name="text_button_quit">Quit</string>
+	<!-- ===== BUTTONS ===== -->
 
-	<string name="text_button_single_device_mode">Single-Device</string>
-	<string name="text_button_play_via_bluetooth">via Bluetooth</string>
-	<string name="text_button_back">Back</string>
-	
-	<!-- High Score Texts -->
-	<string name="text_button_left">&lt;</string>
-	<string name="text_button_right">></string>
-	<string name="text_high_score_title">High Scores</string>
+    <!-- Main Menu -->
+	<string name="button_new_game">New Game</string>
+    <string name="button_free_drawing">Free Drawing</string>
+    <string name="button_tutorial">Tutorial</string>
+    <string name="button_high_scores">High Scores</string>
+    <string name="button_quit">Quit</string>
+    <string name="button_single_device">Single-Device</string>
+    <string name="button_via_bluetooth">via Bluetooth</string>
+    <string name="button_back">Back</string>
 
-	<!-- Pre-Game Texts -->
-	<string name="title_text_view_pre_game">Game Config</string>
-	<string name="text_button_start">Start</string>
-	<string name="hint_text_view_team_one">Team One</string>
-	<string name="hint_text_view_team_two">Team Two</string>
-	<string name="text_view_team_names">Team Names</string>
-    <string name="text_view_game_modes">Game Modes</string>
+    <!-- High Scores -->
+    <string name="button_left">&lt;</string>
+    <string name="button_right">></string>
+
+    <!-- Pre-Game -->
+    <string name="button_start">Start</string>
+
+    <!-- In-Game -->
+    <string name="button_finish">Finish!</string>
+    <string name="button_undo">Undo</string>
+
+    <!-- Bluetooth -->
+    <string name="button_send">Send</string>
+    <string name="button_connect">Connect</string>
+    <string name="button_discoverable">Discoverable</string>
+    <string name="button_create_game">Create Game</string>
+
+    <!-- Device List -->
+    <string name="button_scan">Scan for devices</string>
+
+    <!-- Dialogs -->
+    <string name="dialog_button_ok">OK</string>
+    <string name="dialog_button_close">Close</string>
+    <string name="dialog_button_yes">Yes</string>
+    <string name="dialog_button_no">No</string>
+    <string name="dialog_button_proceed">Proceed</string>
+
+    <!-- ===== RADIO BUTTONS ===== -->
+
+    <!-- Pre-Game -->
     <string name="radio_button_five_rounds">Five Rounds Mode</string>
     <string name="radio_button_global_timer">Ten Minutes Timed Mode</string>
     <string name="radio_button_max_points">First Team to 200 Points Wins</string>
 
-	<!-- Descriptions for Image Views -->
+    <!-- ===== TEXT VIEWS ===== -->
+
+	<!-- High Score -->
+	<string name="text_view_high_scores">High Scores</string>
+	
+	<!-- Tutorial -->
+	<string name="text_view_tutorial">Tutorial</string>
+
+	<!-- Pre-Game -->
+	<string name="text_view_game_config">Game Config</string>
+	<string name="text_view_team_names">Team Names</string>
+    <string name="text_view_game_modes">Game Modes</string>
+
+    <!-- Bluetooth -->
+    <string name="text_view_connecting">connecting</string>
+    <string name="text_view_connected_to">connected: </string>
+    <string name="text_view_not_connected">not connected</string>
+    <string name="text_view_chat">Chat</string>
+
+    <!-- Device List -->
+    <string name="text_view_paired_devices">Paired Devices</string>
+    <string name="text_view_other_devices">Other Available Devices</string>
+
+    <!-- Dialogs -->
+    <string name="dialog_text_view_guessing_title">Guesser\'s Turn</string>
+    <string name="dialog_text_view_guessing_info">Prepare to guess the word!</string>
+    <string name="dialog_text_view_word_picker_title">Pick a Word!</string>
+    <string name="dialog_text_view_scores_title">Default Mode</string>
+    <string name="dialog_text_view_scores_info">Current Score is</string>
+    <string name="dialog_text_view_scores_turn">It is Team1\'s Turn</string>
+    <string name="dialog_text_view_game_over_title">Game Over</string>
+    <string name="dialog_text_view_game_over_winner">Winner of this game is team</string>
+    <string name="dialog_text_view_game_over_with">with</string>
+    <string name="dialog_text_view_game_over_points">points!</string>
+    <string name="dialog_text_view_game_over_congratulations">Congratulations!</string>
+
+    <!-- ===== EDIT TEXTS ===== -->
+
+    <!-- Pre-Game -->
+    <string name="edit_text_hint_team_one">Team One</string>
+    <string name="edit_text_hint_team_two">Team Two</string>
+
+    <!-- In-Game -->
+    <string name="edit_text_hint_guesser">Type Your Guess Here</string>
+    
+    <!-- Bluetooth -->
+    <string name="edit_text_hint_enter_message">Enter your message here</string>
+
+    <!-- ===== CONTENT DESCRIPTIONS ===== -->
+
+	<!-- Main Menu -->
 	<string name="content_desc_logo_game">Main Logo</string>
 	<string name="content_desc_logo_team">Team Logo</string>
 	<string name="content_desc_upper_left">Upper Left</string>
 	<string name="content_desc_lower_left">Lower Left</string>
-
-	<!-- In-Game Texts -->
-	<string name="text_button_finish_drawing">Finish!</string>
-	<string name="text_button_undo">Undo</string>
-	<string name="text_dialog_pick_a_word">Pick a Word!</string>
-	<string name="hint_edit_text_guesser">Type Your Guess Here</string>
 	
-	<!-- Dialog Texts -->
-	<string name="dialog_title_guessing">Guesser Turn</string>
-	<string name="dialog_text_guessing">Prepare to guess the word!</string>
-	<string name="dialog_button_ok">OK</string>
-	<string name="dialog_button_close">Close</string>
-	<string name="dialog_button_cancel">Cancel</string>
-	<string name="dialog_button_yes">Yes</string>
-    <string name="dialog_button_no">No</string>
-	
-	<string name="dialog_title_word_picker">Pick a Word!</string>
-	
-	<string name="dialog_title_scores">Timed Game Mode</string>
-	<string name="dialog_round_scores">End of Round X</string>
-	<string name="dialog_current_scores">Current Score is</string>
-	<string name="dialog_proceed_scores">It is Team1\'s Turn</string>
-	<string name="dialog_proceed_button">Proceed</string>
-	
-	<string name="dialog_title_game_over">Game Over</string>
-    <string name="dialog_text_game_over">Winner of this game is team</string>
-    <string name="dialog_with_game_over">with</string>
-    <string name="dialog_points_game_over">points!</string>
-    <string name="dialog_congratulations_game_over">Congratulations!</string>
+	<!-- Drawing -->
+	<string name="content_desc_save">Save</string>
+	<string name="content_desc_new">New</string>
+	<string name="content_desc_undo">Undo</string>
+	<string name="content_desc_small">Small Brush</string>
+	<string name="content_desc_medium">Medium Brush</string>
+	<string name="content_desc_large">Large Brush</string>
+	<string name="content_desc_color">Color</string>
 
-    <!--  Bluetooth -->
-    <string name="send">Send</string>
-    <string name="not_connected">You are not connected to a device</string>
-    <string name="bt_not_enabled_leaving">Bluetooth was not enabled. Leaving Bluetooth Chat.</string>
-    <string name="title_connecting">connecting</string>
-    <string name="title_connected_to">connected: </string>
-    <string name="title_not_connected">not connected</string>
+	<!-- ===== MISCELLANEOUS ===== -->
 
-    <!--  DeviceListActivity -->
-    <string name="scanning">scanning for devices</string>
-    <string name="select_device">select a device to connect</string>
-    <string name="none_paired">No devices have been paired</string>
-    <string name="none_found">No devices found</string>
-    <string name="title_paired_devices">Paired Devices</string>
-    <string name="title_other_devices">Other Available Devices</string>
-    <string name="button_scan">Scan for devices</string>
+    <!-- Bluetooth -->
+    <string name="bt_not_enabled_leaving">Bluetooth was not enabled. Leaving Bluetooth Mode.</string>
+    <string name="bt_not_connected">You are not connected to a device</string>
 
-    <!-- Options Menu -->
-    <string name="connect">Connect a device</string>
-    <string name="discoverable">Make discoverable</string>
+    <!-- Device List -->
+    <string name="dl_scanning">scanning for devices</string>
+    <string name="dl_select_device">select a device to connect</string>
+    <string name="dl_none_paired">No devices have been paired</string>
+    <string name="dl_none_found">No devices found</string>
+    
+    <!-- Tutorial -->
+    <string name="tutorial_basic_1">
+        Welcome to GUESS THE SKETCH application! This short guide will explain
+        the basic flow of the game and its rules.
+    </string>
+    <string name="tutorial_basic_2">
+        As you start the game from the main menu, you will be presented with
+        two options: to start the game on this device or to start a game through
+        Bluetooth with a nearby device.
+    </string>
+    <string name="tutorial_basic_3">
+        Before the actual game starts, you\'ll need
+        to enter team names for the current game. Colors of the text will also
+        represent that team\'s turn by coloring UI elements with corresponding
+        color. There are two teams competing in total, with blue starting first.
+    </string>
+    <string name="tutorial_basic_4">
+        The game consists of alternating phases of drawing and guessing a word.
+        One member of the team draws a word, while the other one tries to guess it.
+        The game ends depending on the game mode that you selected, either by 
+        fixed rounds, points or time. Drawing and guessing each last 60 seconds.
+    </string>
+    <string name="tutorial_basic_5">
+        Before you can start your drawing masterpiece,
+        you\'ll need to select a word. Words are arranged from easiest to hardest,
+        with the easiest one being worth 5 points and the hardest one 20 points. Numbers
+        next to the words are multipliers that will be used to further evaluate guessed word.
+    </string>
+    <string name="tutorial_basic_6">
+        During the drawing phase, use the color palette and brush sizes at your
+        disposal. You may also undo your moves and finish before the timer runs out.
+    </string>
+    <string name="tutorial_basic_7">
+        Once the drawing is over, the game will switch over to the guessing phase,
+        where you\'ll be required to guess the current word, with the game drawing
+        the word on canvas, just as your team mate had done.
+    </string>
+    <string name="tutorial_basic_8">
+        If you entered the correct word, the timer will stop and your team will 
+        get appropriate amount of points. A dialog will pop that shows the current 
+        score and it will allow you to hand over the device to the other team.
+    </string>
+    <string name="tutorial_basic_9">
+        The phases repeat until the game has reached a game ending condition,
+        as selected in the configuration phase. Good luck and have fun!
+    </string>
+
+    <string name="tutorial_advanced_1">
+        The formula for calculating the points is as follows: 
+        \n(WordPoints + SecondsLeftFromDrawing / 10 + SecondsLeftFromGuessing / 10) * WordModifier
+        \nwhere the WordPoints take values of 5, 10, 15 and 20, extra points on seconds
+        are rounded down and WordModifier is a value between 1.0 and 2.0.
+        \nOver Bluetooth, the formula is
+        \n(WordPoints + 2 * SecondsLeftFromGuessing / 10) * WordModifier,
+        as the guessing and drawing happen simultaneously.
+    </string>
+
 
 </resources>

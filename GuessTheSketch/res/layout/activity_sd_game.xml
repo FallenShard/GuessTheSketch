@@ -70,7 +70,7 @@
 	            android:layout_alignParentTop="true"
 	            android:layout_marginBottom="5dp"
 	            android:background="@drawable/button_in_game_blue"
-	            android:text="@string/text_button_finish_drawing" />
+	            android:text="@string/button_finish" />
 
 	        <Button
 	            android:id="@+id/button_undo"
@@ -81,7 +81,7 @@
 	            android:layout_alignParentTop="true"
 	            android:layout_marginBottom="5dp"
 	            android:background="@drawable/button_in_game_blue"
-	            android:text="@string/text_button_undo" />
+	            android:text="@string/button_undo" />
 
 	        <LinearLayout
 	            android:id="@+id/brush_size_layout"
@@ -95,7 +95,7 @@
 			        android:id="@+id/small_brush"
 			        android:layout_width="wrap_content"
 			        android:layout_height="wrap_content"
-			        android:contentDescription="@string/sml"
+			        android:contentDescription="@string/content_desc_small"
 			        android:background="@null"
 			        android:src="@drawable/small_brush_normal"
 			        android:onClick="brushClicked"
@@ -105,7 +105,7 @@
 			        android:id="@+id/medium_brush"
 			        android:layout_width="wrap_content"
 			        android:layout_height="wrap_content"
-			        android:contentDescription="@string/med"
+			        android:contentDescription="@string/content_desc_medium"
                     android:background="@null"
 			        android:src="@drawable/medium_brush_normal"
 			        android:onClick="brushClicked"
@@ -115,7 +115,7 @@
 			        android:id="@+id/large_brush"
 			        android:layout_width="wrap_content"
 			        android:layout_height="wrap_content"
-			        android:contentDescription="@string/lrg"
+			        android:contentDescription="@string/content_desc_large"
 			        android:background="@null"
 			        android:src="@drawable/large_brush_normal"
 			        android:onClick="brushClicked"
@@ -125,7 +125,7 @@
 
 	        <LinearLayout
 		        android:id="@+id/paint_colors"
-		        android:layout_width="match_parent"
+		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
 		        android:layout_below="@id/button_undo"
 		        android:layout_centerHorizontal="true"
@@ -136,7 +136,7 @@
 		            android:layout_width="wrap_content"
 		            android:src="@drawable/color_button_normal"
 		            android:background="#FF660000"
-		            android:contentDescription="@string/paint"
+		            android:contentDescription="@string/content_desc_color"
 		            android:onClick="paintClicked"
 		            android:tag="#FF660000" />
 
@@ -145,7 +145,7 @@
 		            android:layout_width="wrap_content"
 		            android:src="@drawable/color_button_normal"
 		            android:background="#FFFF0000"
-		            android:contentDescription="@string/paint"
+		            android:contentDescription="@string/content_desc_color"
 		            android:onClick="paintClicked"
 		            android:tag="#FFFF0000" />
 
@@ -154,7 +154,7 @@
 		            android:layout_width="wrap_content"
 		            android:src="@drawable/color_button_normal"
 		            android:background="#FFFF6600"
-		            android:contentDescription="@string/paint"
+		            android:contentDescription="@string/content_desc_color"
 		            android:onClick="paintClicked"
 		            android:tag="#FFFF6600" />
 
@@ -163,7 +163,7 @@
 		            android:layout_width="wrap_content"
 		            android:src="@drawable/color_button_normal"
 		            android:background="#FFFFCC00"
-		            android:contentDescription="@string/paint"
+		            android:contentDescription="@string/content_desc_color"
 		            android:onClick="paintClicked"
 		            android:tag="#FFFFCC00" />
 
@@ -172,7 +172,7 @@
 		            android:layout_width="wrap_content"
 		            android:src="@drawable/color_button_normal"
 		            android:background="#FF009900"
-		            android:contentDescription="@string/paint"
+		            android:contentDescription="@string/content_desc_color"
 		            android:onClick="paintClicked"
 		            android:tag="#FF009900" />
 
@@ -181,7 +181,7 @@
 		            android:layout_width="wrap_content"
 		            android:src="@drawable/color_button_normal"
 		            android:background="#FF009999"
-		            android:contentDescription="@string/paint"
+		            android:contentDescription="@string/content_desc_color"
 		            android:onClick="paintClicked"
 		            android:tag="#FF009999" />
 
@@ -190,7 +190,7 @@
 		            android:layout_width="wrap_content"
 		            android:src="@drawable/color_button_normal"
 		            android:background="#FF0000FF"
-		            android:contentDescription="@string/paint"
+		            android:contentDescription="@string/content_desc_color"
 		            android:onClick="paintClicked"
 		            android:tag="#FF0000FF" />
 
@@ -199,7 +199,7 @@
 		            android:layout_width="wrap_content"
 		            android:src="@drawable/color_button_normal"
 		            android:background="#FF990099"
-		            android:contentDescription="@string/paint"
+		            android:contentDescription="@string/content_desc_color"
 		            android:onClick="paintClicked"
 		            android:tag="#FF990099" />
 
@@ -208,7 +208,7 @@
 		            android:layout_width="wrap_content"
 		            android:src="@drawable/color_button_normal"
 		            android:background="#FFFF6666"
-		            android:contentDescription="@string/paint"
+		            android:contentDescription="@string/content_desc_color"
 		            android:onClick="paintClicked"
 		            android:tag="#FFFF6666" />
 
@@ -217,7 +217,7 @@
 		            android:layout_width="wrap_content"
 		            android:src="@drawable/color_button_normal"
 		            android:background="#FFFFFFFF"
-		            android:contentDescription="@string/paint"
+		            android:contentDescription="@string/content_desc_color"
 		            android:onClick="paintClicked"
 		            android:tag="#FFFFFFFF" />
 
@@ -226,7 +226,7 @@
 		            android:layout_width="wrap_content"
 		            android:src="@drawable/color_button_normal"
 		            android:background="#FF787878"
-		            android:contentDescription="@string/paint"
+		            android:contentDescription="@string/content_desc_color"
 		            android:onClick="paintClicked"
 		            android:tag="#FF787878" />
 
@@ -235,7 +235,7 @@
 		            android:layout_width="wrap_content"
 		            android:src="@drawable/color_button_normal"
 		            android:background="#FF000000"
-		            android:contentDescription="@string/paint"
+		            android:contentDescription="@string/content_desc_color"
 		            android:onClick="paintClicked"
 		            android:tag="#FF000000" />
 
@@ -256,7 +256,7 @@
 		        android:inputType="text"
 		        android:imeOptions="actionGo"
 		        android:maxLines="1"
-		        android:hint="@string/hint_edit_text_guesser"
+		        android:hint="@string/edit_text_hint_guesser"
 		        android:gravity="center_horizontal"
 		        android:textSize="25sp" />
 
@@ -264,7 +264,6 @@
 
     </ViewFlipper>
 
-    <!-- Custom View -->
     <nvnteam.guessthesketch.widget.DrawingView
         android:id="@+id/drawing"
         android:layout_width="match_parent"

@@ -173,6 +173,9 @@ public class MainActivity extends FullScreenActivity
                settings.edit().clear().commit();
                settings = MainActivity.this.getSharedPreferences("FivePrefs", Context.MODE_PRIVATE);
                settings.edit().clear().commit();*/
+               Intent intent = new Intent(MainActivity.this,
+                       TutorialActivity.class);
+               startActivity(intent);
            }
         });
 

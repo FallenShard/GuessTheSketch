@@ -1,7 +1,392 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
-    
+    android:layout_height="match_parent"
+    android:paddingTop="50dp"
+    android:paddingBottom="50dp" >
+
+    <TextView
+        android:id="@+id/text_view_tutorial"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="@string/text_view_tutorial"
+        android:textSize="@dimen/title_font_size"
+        android:textColor="#FFFFFF00"
+        android:layout_marginBottom="50dp" />
+
+    <TextView
+        android:id="@+id/text_view_tutorial_page_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/text_view_tutorial"
+        android:text="@string/debug_text"
+        android:textSize="@dimen/dialog_title_font_size"
+        android:textColor="#FFFFFF00"
+        android:layout_marginBottom="20dp" />
+
+    <TextView
+        android:id="@+id/text_view_tutorial_page_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="5dp"
+        android:layout_below="@id/text_view_tutorial"
+        android:text="@string/debug_text"
+        android:textSize="@dimen/dialog_title_font_size"
+        android:textColor="#FFFFFF00" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text_view_tutorial_page_title"
+        android:layout_margin="10dp"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/btn_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="10dp"
+            android:background="@android:color/transparent"
+            android:text="@string/button_left"
+            android:textColor="#FFFFFF00"
+            android:textSize="@dimen/text_button_font_size" />
+
+        <ViewFlipper
+            android:id="@+id/root_flipper"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" >
+
+	        <ViewFlipper
+	            android:id="@+id/basic_flipper"
+	            android:layout_width="match_parent"
+	            android:layout_height="match_parent" >
+
+	            <RelativeLayout
+	                android:layout_width="match_parent"
+	                android:layout_height="wrap_content"
+	                android:tag="Introduction" >
+
+	                <ImageView
+				        android:id="@+id/image_view_basic_1"
+				        android:layout_width="wrap_content"
+				        android:layout_height="wrap_content"
+				        android:layout_centerHorizontal="true"
+				        android:layout_marginBottom="40dp"
+				        android:src="@drawable/logo_game"
+				        android:contentDescription="@string/content_desc_logo_game" >
+				    </ImageView>
+
+	                <TextView
+	                    android:id="@+id/text_view_basic_1"
+	                    android:layout_width="wrap_content"
+	                    android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_below="@id/image_view_basic_1"
+	                    android:layout_margin="10dp"
+	                    android:text="@string/tutorial_basic_1"
+	                    android:textSize="@dimen/small_text_font_size"
+	                    android:textAlignment="center"
+                        android:gravity="center" />
+
+	            </RelativeLayout>
+
+	            <RelativeLayout
+	                android:layout_width="match_parent"
+	                android:layout_height="wrap_content"
+	                android:tag="Hardware Mode" >
+
+	                <ImageView
+                        android:id="@+id/image_view_basic_2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginBottom="40dp"
+                        android:src="@drawable/basic_2"
+                        android:contentDescription="@string/content_desc_logo_game" >
+                    </ImageView>
+
+                    <TextView
+                        android:id="@+id/text_view_basic_2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_below="@id/image_view_basic_2"
+                        android:layout_margin="10dp"
+                        android:text="@string/tutorial_basic_2"
+                        android:textSize="@dimen/small_text_font_size"
+                        android:textAlignment="center"
+                        android:gravity="center" />
+
+	            </RelativeLayout>
+
+	            <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:tag="Team Names" >
+
+                    <ImageView
+                        android:id="@+id/image_view_basic_3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginBottom="40dp"
+                        android:src="@drawable/basic_3"
+                        android:contentDescription="@string/content_desc_logo_game" >
+                    </ImageView>
+
+                    <TextView
+                        android:id="@+id/text_view_basic_3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_below="@id/image_view_basic_3"
+                        android:layout_margin="10dp"
+                        android:text="@string/tutorial_basic_3"
+                        android:textSize="@dimen/small_text_font_size"
+                        android:textAlignment="center"
+                        android:gravity="center" />
+
+                </RelativeLayout>
+                
+	            <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:tag="Game Flow" >
+
+                    <ImageView
+                        android:id="@+id/image_view_basic_4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginBottom="40dp"
+                        android:src="@drawable/basic_3"
+                        android:contentDescription="@string/content_desc_logo_game" >
+                    </ImageView>
+
+                    <TextView
+                        android:id="@+id/text_view_basic_4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_below="@id/image_view_basic_4"
+                        android:layout_margin="10dp"
+                        android:text="@string/tutorial_basic_4"
+                        android:textSize="@dimen/small_text_font_size"
+                        android:textAlignment="center"
+                        android:gravity="center" />
+                    
+                </RelativeLayout>
+                    
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:tag="Word Selection" >
+
+                    <ImageView
+                        android:id="@+id/image_view_basic_5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginBottom="40dp"
+                        android:src="@drawable/basic_5"
+                        android:contentDescription="@string/content_desc_logo_game" >
+                    </ImageView>
+
+                    <TextView
+                        android:id="@+id/text_view_basic_5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_below="@id/image_view_basic_5"
+                        android:layout_margin="10dp"
+                        android:text="@string/tutorial_basic_5"
+                        android:textSize="@dimen/small_text_font_size"
+                        android:textAlignment="center"
+                        android:gravity="center" />
+                    
+                </RelativeLayout>
+                    
+                    <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:tag="Drawing Phase" >
+
+                    <ImageView
+                        android:id="@+id/image_view_basic_6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginBottom="40dp"
+                        android:src="@drawable/basic_6"
+                        android:contentDescription="@string/content_desc_logo_game" >
+                    </ImageView>
+
+                    <TextView
+                        android:id="@+id/text_view_basic_6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_below="@id/image_view_basic_6"
+                        android:layout_margin="10dp"
+                        android:text="@string/tutorial_basic_6"
+                        android:textSize="@dimen/small_text_font_size"
+                        android:textAlignment="center"
+                        android:gravity="center" />
+                    
+                </RelativeLayout>
+                    
+                    <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:tag="Guessing Phase" >
+
+                    <ImageView
+                        android:id="@+id/image_view_basic_7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginBottom="40dp"
+                        android:src="@drawable/basic_7"
+                        android:contentDescription="@string/content_desc_logo_game" >
+                    </ImageView>
+
+                    <TextView
+                        android:id="@+id/text_view_basic_7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_below="@id/image_view_basic_7"
+                        android:layout_margin="10dp"
+                        android:text="@string/tutorial_basic_7"
+                        android:textSize="@dimen/small_text_font_size"
+                        android:textAlignment="center"
+                        android:gravity="center" />
+                    
+                </RelativeLayout>
+                    
+                 <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:tag="Scoring Points" >
+
+                    <ImageView
+                        android:id="@+id/image_view_basic_8"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginBottom="40dp"
+                        android:src="@drawable/basic_8"
+                        android:contentDescription="@string/content_desc_logo_game" >
+                    </ImageView>
+
+                    <TextView
+                        android:id="@+id/text_view_basic_8"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_below="@id/image_view_basic_8"
+                        android:layout_margin="10dp"
+                        android:text="@string/tutorial_basic_8"
+                        android:textSize="@dimen/small_text_font_size"
+                        android:textAlignment="center"
+                        android:gravity="center" />
+                    
+                </RelativeLayout>
+                    
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:tag="Game Over" >
+
+                    <ImageView
+                        android:id="@+id/image_view_basic_9"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginBottom="40dp"
+                        android:src="@drawable/logo_game"
+                        android:contentDescription="@string/content_desc_logo_game" >
+                    </ImageView>
+
+                    <TextView
+                        android:id="@+id/text_view_basic_9"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_below="@id/image_view_basic_9"
+                        android:layout_margin="10dp"
+                        android:text="@string/tutorial_basic_9"
+                        android:textSize="@dimen/small_text_font_size"
+                        android:textAlignment="center"
+                        android:gravity="center" />
+
+                </RelativeLayout>
+
+            </ViewFlipper>
+
+	        <ViewFlipper
+                android:id="@+id/advanced_flipper"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:tag="The Scoring Formula" >
+
+                    <TextView
+                        android:id="@+id/text_view_advanced_1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:layout_margin="10dp"
+                        android:text="@string/tutorial_advanced_1"
+                        android:textSize="@dimen/small_text_font_size"
+                        android:textAlignment="center"
+                        android:gravity="center" />
+
+                </RelativeLayout>
+
+            </ViewFlipper>
+
+	    </ViewFlipper>
+
+        <Button
+            android:id="@+id/btn_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="10dp"
+            android:background="@android:color/transparent"
+            android:text="@string/button_right"
+            android:textColor="#FFFFFF00"
+            android:textSize="@dimen/text_button_font_size" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/button_changer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:background="@drawable/button_main_menu_red"
+        android:text="@string/button_back"
+        android:textSize="@dimen/menu_font_size" />
+
+    <Button
+        android:id="@+id/button_back_tutorial"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/button_main_menu_blue"
+        android:text="@string/button_back"
+        android:textSize="@dimen/menu_font_size" />
 
 </RelativeLayout>

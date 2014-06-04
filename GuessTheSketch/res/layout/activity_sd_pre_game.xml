@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:text="@string/title_text_view_pre_game"
+        android:text="@string/text_view_game_config"
         android:textSize="@dimen/title_font_size"
         android:textColor="#FFFFFF00"
         android:layout_marginBottom="50dp"/>
@@ -26,8 +26,7 @@
         android:layout_marginBottom="30dp"
         android:text="@string/text_view_team_names"
         android:textSize="@dimen/dialog_title_font_size"
-        android:textColor="#FFFFFF00"
-        />
+        android:textColor="#FFFFFF00" />
 
     <EditText
         android:id="@+id/edit_text_team_one"
@@ -36,7 +35,7 @@
         android:layout_centerHorizontal="true"
         android:layout_below="@id/text_view_pre_game_teams"
         android:inputType="text"
-        android:hint="@string/hint_text_view_team_one"
+        android:hint="@string/edit_text_hint_team_one"
         android:maxLines="1"
         android:maxLength="20"
         android:ems="20"
@@ -49,12 +48,12 @@
         android:layout_centerHorizontal="true"
         android:layout_below="@id/edit_text_team_one"
         android:inputType="text"
-        android:hint="@string/hint_text_view_team_two"
+        android:hint="@string/edit_text_hint_team_two"
         android:maxLines="1"
         android:maxLength="20"
         android:ems="20"
         android:textColor="#FFFF0000" />
-    
+
     <TextView
         android:id="@+id/text_view_pre_game_game_modes"
         android:layout_width="wrap_content"
@@ -101,7 +100,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="80dp"
         android:background="@drawable/button_main_menu_blue"
-        android:text="@string/text_button_back" />
+        android:text="@string/button_back" />
 
     <Button
         style="@style/style_button_main_menu"
@@ -110,6 +109,6 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
         android:background="@drawable/button_main_menu_green"
-        android:text="@string/text_button_start" />
+        android:text="@string/button_start" />
 
 </RelativeLayout>

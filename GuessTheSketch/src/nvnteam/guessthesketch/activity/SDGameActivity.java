@@ -373,7 +373,7 @@ public class SDGameActivity extends FullScreenActivity
             break;
 
         case 1:
-            if (m_currentScores[0] >= 200 || m_currentScores[1] >= 200)
+            if (m_roundsPassed % 2 == 0 && (m_currentScores[0] >= 200 || m_currentScores[1] >= 200))
                 return true;
             break;
         }
@@ -420,7 +420,7 @@ public class SDGameActivity extends FullScreenActivity
         final ConfirmationDialog cd = new ConfirmationDialog(SDGameActivity.this);
         cd.show();
         cd.setParam("Exit", "Are you sure you want to exit?");
-        cd.setYesOnClickListener(new OnClickListener()
+        cd.setYesOnClickListener("Yes", new OnClickListener()
         {
              public void onClick(View v) 
              {
@@ -428,7 +428,7 @@ public class SDGameActivity extends FullScreenActivity
                  SDGameActivity.super.onBackPressed();
              }
         });
-        cd.setNoOnClickListener(new OnClickListener()
+        cd.setNoOnClickListener("No", new OnClickListener()
         {
              public void onClick(View v) 
              {
@@ -447,7 +447,7 @@ public class SDGameActivity extends FullScreenActivity
         m_currentPaint = (ImageButton) (m_colorStrip).getChildAt(0);
         m_currentPaint.setImageDrawable(getResources().getDrawable(R.drawable.color_button_pressed));
         m_currentBrush = (ImageButton) (m_brushStrip).getChildAt(0);
-        m_currentBrush.setImageDrawable(getResources().getDrawable(R.drawable.medium_brush_pressed));
+        m_currentBrush.setImageDrawable(getResources().getDrawable(R.drawable.small_brush_pressed));
         m_finishBtn = (Button) findViewById(R.id.button_finish_drawing);
         m_undoBtn = (Button) findViewById(R.id.button_undo);
         m_globalCountDownTextView = (TextView) findViewById(R.id.text_view_global_count_down);
@@ -472,7 +472,7 @@ public class SDGameActivity extends FullScreenActivity
                 cd.show();
                 cd.setCancelable(true);
                 cd.setParam("Finish", "Are you sure you want to finish?");
-                cd.setYesOnClickListener(new OnClickListener()
+                cd.setYesOnClickListener("Yes", new OnClickListener()
                 {
                      public void onClick(View v) 
                      {
@@ -481,7 +481,7 @@ public class SDGameActivity extends FullScreenActivity
                          prepareGuessingPhase();
                      }
                 });
-                cd.setNoOnClickListener(new OnClickListener()
+                cd.setNoOnClickListener("No", new OnClickListener()
                 {
                      public void onClick(View v) 
                      {

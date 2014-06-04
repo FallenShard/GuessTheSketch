@@ -61,6 +61,11 @@ public class DrawingNode
         return m_actionType;
     }
 
+    public void setActionType(int actionType)
+    {
+        m_actionType = actionType;
+    }
+
     public long getTimeStamp()
     {
         return m_timeStamp;

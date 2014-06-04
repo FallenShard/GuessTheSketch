@@ -4,11 +4,11 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    >
+    android:paddingBottom="50dp" >
 
     <RelativeLayout
-        android:layout_width = "match_parent"
-        android:layout_height = "wrap_content">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
 
         <TextView
             android:id="@+id/device_text_view"
@@ -16,41 +16,38 @@
             android:text="@string/app_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true">
-        </TextView>
+            android:layout_alignParentLeft="true" />
 
         <TextView
             android:id="@+id/status_text_view"
             android:textColor="@android:color/holo_red_light"
-            android:text="@string/not_connected"
+            android:text="@string/text_view_not_connected"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true">
-        </TextView>
-        
+            android:layout_alignParentRight="true" />
+
         <Button
             android:id="@+id/connect_button"
-            android:text="Connect..."
+            android:text="@string/button_connect"
             android:background="@drawable/button_main_menu_blue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/device_text_view"
             android:layout_alignParentLeft="true"
-            android:textSize="@dimen/menu_font_size"
-            />
-        
+            android:textSize="@dimen/menu_font_size" />
+
         <Button
             android:id="@+id/discoverable_button"
-            android:text="Discoverable"
+            android:text="@string/button_discoverable"
             android:background="@drawable/button_main_menu_blue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/status_text_view"
             android:layout_alignParentRight="true"
-            android:textSize="@dimen/menu_font_size"
-            />
+            android:textSize="@dimen/menu_font_size" />
+
     </RelativeLayout>
-    
+
     <TextView
         android:id="@+id/chat_title_view"
         android:layout_width="wrap_content"
@@ -58,48 +55,51 @@
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         android:layout_gravity="center_horizontal"
-        android:text="Chat"
+        android:text="@string/text_view_chat"
         android:textColor="#FFFF00"
         android:textSize="@dimen/dialog_title_font_size" />
 
-    <ListView android:id="@+id/in"
+    <ListView 
+        android:id="@+id/in"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:stackFromBottom="true"
         android:transcriptMode="alwaysScroll"
-        android:layout_weight="1"
-    />
+        android:layout_weight="1" />
+
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
-        <EditText android:id="@+id/edit_text_out"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/edit_text_out"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_gravity="bottom"
-            android:hint="Enter your message here"
-        />
-        <Button android:id="@+id/button_send"
+            android:hint="@string/edit_text_hint_enter_message" />
+
+        <Button
+            android:id="@+id/button_send"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/button_main_menu_blue"
-            android:text="@string/send"
-            android:textSize="@dimen/menu_font_size"
-        />
+            android:text="@string/button_send"
+            android:textSize="@dimen/menu_font_size" />
+
     </LinearLayout>
-    <Space android:layout_width="match_parent"
-           android:layout_height="40dp"></Space>
-    
-    <Button android:id="@+id/button_create_game"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:background="@drawable/button_main_menu_red"
-            android:text="Create game"
-            android:textSize="@dimen/menu_font_size"
-        />
-    <Space android:layout_width="match_parent"
-           android:layout_height="40dp"></Space>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="40dp" />
+
+    <Button
+        android:id="@+id/button_create_game"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/button_main_menu_red"
+        android:text="@string/button_create_game"
+        android:textSize="@dimen/menu_font_size" />
 </LinearLayout>

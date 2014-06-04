@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_margin="10dp"
-        android:text="@string/dialog_title_word_picker"
+        android:text="@string/dialog_text_view_word_picker_title"
         android:textColor="#FFFF00"
         android:textSize="@dimen/title_font_size" />
 

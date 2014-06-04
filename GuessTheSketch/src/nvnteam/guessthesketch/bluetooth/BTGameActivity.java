@@ -3,8 +3,9 @@ package nvnteam.guessthesketch.bluetooth;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.Deque;
 import java.util.Vector;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import nvnteam.guessthesketch.activity.ConfirmationDialog;
 import nvnteam.guessthesketch.activity.FullScreenActivity;
@@ -26,7 +27,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -117,6 +117,7 @@ public class BTGameActivity extends FullScreenActivity
     private TextView m_infoTextView;
     
     private Vector<AlertDialog> m_dialogs = new Vector<AlertDialog>();
+    private BlockingQueue<byte[]> m_nodes = new LinkedBlockingQueue<byte[]>();
 
     // Name of the connected device
     private String m_connectedDeviceName = null;
@@ -181,65 +182,55 @@ public class BTGameActivity extends FullScreenActivity
 
     private CountDownTimer m_globalTimer = null;
 
-    private SenderThread m_senderThread;
-    private DecoderThread m_decoderThread;
+    private ConsumerThread m_consumerThread;
 
     public void transferNode(DrawingNode node)
     {
-        m_senderThread = new SenderThread(node);
-        m_senderThread.run();
+        
     }
 
-    public void getDecodedNodes(Deque<DrawingNode> deque)
+    private class ConsumerThread extends Thread
     {
-        Log.e(TAG, "DECODED QUEUE SIZE: " + deque.size());
-        m_drawView.drawFromDeque(deque);
-    }
+        private final BlockingQueue<byte[]> mm_queue;
 
-    public synchronized void drawDecodedNode(DrawingNode node)
-    {
-        m_drawView.drawNode(node);
-    }
-
-    private class SenderThread extends Thread
-    {
-        private DrawingNode mm_node = null;
-
-        public SenderThread(DrawingNode node)
+        public ConsumerThread(BlockingQueue<byte[]> queue)
         {
-            mm_node = node;
+            mm_queue = queue;
         }
 
         public void run()
         {
-            sendNode(BluetoothProtocol.DATA_DRAWING_NODE, mm_node);
-        }
-    }
-
-    private class DecoderThread extends Thread
-    {
-        private byte[] mm_array = null;
-
-        public DecoderThread(byte[] array)
-        {
-            mm_array = new byte[array.length];
-            for (int i = 0; i < array.length; i++)
-                mm_array[i] = array[i];
+            while (true) 
+            { 
+                try 
+                {
+                    consume(mm_queue.take());
+                } 
+                catch (InterruptedException e) 
+                {
+                    e.printStackTrace();
+                } 
+            }
         }
 
-        public void run()
+        void consume(byte[] array)
         {
-            if (mm_array.length == 28)
+            byte[] nodeBytes = new byte[28];
+            for (int i = 0; i < nodeBytes.length; i++)
+                nodeBytes[i] = array[i + 4];
+            if (nodeBytes.length == 28)
             {
-                DrawingNode newNode = DrawingNode.deserialize(mm_array);
-                Log.i("NODESTUFF", "X: " + newNode.getX() + " Y: " + newNode.getY() 
-                        + " ACTION: " + newNode.getActionType() + " COLOR: " + newNode.getColor() 
-                        + " BRUSH: " +newNode.getBrushSize());
-                if (newNode.getX() > 0.f && newNode.getY() > 0.f)
-                    drawDecodedNode(newNode);
+                DrawingNode newNode = DrawingNode.deserialize(nodeBytes);
+                Log.i("NODESTUFF", " ACTION: " + newNode.getActionType());
+                drawDecodedNode(newNode);
             }
             else
-                Log.e("BluetoothGame", "Error decoding node");
+                Log.e("NODESTUFF", "Error decoding node");
+        }
+
+        public void drawDecodedNode(DrawingNode node)
+        {
+            m_drawView.drawNode(node);
         }
     }
 
@@ -248,7 +239,7 @@ public class BTGameActivity extends FullScreenActivity
     {
         super.onCreate(savedInstanceState);
         if(D) Log.e(TAG, "+++ ON CREATE +++");
-        setContentView(R.layout.view_flipper);
+        setContentView(R.layout.activity_bt_game);
 
         // Get local Bluetooth adapter
         m_bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -413,6 +404,8 @@ public class BTGameActivity extends FullScreenActivity
     public void prepareInGame()
     {
         m_infoTextView.setText("Please wait while the other player picks a word");
+        m_consumerThread = new ConsumerThread(m_nodes);
+        m_consumerThread.start();
         if (m_isGameHost)
         {
             m_viewFlipper.setDisplayedChild(m_viewFlipper.indexOfChild(m_gameLayout));
@@ -433,7 +426,7 @@ public class BTGameActivity extends FullScreenActivity
         // Check that we're actually connected before trying anything
         if (m_bluetoothService.getState() != BluetoothService.STATE_CONNECTED)
         {
-            Toast.makeText(this, R.string.not_connected, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.bt_not_connected, Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -454,7 +447,7 @@ public class BTGameActivity extends FullScreenActivity
     {
         if (m_bluetoothService.getState() != BluetoothService.STATE_CONNECTED)
         {
-            Toast.makeText(this, R.string.not_connected, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.bt_not_connected, Toast.LENGTH_SHORT).show();
             return;
         }
         byte[] stringBytes = string.getBytes();
@@ -477,11 +470,11 @@ public class BTGameActivity extends FullScreenActivity
         m_bluetoothService.write(send);
     }
 
-    private synchronized void sendNode(int code, DrawingNode node)
+    public synchronized void sendNode(int code, DrawingNode node)
     {
         if (m_bluetoothService.getState() != BluetoothService.STATE_CONNECTED)
         {
-            Toast.makeText(this, R.string.not_connected, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.bt_not_connected, Toast.LENGTH_SHORT).show();
             return;
         }
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -504,7 +497,7 @@ public class BTGameActivity extends FullScreenActivity
     {
         if (m_bluetoothService.getState() != BluetoothService.STATE_CONNECTED)
         {
-            Toast.makeText(this, R.string.not_connected, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.bt_not_connected, Toast.LENGTH_SHORT).show();
             return;
         }
         ByteBuffer b = ByteBuffer.allocate(4);
@@ -527,7 +520,7 @@ public class BTGameActivity extends FullScreenActivity
                 switch (msg.arg1)
                 {
                 case BluetoothService.STATE_CONNECTED:
-                    m_statusTextView.setText(R.string.title_connected_to);
+                    m_statusTextView.setText(R.string.text_view_connected_to);
                     m_statusTextView.append(m_connectedDeviceName);
                     if (!m_isGameHost)
                         m_deviceTextView.append(" as a client");
@@ -535,12 +528,12 @@ public class BTGameActivity extends FullScreenActivity
                     break;
 
                 case BluetoothService.STATE_CONNECTING:
-                    m_statusTextView.setText(R.string.title_connecting);
+                    m_statusTextView.setText(R.string.text_view_connecting);
                     break;
 
                 case BluetoothService.STATE_LISTEN:
                 case BluetoothService.STATE_NONE:
-                    m_statusTextView.setText(R.string.title_not_connected);
+                    m_statusTextView.setText(R.string.text_view_not_connected);
                     break;
                 }
                 break;
@@ -556,21 +549,22 @@ public class BTGameActivity extends FullScreenActivity
                 byte[] readBuf = (byte[]) msg.obj;
                 // construct a string from the valid bytes in the buffer
                 Log.e(TAG,  "$$$ MESSAGE LENGTH $$$ " + msg.arg1);
-
+/*
                 if (msg.arg2 == BluetoothProtocol.DATA_DRAWING_NODE)
                 {
                     Log.i(TAG, "HAS ENTERED DRAWING NODE RECEIVE");
-                    m_decoderThread = new DecoderThread(readBuf);
+                    /*m_decoderThread = new DecoderThread(readBuf);
                     m_decoderThread.start();
+                    m_nodes.add(readBuf);
                 }
                 else
-                {
+                {*/
                     if (!handleCommandMessage(readBuf, msg.arg1))
                     {
                         String readMessage = new String(readBuf, 0, msg.arg1);
                         m_conversationArrayAdapter.add(m_connectedDeviceName + ":  " + readMessage);
                     }
-                }
+               /* }*/
                 break;
 
             case BluetoothProtocol.MESSAGE_DEVICE_NAME:
@@ -648,6 +642,11 @@ public class BTGameActivity extends FullScreenActivity
                 m_drawView.undo();
                 return true;
             }
+            case BluetoothProtocol.DATA_DRAWING_NODE:
+            {
+                m_nodes.add(messageBytes);
+                return true;
+            }
             }
             if (D) Log.d(TAG, "CODE RECEIVED: " + code);
             return false;
@@ -674,6 +673,7 @@ public class BTGameActivity extends FullScreenActivity
 
         // Stop the playback and wipe the canvas
         m_drawView.startNew();
+        m_drawView.setDrawingPhase(true);
 
         // Change the backgrounds of buttons to corresponding team color
         if (m_currentTurn == 0)
@@ -745,7 +745,13 @@ public class BTGameActivity extends FullScreenActivity
            else
                outputBuffer.append(' ');
         m_mainWordTextView.setText(outputBuffer.toString());
+        if (m_currentTurn == 0)
+            m_currentRoundTextView.setTextColor(0xFF8080FF);
+        else
+            m_currentRoundTextView.setTextColor(0xFFFF8080);
+        m_currentRoundTextView.setText("Current Round: " + ((m_roundsPassed + 2) >> 1));
         m_drawView.startNew();
+        m_drawView.setDrawingPhase(false);
         m_paletteFlipper.showNext();
         m_revealedLetter = false;
         m_gameState = State.Guessing;
@@ -922,7 +928,7 @@ public class BTGameActivity extends FullScreenActivity
         final ConfirmationDialog cd = new ConfirmationDialog(BTGameActivity.this);
         cd.show();
         cd.setParam("Exit", "Are you sure you want to exit?");
-        cd.setYesOnClickListener(new OnClickListener()
+        cd.setYesOnClickListener("Yes", new OnClickListener()
         {
              public void onClick(View v) 
              {
@@ -930,7 +936,7 @@ public class BTGameActivity extends FullScreenActivity
                  BTGameActivity.super.onBackPressed();
              }
         });
-        cd.setNoOnClickListener(new OnClickListener()
+        cd.setNoOnClickListener("No", new OnClickListener()
         {
              public void onClick(View v) 
              {
@@ -1027,6 +1033,7 @@ public class BTGameActivity extends FullScreenActivity
         m_countDownTextView.setTypeface(tf);
         m_currentRoundTextView.setTypeface(tf);
         m_globalCountDownTextView.setTypeface(tf);
+        m_guesserEditText.setTypeface(tf);
 
         tf = Typeface.createFromAsset(getAssets(), "fonts/Segoe.ttf");
         m_teamNamesText.setTypeface(tf);
@@ -1035,7 +1042,6 @@ public class BTGameActivity extends FullScreenActivity
         m_timedRadioButton.setTypeface(tf);
         m_maxPointsRadioButton.setTypeface(tf);
 
-        m_guesserEditText.setTypeface(tf);
         m_guesserEditText.setInputType(m_guesserEditText.getInputType()
                                      | EditorInfo.TYPE_TEXT_FLAG_NO_SUGGESTIONS
                                      | EditorInfo.TYPE_TEXT_VARIATION_FILTER);
@@ -1076,7 +1082,7 @@ public class BTGameActivity extends FullScreenActivity
             {
                 if (m_bluetoothService.getState() != BluetoothService.STATE_CONNECTED)
                 {
-                    Toast.makeText(BTGameActivity.this, R.string.not_connected, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BTGameActivity.this, R.string.bt_not_connected, Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -1164,7 +1170,7 @@ public class BTGameActivity extends FullScreenActivity
             {
                 if (m_bluetoothService.getState() != BluetoothService.STATE_CONNECTED)
                 {
-                    Toast.makeText(BTGameActivity.this, R.string.not_connected, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BTGameActivity.this, R.string.bt_not_connected, Toast.LENGTH_SHORT).show();
                     return;
                 }
 

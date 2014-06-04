@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_margin="10dp"
-        android:text="@string/dialog_title_game_over"
+        android:text="@string/dialog_text_view_game_over_title"
         android:textColor="#FFFF00"
         android:textSize="@dimen/title_font_size" />
 
@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_margin="10dp"
-        android:text="@string/dialog_text_game_over"
+        android:text="@string/dialog_text_view_game_over_winner"
         android:textColor="@android:color/white"
         android:textSize="@dimen/menu_font_size" />
 
@@ -52,7 +52,7 @@
 	        android:layout_height="wrap_content"
 	        android:layout_gravity="center_horizontal"
 	        android:layout_margin="10dp"
-	        android:text="@string/dialog_with_game_over"
+	        android:text="@string/dialog_text_view_game_over_with"
 	        android:textColor="@android:color/white"
 	        android:textSize="@dimen/menu_font_size" />
 	
@@ -71,7 +71,7 @@
 	        android:layout_height="wrap_content"
 	        android:layout_gravity="center_horizontal"
 	        android:layout_margin="10dp"
-	        android:text="@string/dialog_points_game_over"
+	        android:text="@string/dialog_text_view_game_over_points"
 	        android:textColor="@android:color/white"
 	        android:textSize="@dimen/menu_font_size" />
 
@@ -83,7 +83,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_margin="10dp"
-        android:text="@string/dialog_congratulations_game_over"
+        android:text="@string/dialog_text_view_game_over_congratulations"
         android:textColor="@android:color/white"
         android:textSize="@dimen/menu_font_size" />
 

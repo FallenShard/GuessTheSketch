@@ -113,7 +113,7 @@ public class DeviceListDialogActivity extends Activity {
                 mPairedDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());
             }
         } else {
-            String noDevices = getResources().getText(R.string.none_paired).toString();
+            String noDevices = getResources().getText(R.string.dl_none_paired).toString();
             mPairedDevicesArrayAdapter.add(noDevices);
         }
     }
@@ -139,7 +139,7 @@ public class DeviceListDialogActivity extends Activity {
 
         // Indicate scanning in the title
         setProgressBarIndeterminateVisibility(true);
-        setTitle(R.string.scanning);
+        setTitle(R.string.dl_scanning);
 
         // Turn on sub-title for new devices
         findViewById(R.id.title_new_devices).setVisibility(View.VISIBLE);
@@ -191,9 +191,9 @@ public class DeviceListDialogActivity extends Activity {
             // When discovery is finished, change the Activity title
             } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
                 setProgressBarIndeterminateVisibility(false);
-                setTitle(R.string.select_device);
+                setTitle(R.string.dl_select_device);
                 if (mNewDevicesArrayAdapter.getCount() == 0) {
-                    String noDevices = getResources().getText(R.string.none_found).toString();
+                    String noDevices = getResources().getText(R.string.dl_none_found).toString();
                     mNewDevicesArrayAdapter.add(noDevices);
                 }
             }

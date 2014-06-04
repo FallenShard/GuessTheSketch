@@ -51,7 +51,7 @@ public class HighScoreManager
                 m_roundScoresNames[j] = m_roundScoresNames[j - 1];
             }
 
-            m_roundScoresVals[i] = points;
+            m_roundScoresVals[i] = GTSUtils.round(points, 2);
             m_roundScoresNames[i] = new String(teamName);
 
             SharedPreferences.Editor editor = m_roundPrefs.edit();
@@ -99,7 +99,7 @@ public class HighScoreManager
                 m_fiveScoresNames[j] = m_fiveScoresNames[j - 1];
             }
 
-            m_fiveScoresVals[i] = points;
+            m_fiveScoresVals[i] = GTSUtils.round(points, 2);
             m_fiveScoresNames[i] = new String(teamName);
 
             SharedPreferences.Editor editor = m_fivePrefs.edit();

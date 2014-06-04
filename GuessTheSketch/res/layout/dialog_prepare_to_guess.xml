@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_margin="10dp"
-        android:text="@string/dialog_title_guessing"
+        android:text="@string/dialog_text_view_guessing_title"
         android:textColor="#FFFF00"
         android:textSize="@dimen/title_font_size" />
 
@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_margin="10dp"
-        android:text="@string/dialog_text_guessing"
+        android:text="@string/dialog_text_view_guessing_info"
         android:textColor="@android:color/white"
         android:textSize="@dimen/menu_font_size" />
 

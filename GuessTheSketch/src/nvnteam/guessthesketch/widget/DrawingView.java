@@ -7,6 +7,7 @@ import java.util.Stack;
 
 import nvnteam.guessthesketch.R;
 import nvnteam.guessthesketch.bluetooth.BTGameActivity;
+import nvnteam.guessthesketch.bluetooth.BluetoothProtocol;
 import nvnteam.guessthesketch.dto.DrawingNode;
 
 
@@ -20,6 +21,7 @@ import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.os.SystemClock;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.MotionEvent;
@@ -40,7 +42,7 @@ public class DrawingView extends View
 
 	private PlaybackThread m_playbackThread;
 
-	private volatile boolean m_shouldPlayback = false;
+	private volatile boolean m_enableDrawing = true;
 	private DrawingNode m_currentNode = new DrawingNode();
 	private Deque<DrawingNode> m_playbackDeque = new LinkedList<DrawingNode>();
 
@@ -49,6 +51,8 @@ public class DrawingView extends View
 	private BTGameActivity m_observer = null;
 	private int m_screenX;
 	private int m_screenY;
+	
+	private boolean m_hadStart = false;
 
 	public DrawingView(Context context, AttributeSet attrs)
 	{
@@ -71,11 +75,16 @@ public class DrawingView extends View
 		m_drawPaint = new Paint();
 		m_drawPaint.setColor(m_paintColor);
 		m_drawPaint.setAntiAlias(true);
-		m_drawPaint.setStrokeWidth(m_brushSize);
+		setBrushSize(m_brushSize);
 		m_drawPaint.setStyle(Paint.Style.STROKE);
 		m_drawPaint.setStrokeJoin(Paint.Join.ROUND);
 		m_drawPaint.setStrokeCap(Paint.Cap.ROUND);
 		m_canvasPaint = new Paint(Paint.DITHER_FLAG);
+	}
+	
+	public void setDrawingPhase(boolean isDrawing)
+	{
+	    m_enableDrawing = isDrawing;
 	}
 	
 	public void attachObserver(BTGameActivity act)
@@ -101,7 +110,7 @@ public class DrawingView extends View
 	@Override
 	public boolean onTouchEvent(MotionEvent event)
 	{
-	    if (!m_shouldPlayback)
+	    if (m_enableDrawing)
 	    {
     		float touchX = event.getX();
     		float touchY = event.getY();
@@ -131,8 +140,7 @@ public class DrawingView extends View
 
     		if (m_observer != null)
     		{
-    		    m_observer.transferNode(m_currentNode);
-                m_playbackDeque.clear();
+    		    m_observer.sendNode(BluetoothProtocol.DATA_DRAWING_NODE, m_currentNode);
     		}
     		invalidate();
     		return true;
@@ -168,11 +176,6 @@ public class DrawingView extends View
 	    m_playbackDeque.clear();
 	}
 
-	public boolean getPlayback()
-    {
-        return m_shouldPlayback;
-    }
-
 	public Deque<DrawingNode> getPlaybackDeque()
 	{
 	    return m_playbackDeque;
@@ -185,44 +188,63 @@ public class DrawingView extends View
 
 	public void startPlayback(final long milliSec)
 	{
-	    m_shouldPlayback = true;
+	    m_enableDrawing = false;
 	    m_playbackThread = new PlaybackThread(milliSec);
 	    m_playbackThread.start();
 	}
 
 	public void stopPlayback()
 	{
-	    m_shouldPlayback = false;
+	    m_enableDrawing = true;
 	}
 	
-	public void drawNode(final DrawingNode node)
+	public void drawNode(DrawingNode node)
 	{
-	    new Thread(new Runnable()
-        {
-            public void run()
-            {
-                m_drawPaint.setColor(node.getColor());
-                setBrushSize(node.getBrushSize());
+        m_drawPaint.setColor(node.getColor());
+        setBrushSize(node.getBrushSize());
 
-                switch (node.getActionType()) 
-                {
-                    case MotionEvent.ACTION_DOWN:
-                        m_drawPath.moveTo(node.getX() * m_screenX, node.getY() * m_screenY);
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        m_drawPath.lineTo(node.getX() * m_screenX, node.getY() * m_screenY);
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        m_drawPath.lineTo(node.getX() * m_screenX, node.getY() * m_screenY);
-                        m_drawCanvas.drawPath(m_drawPath, m_drawPaint);
-                        m_drawPath.reset();
-                        break;
-                }
-                postInvalidate();
-                m_undoStack.add(new DrawingNode(m_currentNode));
-                m_playbackDeque.add(new DrawingNode(m_currentNode));
+        switch (node.getActionType()) 
+        {
+            case MotionEvent.ACTION_DOWN:
+            {
+                m_drawPath.moveTo(node.getX() * m_screenX, node.getY() * m_screenY);
+                m_hadStart = true;
+                break;
             }
-        }).start();
+            case MotionEvent.ACTION_MOVE:
+            {
+                if (m_hadStart)
+                    m_drawPath.lineTo(node.getX() * m_screenX, node.getY() * m_screenY);
+                else
+                {
+                    m_drawPath.moveTo(node.getX() * m_screenX, node.getY() * m_screenY);
+                    m_hadStart = true;
+                    node.setActionType(MotionEvent.ACTION_DOWN);
+                }
+                break;
+            }
+            case MotionEvent.ACTION_UP:
+            {
+                if (m_hadStart)
+                {
+                    m_drawPath.lineTo(node.getX() * m_screenX, node.getY() * m_screenY);
+                    m_drawCanvas.drawPath(m_drawPath, m_drawPaint);
+                    m_drawPath.reset();
+                    m_hadStart = false;
+                }
+                else
+                {
+                    m_drawPath.moveTo(node.getX() * m_screenX, node.getY() * m_screenY);
+                    m_hadStart = true;
+                    node.setActionType(MotionEvent.ACTION_DOWN);
+                }
+                break;
+            }
+        }
+        Log.w("NODESTUFF", " MUTATED ACTION: " + node.getActionType());
+        postInvalidate();
+        m_undoStack.add(new DrawingNode(node));
+        m_playbackDeque.add(new DrawingNode(node));
 	}
 
 	public void drawFromDeque(final Deque<DrawingNode> deque)
@@ -268,46 +290,52 @@ public class DrawingView extends View
 
 	public void undo()
 	{
-	    try
-	    {
-    	    while (m_undoStack.peek().getActionType() != MotionEvent.ACTION_DOWN)
-    	    {
-    	        m_undoStack.pop();
-    	        m_playbackDeque.pollLast();
-    	    }
-    	    m_undoStack.pop();
-    	    m_playbackDeque.pollLast();
-    	    m_drawCanvas.drawColor(0, PorterDuff.Mode.CLEAR);
-    	    int previousColor = m_paintColor;
-    	    float prevBrush = m_brushSize;
-    	    for (DrawingNode node : m_undoStack)
-    	    {
-    	        m_drawPaint.setColor(node.getColor());
-    	        setBrushSize(node.getBrushSize());
-    	        switch (node.getActionType())
-                {
-                    case MotionEvent.ACTION_DOWN:
-                        m_drawPath.moveTo(node.getX() * m_screenX, node.getY() * m_screenY);
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        m_drawPath.lineTo(node.getX() * m_screenX, node.getY() * m_screenY);
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        m_drawPath.lineTo(node.getX() * m_screenX, node.getY() * m_screenY);
-                        m_drawCanvas.drawPath(m_drawPath, m_drawPaint);
-                        m_drawPath.reset();
-                        break;
-                }
-    	    }
-    	    m_drawPaint.setColor(previousColor);
-    	    m_paintColor = previousColor;
-    	    invalidate();
-    	    setBrushSize(prevBrush);
-	    }
-	    catch (Exception ex)
-	    {
-
-	    }
+	    new Thread(new Runnable()
+        {
+            public void run()
+            {
+        	    try
+        	    {
+            	    while (m_undoStack.peek().getActionType() != MotionEvent.ACTION_DOWN)
+            	    {
+            	        m_undoStack.pop();
+            	        m_playbackDeque.pollLast();
+            	    }
+            	    m_undoStack.pop();
+            	    m_playbackDeque.pollLast();
+            	    m_drawCanvas.drawColor(0, PorterDuff.Mode.CLEAR);
+            	    int previousColor = m_paintColor;
+            	    float prevBrush = m_brushSize;
+            	    for (DrawingNode node : m_undoStack)
+            	    {
+            	        m_drawPaint.setColor(node.getColor());
+            	        setBrushSize(node.getBrushSize());
+            	        switch (node.getActionType())
+                        {
+                            case MotionEvent.ACTION_DOWN:
+                                m_drawPath.moveTo(node.getX() * m_screenX, node.getY() * m_screenY);
+                                break;
+                            case MotionEvent.ACTION_MOVE:
+                                m_drawPath.lineTo(node.getX() * m_screenX, node.getY() * m_screenY);
+                                break;
+                            case MotionEvent.ACTION_UP:
+                                m_drawPath.lineTo(node.getX() * m_screenX, node.getY() * m_screenY);
+                                m_drawCanvas.drawPath(m_drawPath, m_drawPaint);
+                                m_drawPath.reset();
+                                break;
+                        }
+            	    }
+            	    m_drawPaint.setColor(previousColor);
+            	    m_paintColor = previousColor;
+            	    postInvalidate();
+            	    setBrushSize(prevBrush);
+        	    }
+        	    catch (Exception ex)
+        	    {
+        
+        	    }
+            }
+        }).start();
 	}
 
 	private class PlaybackThread extends Thread
@@ -321,7 +349,7 @@ public class DrawingView extends View
 
         public void run()
         {
-            while (!m_playbackDeque.isEmpty() && m_shouldPlayback)
+            while (!m_playbackDeque.isEmpty() && !m_enableDrawing)
             {
                 while ((SystemClock.uptimeMillis() < m_playbackDeque.peek().getTimeStamp() + mm_timeDelay));
                 DrawingNode firstNode = m_playbackDeque.remove();
@@ -342,11 +370,14 @@ public class DrawingView extends View
                         m_drawPath.reset();
                         break;
                 }
-                if (m_shouldPlayback)
+                if (!m_enableDrawing)
                     postInvalidate();
             }
             if (!m_playbackDeque.isEmpty())
+            {
                 m_playbackDeque.clear();
+                m_drawPath.reset();
+            }
             if (!m_undoStack.isEmpty())
                 m_undoStack.clear();
         }

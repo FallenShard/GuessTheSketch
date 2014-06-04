@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_margin="10dp"
-        android:text="@string/dialog_title_scores"
+        android:text="@string/dialog_text_view_scores_title"
         android:textColor="#FFFF00"
         android:textSize="@dimen/title_font_size" />
 
@@ -36,7 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:textColor="#FFFFFF"
-        android:text="@string/dialog_current_scores"
+        android:text="@string/dialog_text_view_scores_info"
         android:textSize="@dimen/menu_font_size" />
 
     <LinearLayout
@@ -96,7 +96,7 @@
 		android:layout_gravity="center_horizontal"
 		android:layout_margin="10dp"
 		android:textColor="#FFFFFF"
-		android:text="@string/dialog_proceed_scores"
+		android:text="@string/dialog_text_view_scores_turn"
 		android:textSize="@dimen/menu_font_size" />
 
     <Button 
@@ -106,7 +106,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="30dp"
         android:background="@drawable/button_main_menu_yellow"
-        android:text="@string/dialog_proceed_button"
+        android:text="@string/dialog_button_proceed"
         android:textSize="@dimen/menu_font_size" />
 
 </LinearLayout>

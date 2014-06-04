@@ -16,7 +16,7 @@ public class ConfirmationDialog extends AlertDialog
     TextView m_title;
     TextView m_info;
     Button m_yesButton;
-    Button m_nobutton;
+    Button m_noButton;
 
     public ConfirmationDialog(Context context) 
     {
@@ -31,13 +31,13 @@ public class ConfirmationDialog extends AlertDialog
 
         setCancelable(false);
         m_yesButton = (Button) findViewById(R.id.dialog_confirm_button_ok);
-        m_nobutton = (Button) findViewById(R.id.dialog_confirm_button_cancel);
+        m_noButton = (Button) findViewById(R.id.dialog_confirm_button_cancel);
         m_title = (TextView) findViewById(R.id.dialog_confirm_title);
         m_info = (TextView) findViewById(R.id.dialog_confirm_text);
 
         Typeface tf = Typeface.createFromAsset(m_context.getAssets(), "fonts/Villa.ttf");
         m_yesButton.setTypeface(tf);
-        m_nobutton.setTypeface(tf);
+        m_noButton.setTypeface(tf);
         m_title.setTypeface(tf);
 
         tf = Typeface.createFromAsset(m_context.getAssets(), "fonts/Segoe.ttf");
@@ -50,13 +50,15 @@ public class ConfirmationDialog extends AlertDialog
         m_info.setText(message);
     }
 
-    public void setYesOnClickListener(View.OnClickListener lsnr)
+    public void setYesOnClickListener(String text, View.OnClickListener lsnr)
     {
+        m_yesButton.setText(text);
         m_yesButton.setOnClickListener(lsnr);
     }
 
-    public void setNoOnClickListener(View.OnClickListener lsnr)
+    public void setNoOnClickListener(String text, View.OnClickListener lsnr)
     {
-        m_nobutton.setOnClickListener(lsnr);
+        m_noButton.setText(text);
+        m_noButton.setOnClickListener(lsnr);
     }
 }
