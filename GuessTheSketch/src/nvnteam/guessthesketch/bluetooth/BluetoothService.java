@@ -482,14 +482,12 @@ public class BluetoothService
                     Log.i("THREADCOMM", "BYTES READ: " + bytes);
                     if (bytes >= 4)
                     {
-
                         m_handler.obtainMessage(BluetoothProtocol.MESSAGE_READ, bytes, -1, buffer)
                         .sendToTarget();
                     }
                 }
                 catch (IOException e)
                 {
-                    
                     Log.e(TAG, "disconnected", e);
                     connectionLost();
                     break;

@@ -86,7 +86,7 @@ public class DrawingActivity extends FullScreenActivity
             {
                 final ConfirmationDialog cd = new ConfirmationDialog(DrawingActivity.this);
                 cd.show();
-                cd.setParam("New Drawing", "This command will start saving the canvas" +
+                cd.setParam("Save Drawing", "This command will start saving the canvas" +
                 " as a picture to the gallery. Do you wish to continue?");
                 cd.setYesOnClickListener("OK", new OnClickListener()
                 {

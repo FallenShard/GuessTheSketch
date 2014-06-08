@@ -36,7 +36,7 @@
     <string name="button_create_game">Create Game</string>
 
     <!-- Device List -->
-    <string name="button_scan">Scan for devices</string>
+    <string name="button_scan">Scan Devices</string>
 
     <!-- Dialogs -->
     <string name="dialog_button_ok">OK</string>

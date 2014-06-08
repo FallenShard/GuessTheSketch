@@ -48,6 +48,7 @@ public class TutorialActivity extends FullScreenActivity
         m_basicFlipper.setOutAnimation(fadeOut);
         m_advancedFlipper.setInAnimation(fadeIn);
         m_advancedFlipper.setOutAnimation(fadeOut);
+        m_changerButton.setText("Advanced");
     }
 
     private void initUI()

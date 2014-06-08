@@ -52,7 +52,7 @@ public class DrawingView extends View
 	private int m_screenX;
 	private int m_screenY;
 	
-	private boolean m_hadStart = false;
+	private boolean m_lineDrawn = false;
 
 	public DrawingView(Context context, AttributeSet attrs)
 	{
@@ -137,9 +137,20 @@ public class DrawingView extends View
     		}
     		m_undoStack.add(new DrawingNode(m_currentNode));
     		m_playbackDeque.add(new DrawingNode(m_currentNode));
-
+/*
     		if (m_observer != null)
     		{
+    		    m_observer.sendNode(BluetoothProtocol.DATA_DRAWING_NODE, m_currentNode);
+    		    Log.d("NODESENDS", "ACTION SENT: " + m_currentNode.getActionType());
+    		}*/
+    		if (m_observer != null)
+    		{/*
+    		    if (m_playbackDeque.size() > 15 || event.getAction() == MotionEvent.ACTION_UP)
+    		    {
+    		        SenderThread senderThread = new SenderThread(m_playbackDeque);
+    		        senderThread.start();
+    		        m_playbackDeque.clear();
+    		    }*/
     		    m_observer.sendNode(BluetoothProtocol.DATA_DRAWING_NODE, m_currentNode);
     		}
     		invalidate();
@@ -198,50 +209,68 @@ public class DrawingView extends View
 	    m_enableDrawing = true;
 	}
 	
-	public void drawNode(DrawingNode node)
+	public synchronized void drawNode(DrawingNode node)
 	{
+	    float oldBrush = m_brushSize;
+	    int oldColor = m_paintColor;
         m_drawPaint.setColor(node.getColor());
         setBrushSize(node.getBrushSize());
-
+        int type = node.getActionType();
+        boolean lineDrawn = m_lineDrawn;
         switch (node.getActionType()) 
         {
             case MotionEvent.ACTION_DOWN:
             {
-                m_drawPath.moveTo(node.getX() * m_screenX, node.getY() * m_screenY);
-                m_hadStart = true;
+                if (!m_lineDrawn)
+                {
+                    m_drawPath.moveTo(node.getX() * m_screenX, node.getY() * m_screenY);
+                    m_lineDrawn = true;
+                }
+                else
+                {
+                    m_drawPath.lineTo(node.getX() * m_screenX, node.getY() * m_screenY);
+                    m_drawCanvas.drawPath(m_drawPath, m_drawPaint);
+                    m_drawPath.reset();
+                    m_lineDrawn = false;
+                    node.setActionType(MotionEvent.ACTION_UP);
+                }
                 break;
             }
             case MotionEvent.ACTION_MOVE:
             {
-                if (m_hadStart)
-                    m_drawPath.lineTo(node.getX() * m_screenX, node.getY() * m_screenY);
-                else
+                if (!m_lineDrawn)
                 {
                     m_drawPath.moveTo(node.getX() * m_screenX, node.getY() * m_screenY);
-                    m_hadStart = true;
+                    m_lineDrawn = true;
                     node.setActionType(MotionEvent.ACTION_DOWN);
+                }
+                else
+                {
+                    m_drawPath.lineTo(node.getX() * m_screenX, node.getY() * m_screenY);
                 }
                 break;
             }
             case MotionEvent.ACTION_UP:
             {
-                if (m_hadStart)
+                if (!m_lineDrawn)
+                {
+                    m_paintColor = oldColor;
+                    m_drawPaint.setColor(oldColor);
+                    setBrushSize(oldBrush);
+                    Log.w("NODESTUFF", "SKIPPED ONE UP NODE");
+                    return;
+                }
+                else
                 {
                     m_drawPath.lineTo(node.getX() * m_screenX, node.getY() * m_screenY);
                     m_drawCanvas.drawPath(m_drawPath, m_drawPaint);
                     m_drawPath.reset();
-                    m_hadStart = false;
-                }
-                else
-                {
-                    m_drawPath.moveTo(node.getX() * m_screenX, node.getY() * m_screenY);
-                    m_hadStart = true;
-                    node.setActionType(MotionEvent.ACTION_DOWN);
+                    m_lineDrawn = false;
                 }
                 break;
             }
         }
-        Log.w("NODESTUFF", " MUTATED ACTION: " + node.getActionType());
+        Log.w("NODESTUFF", "ACTION: " + type + " START: " + lineDrawn + " MUTATED ACTION: " + node.getActionType());
         postInvalidate();
         m_undoStack.add(new DrawingNode(node));
         m_playbackDeque.add(new DrawingNode(node));
@@ -282,8 +311,8 @@ public class DrawingView extends View
                             m_drawPath.reset();
                             break;
                     }
-                    postInvalidate();
                 }
+                postInvalidate();
             }
         }).start();
     }
@@ -325,17 +354,32 @@ public class DrawingView extends View
                                 break;
                         }
             	    }
-            	    m_drawPaint.setColor(previousColor);
             	    m_paintColor = previousColor;
-            	    postInvalidate();
+            	    m_drawPaint.setColor(previousColor);
             	    setBrushSize(prevBrush);
+            	    postInvalidate();
         	    }
         	    catch (Exception ex)
         	    {
-        
+
         	    }
             }
         }).start();
+	}
+
+	private class SenderThread extends Thread
+	{
+	    private Deque<DrawingNode> mm_deque;
+
+	    public SenderThread (Deque<DrawingNode> deque)
+	    {
+	        mm_deque = new LinkedList<DrawingNode>(deque);
+	    }
+
+	    public void run()
+	    {
+	        m_observer.sendNodes(BluetoothProtocol.DATA_DRAWING_NODE, mm_deque);
+	    }
 	}
 
 	private class PlaybackThread extends Thread

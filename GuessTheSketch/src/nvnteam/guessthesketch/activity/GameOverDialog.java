@@ -47,9 +47,9 @@ public class GameOverDialog extends AlertDialog
         Typeface tf = Typeface.createFromAsset(m_context.getAssets(), "fonts/Villa.ttf");
         m_button.setTypeface(tf);
         m_title.setTypeface(tf);
+        m_teamName.setTypeface(tf);
 
         tf = Typeface.createFromAsset(m_context.getAssets(), "fonts/Segoe.ttf");
-        m_teamName.setTypeface(tf);
         m_number.setTypeface(tf);
         m_info.setTypeface(tf);
         m_with.setTypeface(tf);
