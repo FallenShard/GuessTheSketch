@@ -31,6 +31,7 @@ public class SDGameActivity extends FullScreenActivity
 {
     // LogCat debugging purposes
     public static String LOG_TAG = "DEBUGGING";
+    private static boolean D = false;
 
     // GUI handlers
     private DrawingView m_drawView;
@@ -119,8 +120,6 @@ public class SDGameActivity extends FullScreenActivity
         m_teamNames[0] = getIntent().getStringExtra(SDPreGameActivity.TeamOneNameTag);
         m_teamNames[1] = getIntent().getStringExtra(SDPreGameActivity.TeamTwoNameTag);
         m_gameMode = getIntent().getIntExtra(SDPreGameActivity.gameModeTag, 1);
-
-        Log.e("GAME MODE", "GAME MODE IS " + m_gameMode);
 
         if (m_gameMode == 2)
         {
@@ -328,7 +327,7 @@ public class SDGameActivity extends FullScreenActivity
         // Add the points to the current team
         m_currentScores[m_currentTurn] += m_wordPoints * m_wordModifier;
         m_highScoreManager.saveScore(m_teamNames[m_currentTurn], 
-                m_wordPoints, HighScoreManager.ROUND_PREFS_NAME);
+                m_currentScores[m_currentTurn], HighScoreManager.ROUND_PREFS_NAME);
 
         m_currentTurn = (m_currentTurn + 1) % MaxTeams;
 

@@ -2,6 +2,7 @@ package nvnteam.guessthesketch.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.widget.Toast;
 
 public class HighScoreManager 
 {
@@ -19,9 +20,12 @@ public class HighScoreManager
     private float[] m_avgScoresVals = new float[5];
     private String[] m_fiveScoresNames = new String[5];
     private float[] m_fiveScoresVals = new float[5];
+    
+    private Context m_context;
 
     public HighScoreManager(Context context)
     {
+        m_context = context;
         m_roundPrefs = context.getSharedPreferences(ROUND_PREFS_NAME, Context.MODE_PRIVATE);
         m_avgPrefs = context.getSharedPreferences(AVG_PREFS_NAME, Context.MODE_PRIVATE);
         m_fivePrefs = context.getSharedPreferences(FIVE_PREFS_NAME, Context.MODE_PRIVATE);
@@ -110,6 +114,7 @@ public class HighScoreManager
             }
             editor.commit();
         }
+        Toast.makeText(m_context, "New high score: " + teamName + " - " + points, Toast.LENGTH_SHORT).show();
     }
 
     public String getScoresName(int pos, String fileName)

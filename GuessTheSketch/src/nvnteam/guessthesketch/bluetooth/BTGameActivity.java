@@ -62,6 +62,7 @@ import android.widget.TextView.OnEditorActionListener;
 public class BTGameActivity extends FullScreenActivity
 {
     // Debugging
+    private static int nodesSent = 0;
     private static final String TAG = "BluetoothGame";
     private static final boolean D = true;
 
@@ -211,7 +212,7 @@ public class BTGameActivity extends FullScreenActivity
                 } 
             }
         }
-        void consume(byte[] array)
+       /* void consume(byte[] array)
         {
             byte[] nodeBytes = new byte[28];
             for (int i = 0; i < nodeBytes.length; i++)
@@ -224,34 +225,33 @@ public class BTGameActivity extends FullScreenActivity
             }
             else
                 Log.e("NODESTUFF", "Error decoding node");
-        }
-/*  BUFFERED NODE QUEUE - DOES NOT WORK PROPERLY
+        }*/
+//  BUFFERED NODE QUEUE - DOES NOT WORK PROPERLY
         void consume(byte[] array)
         {
             int ind = 0;
 
             int nodesTotal = ByteBuffer.wrap(array, 4, 4).getInt();
             DrawingNode[] nodes = new DrawingNode[nodesTotal];
-            
+
             for (ind = 0; ind < nodesTotal; ind++)
             {
                 byte[] nodeBytes = new byte[28];
                 int i = 0;
                 for (i = 0; i < nodeBytes.length && ind < nodesTotal; i++)
-                    nodeBytes[i] = array[8 + ind * 28 + i];
+                    nodeBytes[i] = array[12 + ind * 28 + i];
 
                 if (i == 28)
                 {
                     DrawingNode newNode = DrawingNode.deserialize(nodeBytes);
-                    Log.i("NODECOM", "RECEIVED TYPE: " + newNode.getActionType());
+                    Log.i("NODECOM", "RECEIVED TYPE: " + newNode.getActionType() + " TIMESTAMP: " + newNode.getTimeStamp());
                     //m_drawView.drawNode(newNode);
                     //drawDeque.add(newNode);
                     nodes[ind] = newNode;
                 }
                 else
-                    Log.e("NODESTUFF", "Error decoding node");
+                    Log.e("NODECOM", "Error decoding node");
             }
-
             long currentTime = SystemClock.currentThreadTimeMillis();
             long[] nodeDelays = new long[nodesTotal];
             nodeDelays[0] = 0;
@@ -266,16 +266,16 @@ public class BTGameActivity extends FullScreenActivity
                 m_drawView.drawNode(nodes[k]);
             }
             //m_drawView.drawFromDeque(drawDeque);
-        }*/
+        }
     }
     
     public void sendNodes(int code, Deque<DrawingNode> deque)
-    {
+    {/*
         if (m_bluetoothService.getState() != BluetoothService.STATE_CONNECTED)
         {
             Toast.makeText(this, R.string.bt_not_connected, Toast.LENGTH_SHORT).show();
             return;
-        }
+        }*/
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         try 
         {
@@ -285,12 +285,19 @@ public class BTGameActivity extends FullScreenActivity
             bsize.putInt(deque.size());
             outputStream.write(b.array());
             outputStream.write(bsize.array());
+            ByteBuffer packetSize = ByteBuffer.allocate(4);
+            int pSize = 12 + deque.size() * 28;
+            int dSize = deque.size();
+            packetSize.putInt(pSize);
+            outputStream.write(packetSize.array());
             while (deque.peek() != null)
             {
                 DrawingNode node = deque.poll();
-                Log.i("NODECOM", "SENT TYPE: " + node.getActionType());
                 outputStream.write(DrawingNode.serialize(node));
             }
+            Log.e("PACKETS", "PACKET SIZE: " + pSize);
+            Log.d("NODECOM", "NODES SENT: " + dSize);
+            nodesSent += dSize;
             m_bluetoothService.write(outputStream.toByteArray());
         } 
         catch (IOException e1) 
@@ -403,7 +410,6 @@ public class BTGameActivity extends FullScreenActivity
                 // Attempt to connect to the device
                 m_isGameHost = true;
                 m_bluetoothService.connect(device);
-                m_deviceTextView.append(" as a server");
             }
             break;
         case REQUEST_ENABLE_BT:
@@ -634,7 +640,7 @@ public class BTGameActivity extends FullScreenActivity
             case BluetoothProtocol.MESSAGE_READ:
                 byte[] readBuf = (byte[]) msg.obj;
                 // construct a string from the valid bytes in the buffer
-                Log.e(TAG,  "$$$ MESSAGE LENGTH $$$ " + msg.arg1);
+                Log.e("HANDLER",  "MESSAGE LENGTH: " + msg.arg1);
 /*
                 if (msg.arg2 == BluetoothProtocol.DATA_DRAWING_NODE)
                 {
@@ -671,9 +677,10 @@ public class BTGameActivity extends FullScreenActivity
         {
             int code = messageBytes[0] << 24 | messageBytes[1] << 16
                      | messageBytes[2] << 8  | messageBytes[3];
-            Log.e(TAG,  "RECEIVED MESSAGE CODE: ++++ " + code);
-            for (AlertDialog ad : m_dialogs)
-                if (ad.isShowing() && ad instanceof ScoreDialog) ad.dismiss();
+            // Log.e("CODE",  "RECEIVED MESSAGE CODE: ++++ " + code);
+            if (code != BluetoothProtocol.DATA_DRAWING_NODE)
+                for (AlertDialog ad : m_dialogs)
+                    if (ad.isShowing() && ad instanceof ScoreDialog) ad.dismiss();
             switch (code)
             {
             case BluetoothProtocol.COMMAND_CREATE_GAME:
@@ -773,6 +780,7 @@ public class BTGameActivity extends FullScreenActivity
         // Stop the playback and wipe the canvas
         m_drawView.startNew();
         m_drawView.setDrawing(true);
+        m_drawView.clearDeque();
 
         // Change the backgrounds of buttons to corresponding team color
         if (m_currentTurn == 0)
@@ -821,6 +829,7 @@ public class BTGameActivity extends FullScreenActivity
                     m_wordPoints = m_baseFactor + m_difficultyFactor * wpd.getSelectedIndex();
                     m_gameState = State.Drawing;
                     m_timer.start();
+                    m_drawView.startTransmit();
                     Toast.makeText(BTGameActivity.this, wpd.getSelectedWord(), Toast.LENGTH_LONG).show();
                     wpd.dismiss();
                 }
@@ -867,6 +876,7 @@ public class BTGameActivity extends FullScreenActivity
     {
         // Cancel the timer and stop playback
         m_timer.cancel();
+        m_drawView.stopTransmit();
 
         // Reveal the word to the guesser
         m_mainWordTextView.setText(m_currentWord);
@@ -924,7 +934,7 @@ public class BTGameActivity extends FullScreenActivity
         // Add the points to the current team
         m_currentScores[m_currentTurn] += m_wordPoints * m_wordModifier;
         m_highScoreManager.saveScore(m_teamNames[m_currentTurn], 
-                m_wordPoints, HighScoreManager.ROUND_PREFS_NAME);
+                m_currentScores[m_currentTurn], HighScoreManager.ROUND_PREFS_NAME);
 
         m_currentTurn = (m_currentTurn + 1) % MaxTeams;
 
@@ -1198,7 +1208,7 @@ public class BTGameActivity extends FullScreenActivity
                 else
                 {
                     Toast.makeText(BTGameActivity.this, 
-                            "Please wait for the server to create the game", Toast.LENGTH_LONG).show();
+                            "Please wait for the game host to create the game", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -1287,7 +1297,7 @@ public class BTGameActivity extends FullScreenActivity
                 else
                 {
                     Toast.makeText(BTGameActivity.this, 
-                            "Please wait for the server to start the game", Toast.LENGTH_LONG).show();
+                            "Please wait for the game host to start the game", Toast.LENGTH_LONG).show();
                 }
             }
         });

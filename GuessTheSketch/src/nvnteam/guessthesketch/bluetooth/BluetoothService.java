@@ -1,8 +1,10 @@
 package nvnteam.guessthesketch.bluetooth;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Arrays;
 import java.util.UUID;
 
 import android.bluetooth.BluetoothAdapter;
@@ -238,8 +240,7 @@ public class BluetoothService
     public void write(byte[] out)
     {
         m_writeThread.write(out);
-
-        Log.e("NODEWRITES", "" + ++x);
+        if (D) Log.e("NODEWRITES", "" + ++x);
     }
 
     /**
@@ -482,7 +483,9 @@ public class BluetoothService
         public void run()
         {
             Log.i(TAG, "BEGIN m_connectedThread");
-            byte[] buffer = new byte[4096];
+            byte[] buffer = new byte[1024];
+            for (byte b : buffer)
+                b = 0;
             int bytes;
 
             // Keep listening to the InputStream while connected
@@ -492,10 +495,38 @@ public class BluetoothService
                 {
                     // Read from the InputStream
                     bytes = mm_inStream.read(buffer);
-                    Log.i("THREADCOMM", "BYTES READ: " + bytes);
+                    /* 
+                    while ((bytes = inputStream.read(buffer, 0, buffer.length)) > -1) {
+                              baos.write(buffer, 0, bytes);
+                              baos.flush();
+                    }
+                    byte[] message = baos.toByteArray();*/
+                    Log.i("THREADCOMM", "BYTES READ: " + bytes);/*
+                    if (bytesToInt(buffer[0], buffer[1], buffer[2], buffer[3]) == BluetoothProtocol.DATA_DRAWING_NODE)
+                    {
+
+                        int currentLength = bytes;
+                        while (currentLength < 12)
+                        {
+                            bytes = mm_inStream.read(buffer, currentLength, 1024 - currentLength);
+                            currentLength += bytes;
+                        }
+                        int packetLength = bytesToInt(buffer[8], buffer[9], buffer[10], buffer[11]);
+
+                        Log.e("PACKETS", "RECEIVED PACKET SIZE: " + packetLength);
+                        while (currentLength < packetLength)
+                        {
+                            bytes = mm_inStream.read(buffer, currentLength, 1024 - currentLength);
+                            currentLength += bytes;
+                        }
+
+                        m_handler.obtainMessage(BluetoothProtocol.MESSAGE_READ, currentLength, -1, Arrays.copyOf(buffer, bytes))
+                        .sendToTarget();
+                    }
+                    else*/
                     if (bytes >= 4)
                     {
-                        m_handler.obtainMessage(BluetoothProtocol.MESSAGE_READ, bytes, -1, buffer)
+                        m_handler.obtainMessage(BluetoothProtocol.MESSAGE_READ, bytes, -1, Arrays.copyOf(buffer, bytes))
                         .sendToTarget();
                     }
                 }
@@ -507,6 +538,12 @@ public class BluetoothService
                 }
             }
         }
+        
+        private int bytesToInt(byte first, byte second, byte third, byte fourth)
+        {
+            return first << 24 | second << 16
+            | third << 8  | fourth;
+        }
 
         /**
          * Write to the connected OutStream.
@@ -517,6 +554,8 @@ public class BluetoothService
             try
             {
                 mm_outStream.write(buffer);
+                mm_outStream.flush();
+                Log.i("THREADCOMM", "BYTES SENT: " + buffer.length);
 
                 // Share the sent message back to the UI Activity
                 m_handler.obtainMessage(BluetoothProtocol.MESSAGE_WRITE, -1, -1, buffer)

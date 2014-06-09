@@ -19,6 +19,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.PorterDuff;
+import android.os.CountDownTimer;
 import android.os.SystemClock;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -53,6 +54,29 @@ public class DrawingView extends View
 	private int m_screenY;
 	
 	private boolean m_lineDrawn = false;
+	
+	private CountDownTimer m_timer = new CountDownTimer(60000, 300)
+    {
+        public void onTick(long millisUntilFinished)
+        {
+            if (m_observer != null && !m_playbackDeque.isEmpty())
+            {
+                SenderThread senderThread = new SenderThread(m_playbackDeque);
+                senderThread.start();
+                m_playbackDeque.clear();
+            }
+        }
+
+        public void onFinish()
+        {
+            if (m_observer != null && !m_playbackDeque.isEmpty())
+            {
+                SenderThread senderThread = new SenderThread(m_playbackDeque);
+                senderThread.start();
+                m_playbackDeque.clear();
+            }
+        }
+    };
 
 	public DrawingView(Context context, AttributeSet attrs)
 	{
@@ -132,15 +156,15 @@ public class DrawingView extends View
     		}
     		m_undoStack.add(new DrawingNode(m_currentNode));
     		m_playbackDeque.add(new DrawingNode(m_currentNode));
-
+/*
     		if (m_observer != null)
     		{
     		    m_observer.sendNode(BluetoothProtocol.DATA_DRAWING_NODE, m_currentNode);
-    		    Log.d("NODESENDS", "ACTION SENT: " + m_currentNode.getActionType());
-    		}
+    		    Log.d("NODECOM", "ACTION SENT: " + m_currentNode.getActionType() + " TIMESTAMP: " + m_currentNode.getTimeStamp());
+    		}*/
     		/*if (m_observer != null)
     		{
-    		    if (m_playbackDeque.size() > 15 || event.getAction() == MotionEvent.ACTION_UP)
+    		    if (m_playbackDeque.size() > 10 || event.getAction() == MotionEvent.ACTION_UP)
     		    {
     		        SenderThread senderThread = new SenderThread(m_playbackDeque);
     		        senderThread.start();
@@ -178,8 +202,18 @@ public class DrawingView extends View
 		invalidate();
 		m_lineDrawn = false;
 	}
+	
+	public void startTransmit()
+	{
+	    if (m_observer != null) { m_timer.cancel(); m_timer.start(); }
+	}
+	
+	public void stopTransmit()
+    {
+        if (m_observer != null) m_timer.cancel();
+    }
 
-	public void clearQueue()
+	public void clearDeque()
 	{
 	    m_playbackDeque.clear();
 	}
@@ -211,7 +245,7 @@ public class DrawingView extends View
 	    m_enableDrawing = true;
 	}
 	
-	public synchronized void drawNode(DrawingNode node)
+	public void drawNode(DrawingNode node)
 	{
 	    float oldBrush = m_brushSize;
 	    int oldColor = m_paintColor;
@@ -275,7 +309,7 @@ public class DrawingView extends View
         Log.w("NODESTUFF", "ACTION: " + type + " START: " + lineDrawn + " MUTATED ACTION: " + node.getActionType());
         postInvalidate();
         m_undoStack.add(new DrawingNode(node));
-        m_playbackDeque.add(new DrawingNode(node));
+        //m_playbackDeque.add(new DrawingNode(node));
 	}
 
 	public void drawFromDeque(final Deque<DrawingNode> deque)
@@ -327,6 +361,8 @@ public class DrawingView extends View
             {
         	    try
         	    {
+        	        while (m_lineDrawn);
+        	        
             	    while (m_undoStack.peek().getActionType() != MotionEvent.ACTION_DOWN)
             	    {
             	        m_undoStack.pop();
@@ -380,6 +416,8 @@ public class DrawingView extends View
 
 	    public void run()
 	    {
+	        for (DrawingNode node : mm_deque)
+	            Log.d("NODECOM", "ACTION SENT: " + node.getActionType() + " TIMESTAMP: " + node.getTimeStamp());
 	        m_observer.sendNodes(BluetoothProtocol.DATA_DRAWING_NODE, mm_deque);
 	    }
 	}
