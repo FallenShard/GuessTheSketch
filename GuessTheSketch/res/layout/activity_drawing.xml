@@ -44,12 +44,25 @@
 
         </LinearLayout>
 
+        <ImageButton
+            android:id="@+id/button_exit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="50dp"
+            android:layout_marginLeft="50dp"
+            android:paddingLeft="50dp"
+            android:contentDescription="@string/content_desc_small"
+            android:background="@null"
+            android:src="@drawable/exit_icon"
+            android:onClick="brushClicked" />
+
         <LinearLayout
             android:id="@+id/brush_size_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="50dp"
+            android:layout_marginRight="150dp"
             android:orientation="horizontal" >
 
             <ImageButton

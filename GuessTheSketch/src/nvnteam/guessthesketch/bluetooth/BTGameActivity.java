@@ -177,6 +177,7 @@ public class BTGameActivity extends FullScreenActivity
 
         public void onFinish()
         {
+            m_drawView.setDrawing(false);
             m_currentTimeLeft = 0;
             if (m_gameState == State.Drawing || m_gameState == State.Guessing)
                 exitGuessingPhase();
@@ -718,6 +719,7 @@ public class BTGameActivity extends FullScreenActivity
             }
             case BluetoothProtocol.COMMAND_SHOW_SCORES:
             {
+                m_drawView.setDrawing(false);
                 exitGuessingPhase();
                 return true;
             }
@@ -731,7 +733,7 @@ public class BTGameActivity extends FullScreenActivity
             {
                 String gameMode = new String(messageBytes, 4, arg1 - 4);
                 m_gameMode = getGameMode(gameMode);
-                Toast.makeText(BTGameActivity.this, "Received game mode: " + m_gameMode , Toast.LENGTH_SHORT).show();
+                Toast.makeText(BTGameActivity.this, "Game mode: " + gameMode , Toast.LENGTH_SHORT).show();
                 return true;
             }
             case BluetoothProtocol.DATA_DRAWING_NODE:
@@ -754,6 +756,10 @@ public class BTGameActivity extends FullScreenActivity
     public void prepareDrawingPhase()
     {
         // Reset UI Text Views, color and brush size
+        m_viewFlipper.setDisplayedChild(m_viewFlipper.indexOfChild(m_gameLayout));
+        View drawingPalette = findViewById(R.id.drawers_palette);
+        m_paletteFlipper.setDisplayedChild(m_viewFlipper.indexOfChild(drawingPalette));
+        m_paletteFlipper.showNext();
         m_guesserEditText.setText("");
         m_countDownTextView.setText("");
         m_currentRoundTextView.setText("Current Round: " + ((m_roundsPassed + 2) >> 1));
@@ -766,7 +772,7 @@ public class BTGameActivity extends FullScreenActivity
 
         // Stop the playback and wipe the canvas
         m_drawView.startNew();
-        m_drawView.setDrawingPhase(true);
+        m_drawView.setDrawing(true);
 
         // Change the backgrounds of buttons to corresponding team color
         if (m_currentTurn == 0)
@@ -827,7 +833,6 @@ public class BTGameActivity extends FullScreenActivity
     /**
      * This function gets executed before the guessing phase begins, by clearing
      * all the relevant text views, wiping the canvas and resetting the timer.
-     * It pops a modal dialog where the user can confirm he's ready to guess.
      */
     public void prepareGuessingPhase()
     {
@@ -844,8 +849,10 @@ public class BTGameActivity extends FullScreenActivity
             m_currentRoundTextView.setTextColor(0xFFFF8080);
         m_currentRoundTextView.setText("Current Round: " + ((m_roundsPassed + 2) >> 1));
         m_drawView.startNew();
-        m_drawView.setDrawingPhase(false);
-        m_paletteFlipper.showNext();
+        m_drawView.setDrawing(false);
+        m_viewFlipper.setDisplayedChild(m_viewFlipper.indexOfChild(m_gameLayout));
+        View guessersPalette = findViewById(R.id.guesser_palette);
+        m_paletteFlipper.setDisplayedChild(m_viewFlipper.indexOfChild(guessersPalette));
         m_revealedLetter = false;
         m_gameState = State.Guessing;
         m_timer.cancel();
@@ -946,24 +953,16 @@ public class BTGameActivity extends FullScreenActivity
                     if (m_isGameHost)
                     {
                         if (m_roundsPassed % 2 == 0)
-                        {
-                            m_paletteFlipper.showNext();
                             prepareDrawingPhase();
-                        }
                         else
                             m_viewFlipper.setDisplayedChild(m_viewFlipper.indexOfChild(m_infoLayout));
                     }
                     else
                     {
                         if (m_roundsPassed % 2 == 0)
-                        {
                             m_viewFlipper.setDisplayedChild(m_viewFlipper.indexOfChild(m_infoLayout));
-                        }
                         else
-                        {
-                            m_paletteFlipper.showNext();
                             prepareDrawingPhase();
-                        }
                     }
                 }
                 else
@@ -1105,7 +1104,7 @@ public class BTGameActivity extends FullScreenActivity
         m_currentPaint = (ImageButton) (m_colorStrip).getChildAt(0);
         m_currentPaint.setImageDrawable(getResources().getDrawable(R.drawable.color_button_pressed));
         m_currentBrush = (ImageButton) (m_brushStrip).getChildAt(0);
-        m_currentBrush.setImageDrawable(getResources().getDrawable(R.drawable.medium_brush_pressed));
+        m_currentBrush.setImageDrawable(getResources().getDrawable(R.drawable.small_brush_pressed));
         m_finishBtn = (Button) findViewById(R.id.button_finish_drawing);
         m_finishBtn.setVisibility(View.GONE);
         m_undoBtn = (Button) findViewById(R.id.button_undo);
@@ -1113,6 +1112,8 @@ public class BTGameActivity extends FullScreenActivity
         m_countDownTextView = (TextView) findViewById(R.id.text_view_count_down);
         m_guesserEditText = (EditText) findViewById(R.id.edit_text_guesser);
         m_paletteFlipper = (ViewFlipper) findViewById(R.id.palette_flipper);
+        View drawingPalette = findViewById(R.id.drawers_palette);
+        m_paletteFlipper.setDisplayedChild(m_viewFlipper.indexOfChild(drawingPalette));
         m_paletteFlipper.setInAnimation(inAnim);
         m_paletteFlipper.setOutAnimation(outAnim);
 

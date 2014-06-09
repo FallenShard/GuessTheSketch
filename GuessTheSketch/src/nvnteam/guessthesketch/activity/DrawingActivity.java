@@ -25,6 +25,7 @@ public class DrawingActivity extends FullScreenActivity
 	private ImageButton m_undoButton;
 	private ImageButton m_currentBrush;
 	private ImageButton m_currentPaint;
+	private ImageButton m_exitButton;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
@@ -51,6 +52,8 @@ public class DrawingActivity extends FullScreenActivity
         LinearLayout brushLayout = (LinearLayout)findViewById(R.id.brush_size_layout);
         m_currentBrush = (ImageButton) brushLayout.getChildAt(0);
         m_currentBrush.setImageDrawable(getResources().getDrawable(R.drawable.small_brush_pressed));
+        
+        m_exitButton = (ImageButton) findViewById(R.id.button_exit);
 	}
 
 	private void initListeners()
@@ -129,6 +132,31 @@ public class DrawingActivity extends FullScreenActivity
                 m_drawView.undo();
             }
         });
+
+	    m_exitButton.setOnClickListener(new OnClickListener()
+	    {
+	        public void onClick(View v)
+            {
+	            final ConfirmationDialog cd = new ConfirmationDialog(DrawingActivity.this);
+	            cd.show();
+	            cd.setParam("Exit", "Are you sure you want to exit?");
+	            cd.setYesOnClickListener("Yes", new OnClickListener()
+	            {
+	                 public void onClick(View v) 
+	                 {
+	                     cd.dismiss();
+	                     DrawingActivity.super.onBackPressed();
+	                 }
+	            });
+	            cd.setNoOnClickListener("No", new OnClickListener()
+	            {
+	                 public void onClick(View v) 
+	                 {
+	                     cd.dismiss();
+	                 }
+	            });
+            }
+	    });
 	}
 
 	public void brushClicked(View view)

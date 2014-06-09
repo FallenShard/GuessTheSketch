@@ -478,6 +478,7 @@ public class SDGameActivity extends FullScreenActivity
                      {
                          cd.dismiss();
                          m_timer.cancel();
+                         m_drawView.setDrawing(false);
                          prepareGuessingPhase();
                      }
                 });

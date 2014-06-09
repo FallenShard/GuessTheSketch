@@ -22,5 +22,4 @@ public class BluetoothProtocol
     public static final int DATA_DRAWING_NODE = 20;
 
     public static final int IS_COMMAND = 100;
-    //public static final int COMMAND_
 }

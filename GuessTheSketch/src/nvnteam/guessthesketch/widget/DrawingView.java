@@ -82,11 +82,6 @@ public class DrawingView extends View
 		m_canvasPaint = new Paint(Paint.DITHER_FLAG);
 	}
 	
-	public void setDrawingPhase(boolean isDrawing)
-	{
-	    m_enableDrawing = isDrawing;
-	}
-	
 	public void attachObserver(BTGameActivity act)
 	{
 	    m_observer = act;
@@ -137,22 +132,21 @@ public class DrawingView extends View
     		}
     		m_undoStack.add(new DrawingNode(m_currentNode));
     		m_playbackDeque.add(new DrawingNode(m_currentNode));
-/*
+
     		if (m_observer != null)
     		{
     		    m_observer.sendNode(BluetoothProtocol.DATA_DRAWING_NODE, m_currentNode);
     		    Log.d("NODESENDS", "ACTION SENT: " + m_currentNode.getActionType());
-    		}*/
-    		if (m_observer != null)
-    		{/*
+    		}
+    		/*if (m_observer != null)
+    		{
     		    if (m_playbackDeque.size() > 15 || event.getAction() == MotionEvent.ACTION_UP)
     		    {
     		        SenderThread senderThread = new SenderThread(m_playbackDeque);
     		        senderThread.start();
     		        m_playbackDeque.clear();
-    		    }*/
-    		    m_observer.sendNode(BluetoothProtocol.DATA_DRAWING_NODE, m_currentNode);
-    		}
+    		    }
+    		}*/
     		invalidate();
     		return true;
 	    }
@@ -178,8 +172,11 @@ public class DrawingView extends View
 	{
 	    if (m_drawCanvas != null)
 	        m_drawCanvas.drawColor(0, PorterDuff.Mode.CLEAR);
+	    m_drawPath.reset();
+	    undo();
 	    m_undoStack.clear();
 		invalidate();
+		m_lineDrawn = false;
 	}
 
 	public void clearQueue()
@@ -202,6 +199,11 @@ public class DrawingView extends View
 	    m_enableDrawing = false;
 	    m_playbackThread = new PlaybackThread(milliSec);
 	    m_playbackThread.start();
+	}
+	
+	public void setDrawing(boolean drawing)
+	{
+	    m_enableDrawing = drawing;
 	}
 
 	public void stopPlayback()
